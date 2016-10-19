@@ -124,9 +124,7 @@ data MyData // this comment is ignored
 }
 ```
 
-## Documentation
-
-### Summary
+## Summary
 
 A [summary](Specification.md#summary) is a special comment that appears in generated code and documentation. Comments with summaries use three slashes instead of two.
 
@@ -142,15 +140,24 @@ data MyData
 }
 ```
 
-### Remarks
+## Remarks
 
-Additional [remarks](Specification.md#remarks) should be written in an `.fsd.md` file in the same directory as the `.fsd` file, e.g. `MyApi.fsd.md` with `MyApi.fsd`.
+Additional [remarks](Specification.md#remarks) using Markdown may be added after the end of the closing bracket of the `service`.
 
-Each top-level heading in the `.fsd.md` file (e.g. `# myMethod`) must match the name of a method, DTO, enumerated type, or error set. Any text under that heading represents additional documentation for that service element.
+The first non-blank line immediately following the closing bracket must be a top-level [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/) heading (e.g. `# myMethod`).
 
-Any text before the first top-level heading is additional documentation for the entire service.
+That first heading as well as any additional top-level headings must match the name of the service or a method, DTO, enumerated type, or error set. Any text under that heading represents additional documentation for that part of the service.
 
 ```
+service MyApi
+{
+  method myMethod { ... }: { ... }
+  data MyData { ... }
+  ...
+}
+
+# MyApi
+
 These are the remarks for the entire service.
 
 # myMethod
