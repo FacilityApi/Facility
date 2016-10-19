@@ -2,10 +2,8 @@
 
 A Facility Service Definition (FSD) describes the operations supported by a service API.
 
-This specification intentionally avoids discussion of file formats, since multiple file formats are supported:
+This specification intentionally avoids discussion of file formats, since multiple file formats may be supported:
 * [FSD File Format](FsdFile.md)
-* [FSD JSON File Format](FsdJson.md)
-* [FSD YAML File Format](FsdYaml.md)
 
 This specification also avoids discussion of transport (e.g. HTTP) and encoding (e.g. JSON), since an FSD can be used with any supported transport or encoding.
 * [HTTP](Http.md)

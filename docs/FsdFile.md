@@ -2,8 +2,6 @@
 
 The FSD file format uses a domain-specific language in an effort to make [Facility Service Definitions](Specification.md) easier to read and write, especially for developers comfortable with C-style languages.
 
-Alternative file formats include [FSD JSON](FsdJson.md) and [FSD YAML](FsdYaml.md).
-
 ## FSD File
 
 Each FSD file should contain the definition of one service. Frequently the file name will match the service name followed by an `.fsd` file extension, e.g. `MyApi.fsd`.
@@ -167,20 +165,4 @@ Here are the remarks for one of the service methods.
 # MyData
 
 Here are the remarks for one of the service DTOs.
-```
-
-## Example
-
-The following is an example service definition in FSD format. It is equivalent to the [FSD JSON example](FsdJson.md#example) and the [FSD YAML example](FsdYaml.md#example).
-
-### ExampleApi.fsd
-
-```
-...
-```
-
-### ExampleApi.fsd.md
-
-```
-...
 ```
