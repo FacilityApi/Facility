@@ -1,7 +1,9 @@
 .vs/
 bin/
-packages/
+cake/
 obj/
+packages/
+release/
 
 *.cache
 *.ncrunchproject

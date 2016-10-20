@@ -1,0 +1,7 @@
+version: '{build}'
+environment:
+  COVERALLSAPIKEY:
+    secure: w6ojRE0he/6J2qd8sgq1kwSl3YlgLXaGJbiLvWfAdf8KtWAfSobZwSFwu3nCBLWJ
+build_script:
+- ps: .\build.ps1 -target=CoveragePublish -configuration=Debug "-coverallsApiKey=$env:COVERALLSAPIKEY"
+test: off
