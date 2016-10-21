@@ -6,10 +6,19 @@ using Facility.Definition.CodeGen;
 
 namespace Facility.Definition.Fsd
 {
+	/// <summary>
+	/// Generates an FSD file for a service definition.
+	/// </summary>
 	public sealed class FsdGenerator
 	{
+		/// <summary>
+		/// The name of the generator (for comments).
+		/// </summary>
 		public string GeneratorName { get; set; }
 
+		/// <summary>
+		/// Generates an FSD file for a service definition.
+		/// </summary>
 		public ServiceTextSource GenerateOutput(ServiceDefinitionInfo definition)
 		{
 			var service = definition.Service;
