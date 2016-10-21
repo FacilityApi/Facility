@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>Facility.Definition</id>
     <version>$version$</version>
@@ -10,10 +10,10 @@
     <copyright>Copyright 2016 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <dependencies>
+      <dependency id="Faithlife.Parsing" version="1.0.0" />
+    </dependencies>
   </metadata>
-  <dependencies>
-    <dependency id="Faithlife.Parsing" version="1.0.0" />
-  </dependencies>
   <files>
     <file src="Facility.Definition\bin\Release\Facility.Definition.*" target="lib/dotnet" />
     <file src="Facility.Definition\bin\Release\Facility.Definition.*" target="lib/portable-net45+netcore45+wpa81" />
