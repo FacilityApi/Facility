@@ -5,8 +5,36 @@ using System.Text.RegularExpressions;
 
 namespace Facility.Definition
 {
-	internal static class ServiceDefinitionUtility
+	/// <summary>
+	/// Helper methods for working with service definitions.
+	/// </summary>
+	public static class ServiceDefinitionUtility
 	{
+		/// <summary>
+		/// Returns the attribute with the specified name.
+		/// </summary>
+		/// <remarks>Throws a ServiceDefinitionException if the attribute is duplicated.</remarks>
+		public static ServiceAttributeInfo TryGetAttribute(this IServiceElementInfo element, string name)
+		{
+			var attributes = element?.Attributes;
+			if (attributes == null)
+				return null;
+
+			var matchingAttributes = attributes.Where(x => x.Name == name).ToList();
+			if (matchingAttributes.Count > 1)
+				throw new ServiceDefinitionException($"'{name}' attribute is duplicated.", matchingAttributes[1].Position);
+
+			return matchingAttributes.FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Returns true if the element has the 'obsolete' attribute.
+		/// </summary>
+		public static bool IsObsolete(this IServiceElementInfo element)
+		{
+			return element.TryGetAttribute("obsolete") != null;
+		}
+
 		internal static void ValidateName(string name, ServiceTextPosition position)
 		{
 			if (!s_validNameRegex.IsMatch(name))
