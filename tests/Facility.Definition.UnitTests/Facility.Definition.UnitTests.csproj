@@ -40,6 +40,7 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGen\CodeGenUtilityTests.cs" />
     <Compile Include="FsdTests\AttributeTests.cs" />
     <Compile Include="FsdTests\MethodTests.cs" />
     <Compile Include="FsdTests\FieldTests.cs" />
