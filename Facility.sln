@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition", "src\Facility.Definition\Facility.Definition.csproj", "{64DB00A4-5FA3-4598-BA61-ED1FA891043C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		SolutionInfo.cs = SolutionInfo.cs
@@ -14,6 +14,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{30AA7D3D-60FB-40FB-B594-EA763DA08E01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fsdgenfsd", "src\fsdgenfsd\fsdgenfsd.csproj", "{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{53E160D7-72A0-4804-BCE9-DD14EB1CB92D}"
+	ProjectSection(SolutionItems) = preProject
+		src\Facility.Definition.nuspec = src\Facility.Definition.nuspec
+		src\fsdgenfsd.nuspec = src\fsdgenfsd.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
