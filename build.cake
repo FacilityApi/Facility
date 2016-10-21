@@ -15,11 +15,11 @@ var githubApiKey = Argument("githubApiKey", "");
 var coverallsApiKey = Argument("coverallsApiKey", "");
 
 var solutionFileName = "Facility.sln";
-var assemblyFileName = "src/Facility.Definition/bin/Release/Facility.Definition.dll";
 var githubOwner = "FacilityApi";
 var githubRepo = "Facility";
 var githubRawUri = "http://raw.githubusercontent.com";
 var nugetSource = "https://www.nuget.org/api/v2/package";
+var coverageAssemblies = new[] { "Facility.Definition" };
 
 var gitRepository = new LibGit2Sharp.Repository(MakeAbsolute(Directory(".")).FullPath);
 
@@ -83,7 +83,7 @@ Task("SourceIndex")
 			ArgumentCustomization = args => args.Append($"-ignore Bom,BomTest"),
 		});
 
-		version = GetSemVerFromFile(assemblyFileName);
+		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
 	});
 
 Task("NuGetPack")
@@ -139,10 +139,13 @@ Task("Coverage")
 		CreateDirectory("release");
 		if (FileExists("release/coverage.xml"))
 			DeleteFile("release/coverage.xml");
+
+		string filter = string.Concat(coverageAssemblies.Select(x => $@" ""-filter:+[{x}]*"""));
+
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
 			StartProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:cake\xunit.runner.console\tools\xunit.console.exe"" ""-targetargs:{testDllPath} -noshadow"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode ""-filter:+[Facility*]*""");
+				$@"-register:user -mergeoutput ""-target:cake\xunit.runner.console\tools\xunit.console.exe"" ""-targetargs:{testDllPath} -noshadow"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
 
