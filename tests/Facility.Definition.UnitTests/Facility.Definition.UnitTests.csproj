@@ -14,7 +14,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -60,6 +60,12 @@
     <Compile Include="TestUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Facility.Definition\Facility.Definition.csproj">
+      <Project>{64DB00A4-5FA3-4598-BA61-ED1FA891043C}</Project>
+      <Name>Facility.Definition</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Shouldly, Version=2.7.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Shouldly.2.7.0\lib\portable-net45+netcore45+wp8+wpa81\Shouldly.dll</HintPath>
       <Private>True</Private>
@@ -83,12 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Facility.Definition\Facility.Definition.csproj">
-      <Project>{64DB00A4-5FA3-4598-BA61-ED1FA891043C}</Project>
-      <Name>Facility.Definition</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
