@@ -28,6 +28,22 @@ namespace Facility.Definition
 		}
 
 		/// <summary>
+		/// Returns the attribute parameter with the specified name.
+		/// </summary>
+		public static ServiceAttributeParameterInfo TryGetParameter(this ServiceAttributeInfo attribute, string name)
+		{
+			return attribute?.Parameters?.FirstOrDefault(x => x.Name == name);
+		}
+
+		/// <summary>
+		/// Returns the value of the attribute parameter with the specified name.
+		/// </summary>
+		public static string TryGetParameterValue(this ServiceAttributeInfo attribute, string name)
+		{
+			return attribute.TryGetParameter(name)?.Value;
+		}
+
+		/// <summary>
 		/// Returns true if the element has the 'obsolete' attribute.
 		/// </summary>
 		public static bool IsObsolete(this IServiceElementInfo element)

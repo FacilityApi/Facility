@@ -1,6 +1,6 @@
 # JSON
 
-Since JSON is currently the most commonly-used serialization format for APIs over HTTP, field definitions are designed to be trivially compatible with JSON.
+Since [JSON](http://www.json.org/) is currently the most commonly-used serialization format for APIs over HTTP, field definitions are designed to be trivially compatible with JSON.
 
 In fact, to avoid complicating implementations, there is no way to customize the JSON serialization of a request body, response body, or DTO. Each field is always serialized as a JSON property with the same name.
 
@@ -13,3 +13,5 @@ In fact, to avoid complicating implementations, there is no way to customize the
 * `map<T>` is encoded as a JSON object.
 
 `null` is not a valid value for any field type. If a JSON property is set to `null`, it is treated as though it were omitted. Arrays and maps are not permitted to have `null` items.
+
+When reading JSON, conforming clients and servers may match property names case-insensitively, and they may perform type conversions for property values, e.g. strings to numbers. They may also support non-standard JSON features, such as unquoted property names, single-quoted strings, comments, etc. However, when writing JSON, conforming clients and servers must always use [standard JSON](http://www.json.org/) with no comments, correctly-cased property names, correctly-typed property values, etc.

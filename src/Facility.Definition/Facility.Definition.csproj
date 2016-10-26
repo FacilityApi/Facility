@@ -45,6 +45,17 @@
     <Compile Include="CodeGen\CodeWriter.cs" />
     <Compile Include="Fsd\FsdGenerator.cs" />
     <Compile Include="Fsd\FsdRemarksSection.cs" />
+    <Compile Include="Http\HttpAttributeUtility.cs" />
+    <Compile Include="Http\HttpBodyFieldInfo.cs" />
+    <Compile Include="Http\HttpErrorInfo.cs" />
+    <Compile Include="Http\HttpErrorSetInfo.cs" />
+    <Compile Include="Http\HttpNormalFieldInfo.cs" />
+    <Compile Include="Http\HttpHeaderFieldInfo.cs" />
+    <Compile Include="Http\HttpMethodInfo.cs" />
+    <Compile Include="Http\HttpPathFieldInfo.cs" />
+    <Compile Include="Http\HttpQueryFieldInfo.cs" />
+    <Compile Include="Http\HttpResponseInfo.cs" />
+    <Compile Include="Http\HttpServiceInfo.cs" />
     <Compile Include="IServiceNamedInfo.cs" />
     <Compile Include="IServiceMemberInfo.cs" />
     <Compile Include="IServiceElementInfo.cs" />

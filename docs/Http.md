@@ -10,10 +10,8 @@ The examples below use the [FSD file format](FsdFile.md).
 
 On a service, the `url` parameter of the `http` attribute indicates the base URL where the HTTP service lives, e.g. `https://api.example.com/v1/`. The trailing slash is optional. Clients should still be able to use a different base URL; if this parameter is omitted, clients will be required to provide the base URL.
 
-The `version` parameter indicates the version of the API. This specification does not indicate the format, though [semantic versioning](http://semver.org/) is recommended.
-
 ```
-[http(url: "https://api.example.com/v1/", version: 1.0.4)]
+[http(url: "https://api.example.com/v1/")]
 service MyApi
 {
   ...
@@ -22,7 +20,7 @@ service MyApi
 
 ## Methods
 
-On a method, the `method` parameter of the `http` attribute indicates the HTTP method that is used, e.g. `GET`, `POST`, `PUT`, `DELETE`, or `PATCH`. If omitted, the default is `POST`.
+On a method, the `method` parameter of the `http` attribute indicates the HTTP method that is used, e.g. `GET`, `POST`, `PUT`, `DELETE`, or `PATCH`. If omitted, the default is `POST`. The HTTP method name is always uppercased, so lowercase is permitted, e.g. `[http(method: get)]`.
 
 The `path`  parameter indicates the HTTP path of the method (relative to the base URI). The path must start with a slash. A single slash indicates that the method is at the base URL itself.
 
@@ -45,15 +43,13 @@ The `code` parameter indicates the HTTP status code used if the method is succes
 
 ## Request/Response Fields
 
-On a request or response field, the `from` parameter of the `http` attribute indicates where the field comes from. It can be set to `path`, `query`, `body`, `header`, or `normal`.
+On a request or response field, the `from` parameter of the `http` attribute indicates where the field comes from. It can be set to `path`, `query`, `body`, `header`, or `normal`. Like all `http` parameters, the `from` parameter is optional; see below for defaults.
 
 The `http` attribute should not be used on a DTO field.
 
 ### Path Fields
 
 If `from: path` is used on a request field, the field comes from the method path, which must contain the field name in braces. (Response fields cannot be path fields.)
-
-The `name` parameter of the `http` attribute can be used to indicate the name of the field as found in the path; if omitted, it defaults to the field name.
 
 If the name of a request field without a `from` parameter is found in the path, it is assumed to be a path field, so `from: path` is rarely used explicitly.
 
@@ -121,7 +117,7 @@ If `from: header` is used on a request or response field, the field is transmitt
 
 The `name` parameter of the `http` attribute can be used to indicate the name of the HTTP header; if omitted, it defaults to the field name.
 
-Header fields should be of type `string`. The header value is not transformed in any way and must conform to the HTTP requirements for that header.
+Header fields must be of type `string`. The header value is not transformed in any way and must conform to the HTTP requirements for that header.
 
 Headers commonly used by all service methods (`Authorization`, `User Agent`, etc.) are generally outside the scope of the FSD and not explicitly included with each request and/or response.
 
