@@ -1,4 +1,5 @@
 /// Common service elements.
+[csharp(namespace: Facility.Core)]
 service Core
 {
 	/// An error.

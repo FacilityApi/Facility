@@ -21,6 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{53E160D7-72A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{999A87D4-79C9-4412-92A2-573174CC7114}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD5-46BE-9606-4121422F686B}"
+	ProjectSection(SolutionItems) = preProject
+		fsd\Core.fsd = fsd\Core.fsd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
