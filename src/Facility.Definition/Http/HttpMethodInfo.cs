@@ -251,7 +251,8 @@ namespace Facility.Definition.Http
 				fieldTypeKind == ServiceTypeKind.Boolean ||
 				fieldTypeKind == ServiceTypeKind.Double ||
 				fieldTypeKind == ServiceTypeKind.Int32 ||
-				fieldTypeKind == ServiceTypeKind.Int64;
+				fieldTypeKind == ServiceTypeKind.Int64 ||
+				fieldTypeKind == ServiceTypeKind.Enum;
 		}
 
 		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
