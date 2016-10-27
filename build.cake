@@ -4,7 +4,7 @@
 #tool "nuget:?package=gitlink"
 #tool "nuget:?package=OpenCover"
 #tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=xunit.runner.console"
+#tool "nuget:?package=NUnit.ConsoleRunner"
 
 using LibGit2Sharp;
 
@@ -56,7 +56,7 @@ Task("Build")
 
 Task("Test")
 	.IsDependentOn("Build")
-	.Does(() => XUnit2($"tests/**/bin/**/*.UnitTests.dll"));
+	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")
 	.IsDependentOn("Test")
