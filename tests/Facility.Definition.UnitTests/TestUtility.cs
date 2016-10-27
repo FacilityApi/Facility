@@ -1,6 +1,6 @@
 ﻿using System;
 using Facility.Definition.Fsd;
-using Xunit;
+using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
 {
@@ -11,11 +11,11 @@ namespace Facility.Definition.UnitTests
 			try
 			{
 				action();
-				Assert.True(false);
+				throw new InvalidOperationException("Action did not throw.");
 			}
 			catch (ServiceDefinitionException exception)
 			{
-				Assert.Same(position, exception.Position);
+				Assert.AreSame(position, exception.Position);
 			}
 		}
 

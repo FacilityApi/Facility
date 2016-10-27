@@ -1,20 +1,19 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class FieldTests
 	{
-		[Theory]
-		[InlineData("string", ServiceTypeKind.String)]
-		[InlineData("boolean", ServiceTypeKind.Boolean)]
-		[InlineData("double", ServiceTypeKind.Double)]
-		[InlineData("int32", ServiceTypeKind.Int32)]
-		[InlineData("int64", ServiceTypeKind.Int64)]
-		[InlineData("bytes", ServiceTypeKind.Bytes)]
-		[InlineData("object", ServiceTypeKind.Object)]
-		[InlineData("error", ServiceTypeKind.Error)]
+		[TestCase("string", ServiceTypeKind.String)]
+		[TestCase("boolean", ServiceTypeKind.Boolean)]
+		[TestCase("double", ServiceTypeKind.Double)]
+		[TestCase("int32", ServiceTypeKind.Int32)]
+		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("bytes", ServiceTypeKind.Bytes)]
+		[TestCase("object", ServiceTypeKind.Object)]
+		[TestCase("error", ServiceTypeKind.Error)]
 		public void PrimitiveFields(string name, ServiceTypeKind kind)
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { data One { x: xyzzy; } }".Replace("xyzzy", name));
@@ -45,13 +44,13 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void CaseSensitivePrimitive()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: Boolean; } }");
 		}
 
-		[Fact]
+		[Test]
 		public void EnumField()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { enum MyEnum { X } data One { x: MyEnum; } }");
@@ -87,7 +86,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void DtoField()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { data MyDto { x: int32; } data One { x: MyDto; } }");
@@ -123,7 +122,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void RecursiveDtoField()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { data MyDto { x: MyDto; } }");
@@ -154,33 +153,33 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void TwoFieldsSameName()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: int32; X: int64;} }")
 				.Message.ShouldBe("TestApi.fsd(1,40): Duplicate field: X");
 		}
 
-		[Fact]
+		[Test]
 		public void InvalidFieldType()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: x; } }")
 				.Message.ShouldBe("TestApi.fsd(1,30): Unknown field type 'x'.");
 		}
 
-		[Fact]
+		[Test]
 		public void ResultOfArrayInvalid()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: result<int32[]>; } }");
 		}
 
-		[Fact]
+		[Test]
 		public void ResultOfResultInvalid()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: result<result<int32>>; } }");
 		}
 
-		[Fact]
+		[Test]
 		public void ArrayOfArrayInvalid()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: int32[][]; } }");

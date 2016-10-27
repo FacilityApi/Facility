@@ -1,25 +1,25 @@
-﻿using Shouldly;
-using Xunit;
+﻿using NUnit.Framework;
+using Shouldly;
 
 namespace Facility.Definition.UnitTests
 {
 	public class ServiceTextPositionTests
 	{
-		[Fact]
+		[Test]
 		public void SourceNameOnly()
 		{
 			var position = new ServiceTextPosition("source");
 			position.ToString().ShouldBe("source");
 		}
 
-		[Fact]
+		[Test]
 		public void LineNumberOnly()
 		{
 			var position = new ServiceTextPosition("source", 3);
 			position.ToString().ShouldBe("source(3)");
 		}
 
-		[Fact]
+		[Test]
 		public void FullPosition()
 		{
 			var position = new ServiceTextPosition("source", 3, 14);

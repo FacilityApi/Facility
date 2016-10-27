@@ -1,10 +1,10 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
 {
 	public class ServiceEnumInfoTests
 	{
-		[Fact]
+		[Test]
 		public void InvalidNameThrows()
 		{
 			var position = new ServiceTextPosition("source");

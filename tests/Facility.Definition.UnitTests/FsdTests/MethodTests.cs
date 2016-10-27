@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class MethodTests
 	{
-		[Fact]
+		[Test]
 		public void OneMinimalMethod()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { method do {}: {} }");

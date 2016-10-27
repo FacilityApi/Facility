@@ -1,11 +1,11 @@
-﻿using Shouldly;
-using Xunit;
+﻿using NUnit.Framework;
+using Shouldly;
 
 namespace Facility.Definition.UnitTests.Http
 {
 	public class HttpServiceInfoTests : HttpInfoTestsBase
 	{
-		[Fact]
+		[Test]
 		public void EmptyServiceDefinition()
 		{
 			var info = ParseHttpApi("service TestApi{}");
@@ -15,7 +15,7 @@ namespace Facility.Definition.UnitTests.Http
 			info.ErrorSets.Count.ShouldBe(0);
 		}
 
-		[Fact]
+		[Test]
 		public void OneMinimalMethod()
 		{
 			var info = ParseHttpApi("service TestApi { method do {}: {} }");
@@ -25,35 +25,35 @@ namespace Facility.Definition.UnitTests.Http
 			info.ErrorSets.Count.ShouldBe(0);
 		}
 
-		[Fact]
+		[Test]
 		public void EmptyServiceAttribute()
 		{
 			var info = ParseHttpApi("[http] service TestApi { method do {}: {} }");
 			info.Url.ShouldBe(null);
 		}
 
-		[Fact]
+		[Test]
 		public void FullServiceAttribute()
 		{
 			var info = ParseHttpApi("[http(url: \"https://api.example.com\")] service TestApi { method do {}: {} }");
 			info.Url.ShouldBe("https://api.example.com");
 		}
 
-		[Fact]
+		[Test]
 		public void TwoServiceAttributes()
 		{
 			ParseInvalidHttpApi("[http] [http] service TestApi { method do {}: {} }")
 				.Message.ShouldBe("TestApi.fsd(1,9): 'http' attribute is duplicated.");
 		}
 
-		[Fact]
+		[Test]
 		public void UnexpectedHttpParameter()
 		{
 			ParseInvalidHttpApi("[http(xyzzy: true)] service TestApi { method do {}: {} }")
 				.Message.ShouldBe("TestApi.fsd(1,7): Unexpected 'http' parameter 'xyzzy'.");
 		}
 
-		[Fact]
+		[Test]
 		public void UnexpectedHttpAttribute()
 		{
 			ParseInvalidHttpApi("service TestApi { [http] data Hey {} }")

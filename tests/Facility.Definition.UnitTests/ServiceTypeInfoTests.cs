@@ -1,19 +1,18 @@
-﻿using Shouldly;
-using Xunit;
+﻿using NUnit.Framework;
+using Shouldly;
 
 namespace Facility.Definition.UnitTests
 {
 	public class ServiceTypeInfoTests
 	{
-		[Theory]
-		[InlineData("string", ServiceTypeKind.String)]
-		[InlineData("boolean", ServiceTypeKind.Boolean)]
-		[InlineData("double", ServiceTypeKind.Double)]
-		[InlineData("int32", ServiceTypeKind.Int32)]
-		[InlineData("int64", ServiceTypeKind.Int64)]
-		[InlineData("bytes", ServiceTypeKind.Bytes)]
-		[InlineData("object", ServiceTypeKind.Object)]
-		[InlineData("error", ServiceTypeKind.Error)]
+		[TestCase("string", ServiceTypeKind.String)]
+		[TestCase("boolean", ServiceTypeKind.Boolean)]
+		[TestCase("double", ServiceTypeKind.Double)]
+		[TestCase("int32", ServiceTypeKind.Int32)]
+		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("bytes", ServiceTypeKind.Bytes)]
+		[TestCase("object", ServiceTypeKind.Object)]
+		[TestCase("error", ServiceTypeKind.Error)]
 		public void PrimitiveTypes(string name, ServiceTypeKind kind)
 		{
 			var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: new[] { new ServiceFieldInfo("myField", name) }) });
@@ -25,7 +24,7 @@ namespace Facility.Definition.UnitTests
 			type.ToString().ShouldBe(name);
 		}
 
-		[Fact]
+		[Test]
 		public void DtoType()
 		{
 			var service = new ServiceInfo(name: "MyApi",
@@ -38,7 +37,7 @@ namespace Facility.Definition.UnitTests
 			type.ToString().ShouldBe("MyDto");
 		}
 
-		[Fact]
+		[Test]
 		public void EnumType()
 		{
 			var service = new ServiceInfo(name: "MyApi",
@@ -51,10 +50,9 @@ namespace Facility.Definition.UnitTests
 			type.ToString().ShouldBe("MyEnum");
 		}
 
-		[Theory]
-		[InlineData("result<MyDto>", ServiceTypeKind.Result)]
-		[InlineData("MyDto[]", ServiceTypeKind.Array)]
-		[InlineData("map<MyDto>", ServiceTypeKind.Map)]
+		[TestCase("result<MyDto>", ServiceTypeKind.Result)]
+		[TestCase("MyDto[]", ServiceTypeKind.Array)]
+		[TestCase("map<MyDto>", ServiceTypeKind.Map)]
 		public void ContainerOfDtoType(string name, ServiceTypeKind kind)
 		{
 			var service = new ServiceInfo(name: "MyApi",

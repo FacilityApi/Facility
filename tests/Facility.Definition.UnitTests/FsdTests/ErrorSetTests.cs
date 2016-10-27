@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class ErrorSetTests
 	{
-		[Fact]
+		[Test]
 		public void OneMinimalErrorSet()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { errors One { X } }");

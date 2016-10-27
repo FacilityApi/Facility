@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class AttributeTests
 	{
-		[Fact]
+		[Test]
 		public void NoParameters()
 		{
 			var service = TestUtility.ParseTestApi("[x] service TestApi{}");
@@ -27,7 +27,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void ZeroParameter()
 		{
 			var service = TestUtility.ParseTestApi("[x(y:0)] service TestApi{}");
@@ -50,7 +50,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void TokenParameter()
 		{
 			var service = TestUtility.ParseTestApi("[x(y:1b-3D_5f.7H+9J)] service TestApi{}");
@@ -73,7 +73,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void EmptyStringParameter()
 		{
 			var service = TestUtility.ParseTestApi("[x(y:\"\")] service TestApi{}");
@@ -96,7 +96,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void JsonStringParameter()
 		{
 			var service = TestUtility.ParseTestApi(@"[x(y:""á\\\""\/\b\f\n\r\t\u1234!"")] service TestApi{}");
@@ -119,7 +119,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void ManyAttributesAndParameters()
 		{
 			var service = TestUtility.ParseTestApi("[x, x(x:0)] [x(x:0,y:1)] service TestApi{}");

@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class DtoTests
 	{
-		[Fact]
+		[Test]
 		public void OneMinimalDto()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { data One { } }");
@@ -33,7 +33,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void TwoDtosSameName()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One {} data One {} }")

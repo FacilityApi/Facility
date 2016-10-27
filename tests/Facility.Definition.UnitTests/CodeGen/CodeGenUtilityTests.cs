@@ -1,24 +1,24 @@
 ﻿using Facility.Definition.CodeGen;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.CodeGen
 {
 	public sealed class CodeGenUtilityTests
 	{
-		[Fact]
+		[Test]
 		public void CapitalizeLowerCase()
 		{
 			CodeGenUtility.Capitalize("xyzzy").ShouldBe("Xyzzy");
 		}
 
-		[Fact]
+		[Test]
 		public void CapitalizeUpperCase()
 		{
 			CodeGenUtility.Capitalize("Xyzzy").ShouldBe("Xyzzy");
 		}
 
-		[Fact]
+		[Test]
 		public void CapitalizeNumber()
 		{
 			CodeGenUtility.Capitalize("1234").ShouldBe("1234");

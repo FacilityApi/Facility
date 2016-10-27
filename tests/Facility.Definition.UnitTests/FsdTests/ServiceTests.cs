@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class ServiceTests
 	{
-		[Fact]
+		[Test]
 		public void EmptyServiceDefinition()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi{}");
@@ -31,7 +31,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void EmptyServiceDefinitionWithWhitespace()
 		{
 			var service = TestUtility.ParseTestApi(" \r\n\t service \r\n\t TestApi \r\n\t { \r\n\t } \r\n\t ");
@@ -49,43 +49,43 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void BlankServiceDefinition()
 		{
 			TestUtility.ParseInvalidTestApi("").Message.ShouldBe("TestApi.fsd(1,1): expected '[' or 'service'");
 		}
 
-		[Fact]
+		[Test]
 		public void WhitespaceServiceDefinition()
 		{
 			TestUtility.ParseInvalidTestApi(" \r\n\t ").Message.ShouldBe("TestApi.fsd(2,3): expected '[' or 'service'");
 		}
 
-		[Fact]
+		[Test]
 		public void MissingServiceName()
 		{
 			TestUtility.ParseInvalidTestApi("service{}").Message.ShouldBe("TestApi.fsd(1,8): expected service name");
 		}
 
-		[Fact]
+		[Test]
 		public void MissingServiceBody()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi").Message.ShouldBe("TestApi.fsd(1,16): expected '{'");
 		}
 
-		[Fact]
+		[Test]
 		public void MissingEndBrace()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi {").Message.ShouldBe("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'method'");
 		}
 
-		[Fact]
+		[Test]
 		public void DuplicatedService()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi{} service TestApi{}").Message.ShouldBe("TestApi.fsd(1,19): expected end");
 		}
 
-		[Fact]
+		[Test]
 		public void ServiceRemarks()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi{}\n# TestApi\ntest\nremarks");
@@ -108,7 +108,7 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void MethodRemarks()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { method do {}: {} }\n# do\nremarks");
@@ -135,14 +135,14 @@ namespace Facility.Definition.UnitTests.FsdTests
 			});
 		}
 
-		[Fact]
+		[Test]
 		public void DuplicatedRemarks()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { method do {}: {} }\n# do\nremarks\n# do\nremarks")
 				.Message.ShouldBe("TestApi.fsd(4,1): Duplicate remarks heading: do");
 		}
 
-		[Fact]
+		[Test]
 		public void UnmatchedRemarks()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi{}\n# TestApi2\ntest\nremarks")

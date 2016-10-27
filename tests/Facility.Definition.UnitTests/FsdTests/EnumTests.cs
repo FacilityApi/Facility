@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Facility.Definition.UnitTests.FsdTests
 {
 	public sealed class EnumTests
 	{
-		[Fact]
+		[Test]
 		public void OneMinimalEnum()
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { enum One { X } }");

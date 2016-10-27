@@ -1,17 +1,17 @@
-﻿using Xunit;
+﻿using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
 {
 	public class ServiceMethodInfoTests
 	{
-		[Fact]
+		[Test]
 		public void InvalidNameThrows()
 		{
 			var position = new ServiceTextPosition("source");
 			TestUtility.ThrowsServiceDefinitionException(() => new ServiceMethodInfo(name: "4u", position: position), position);
 		}
 
-		[Theory, InlineData(true), InlineData(false)]
+		[TestCase(true), TestCase(false)]
 		public void DuplicateFieldThrows(bool isRequest)
 		{
 			var fields = new[]
