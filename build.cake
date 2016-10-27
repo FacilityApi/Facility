@@ -144,7 +144,7 @@ Task("Coverage")
 
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
-			StartProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
+			ExecuteProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
 				$@"-register:user -mergeoutput ""-target:cake\xunit.runner.console\tools\xunit.console.exe"" ""-targetargs:{testDllPath} -noshadow"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
@@ -153,17 +153,24 @@ Task("CoverageReport")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		StartProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
+		ExecuteProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
 	});
 
 Task("CoveragePublish")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		StartProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
+		ExecuteProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
 	.IsDependentOn("Test");
+
+void ExecuteProcess(string exePath, string arguments)
+{
+	int exitCode = StartProcess(exePath, arguments);
+	if (exitCode != 0)
+		throw new InvalidOperationException($"{exePath} failed with exit code {exitCode}.");
+}
 
 RunTarget(target);
