@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition.UnitTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD5-46BE-9606-4121422F686B}"
 	ProjectSection(SolutionItems) = preProject
-		fsd\Core.fsd = fsd\Core.fsd
+		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 	EndProjectSection
 EndProject
 Global

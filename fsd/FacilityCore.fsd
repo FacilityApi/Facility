@@ -1,6 +1,6 @@
 /// Common service elements.
 [csharp(namespace: Facility.Core)]
-service Core
+service FacilityCore
 {
 	/// An error.
 	data ServiceError
