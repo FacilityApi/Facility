@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
+using Facility.Definition.Fsd;
+using Facility.Definition.Http;
 using NUnit.Framework;
 using Shouldly;
 
@@ -540,6 +542,31 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: heade)] xyzzy: string; } }")
 				.Message.ShouldBe("TestApi.fsd(1,55): Unsupported 'from' parameter of 'http' attribute: 'heade'");
+		}
+
+		[TestCase("", "", -1)]
+		[TestCase("[http(path: \"/right\")]", "[http(path: \"/left\")]", 1)]
+		[TestCase("[http(path: \"/xyzzy\")]", "[http(path: \"/\")]", 1)]
+		[TestCase("[http(path: \"/\")]", "[http(path: \"/xyzzy\")]", -1)]
+		[TestCase("[http(path: \"/xyzzy\")]", "[http(path: \"/{id}\")]", -1)]
+		[TestCase("[http(path: \"/{id}\")]", "[http(path: \"/xyzzy\")]", 1)]
+		[TestCase("[http(path: \"/{id}/xyzzy\")]", "[http(path: \"/xyzzy/{id}\")]", 1)]
+		[TestCase("[http(method: get, path: \"/\")]", "[http(method: post, path: \"/\")]", -1)]
+		[TestCase("[http(method: post, path: \"/\")]", "[http(method: put, path: \"/\")]", -1)]
+		[TestCase("[http(method: delete, path: \"/\")]", "[http(method: put, path: \"/\")]", 1)]
+		[TestCase("[http(method: get, path: \"/\")]", "[http(method: apple, path: \"/\")]", -1)]
+		[TestCase("[http(method: xyzzy, path: \"/\")]", "[http(method: post, path: \"/\")]", 1)]
+		public void ByRouteComparer(string leftHttp, string rightHttp, int expected)
+		{
+			string fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);
+			var service = new HttpServiceInfo(new FsdParser().ParseDefinition(new ServiceTextSource("TestApi.fsd", fsdText)).Service);
+			var left = service.Methods.Single(x => x.ServiceMethod.Name == "left");
+			var right = service.Methods.Single(x => x.ServiceMethod.Name == "right");
+			int actual = HttpMethodInfo.ByRouteComparer.Compare(left, right);
+			if (expected < 0)
+				actual.ShouldBeLessThan(0);
+			else
+				actual.ShouldBeGreaterThan(0);
 		}
 	}
 }

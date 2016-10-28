@@ -77,6 +77,13 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public IReadOnlyList<HttpResponseInfo> ValidResponses { get; }
 
+		/// <summary>
+		/// Compares service methods by HTTP route.
+		/// </summary>
+		/// <remarks>Orders methods by path, then by HTTP method. Critically, it orders potentially ambiguous routes
+		/// in the order that they should be considered, e.g. `/widgets/query` before `/widgets/{id}`.</remarks>
+		public static readonly IComparer<HttpMethodInfo> ByRouteComparer = new NestedByRouteComparer();
+
 		internal HttpMethodInfo(ServiceMethodInfo methodInfo, ServiceInfo serviceInfo)
 		{
 			ServiceMethod = methodInfo;
@@ -328,6 +335,54 @@ namespace Facility.Definition.Http
 		private static IReadOnlyList<string> GetPathParameterNames(string routePath)
 		{
 			return s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
+		}
+
+		private class NestedByRouteComparer : IComparer<HttpMethodInfo>
+		{
+			public int Compare(HttpMethodInfo left, HttpMethodInfo right)
+			{
+				var leftParts = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+				var rightParts = right.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+				int partIndex = 0;
+				while (true)
+				{
+					string leftPart = partIndex < leftParts.Length ? leftParts[partIndex] : null;
+					string rightPart = partIndex < rightParts.Length ? rightParts[partIndex] : null;
+					if (leftPart == null && rightPart == null)
+						break;
+					if (leftPart == null)
+						return -1;
+					if (rightPart == null)
+						return 1;
+
+					bool leftPlaceholder = leftPart[0] == '{';
+					bool rightPlaceholder = rightPart[0] == '{';
+					if (!leftPlaceholder || !rightPlaceholder)
+					{
+						if (leftPlaceholder || rightPlaceholder)
+							return leftPlaceholder ? 1 : -1;
+
+						int partCompare = string.CompareOrdinal(leftPart, rightPart);
+						if (partCompare != 0)
+							return partCompare;
+					}
+
+					partIndex++;
+				}
+
+				int leftRank = s_httpMethods.IndexOf(left.Method);
+				int rightRank = s_httpMethods.IndexOf(right.Method);
+				if (leftRank >= 0 && rightRank >= 0)
+					return leftRank.CompareTo(rightRank);
+				if (leftRank >= 0)
+					return -1;
+				if (rightRank >= 0)
+					return 1;
+
+				return string.CompareOrdinal(left.Method.ToString(), right.Method.ToString());
+			}
+
+			static readonly List<HttpMethod> s_httpMethods = new List<HttpMethod> { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, new HttpMethod("PATCH"), HttpMethod.Delete };
 		}
 
 		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);

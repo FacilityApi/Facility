@@ -59,5 +59,12 @@ namespace Facility.Definition.UnitTests.Http
 			ParseInvalidHttpApi("service TestApi { [http] data Hey {} }")
 				.Message.ShouldBe("TestApi.fsd(1,20): 'http' attribute not supported on this element.");
 		}
+
+		[Test]
+		public void TwoMethodsSameRoute()
+		{
+			ParseInvalidHttpApi("service TestApi { method do {}: {} [http(path: \"/do\")] method doNot {}: {} }")
+				.Message.ShouldBe("TestApi.fsd(1,56): Methods 'do' and 'doNot' have the same route: POST /do");
+		}
 	}
 }

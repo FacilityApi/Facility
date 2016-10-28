@@ -34,6 +34,15 @@ namespace Facility.Definition.Http
 				.FirstOrDefault(x => x != null);
 			if (httpAttribute != null)
 				throw new ServiceDefinitionException("'http' attribute not supported on this element.", httpAttribute.Position);
+
+			var methodsByRoute = Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
+			for (int index = 1; index < methodsByRoute.Count; index++)
+			{
+				var left = methodsByRoute[index - 1];
+				var right = methodsByRoute[index];
+				if (HttpMethodInfo.ByRouteComparer.Compare(left, right) == 0)
+					throw new ServiceDefinitionException($"Methods '{left.ServiceMethod.Name}' and '{right.ServiceMethod.Name}' have the same route: {right.Method} {right.Path}", right.ServiceMethod.Position);
+			}
 		}
 
 		/// <summary>
