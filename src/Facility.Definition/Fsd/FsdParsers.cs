@@ -8,7 +8,7 @@ namespace Facility.Definition.Fsd
 {
 	internal static class FsdParsers
 	{
-		public static ServiceDefinitionInfo ParseDefinition(ServiceTextSource source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+		public static ServiceInfo ParseDefinition(ServiceTextSource source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
 		{
 			return DefinitionParser(new Context(source, remarksSections)).Parse(source.Text);
 		}
@@ -140,10 +140,10 @@ namespace Facility.Definition.Fsd
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
 
-		static IParser<ServiceDefinitionInfo> DefinitionParser(Context context) =>
+		static IParser<ServiceInfo> DefinitionParser(Context context) =>
 			from service in ServiceParser(context).FollowedBy(CommentOrWhiteSpaceParser.Many())
 			from end in Parser.Success(true).End().Named("end")
-			select new ServiceDefinitionInfo(service);
+			select service;
 
 		static string TryParseAttributeParameterValue(Match match)
 		{

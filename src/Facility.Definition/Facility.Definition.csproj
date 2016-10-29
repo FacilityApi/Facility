@@ -72,7 +72,6 @@
     <Compile Include="ServiceErrorInfo.cs" />
     <Compile Include="ServiceErrorSetInfo.cs" />
     <Compile Include="ServiceFieldInfo.cs" />
-    <Compile Include="ServiceDefinitionInfo.cs" />
     <Compile Include="ServiceTextSource.cs" />
     <Compile Include="ServiceTypeInfo.cs" />
     <Compile Include="ServiceTypeKind.cs" />

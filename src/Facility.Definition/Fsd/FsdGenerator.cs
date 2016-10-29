@@ -19,10 +19,8 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Generates an FSD file for a service definition.
 		/// </summary>
-		public ServiceTextSource GenerateOutput(ServiceDefinitionInfo definition)
+		public ServiceTextSource GenerateOutput(ServiceInfo service)
 		{
-			var service = definition.Service;
-
 			using (var stringWriter = new StringWriter())
 			{
 				var code = new CodeWriter(stringWriter);

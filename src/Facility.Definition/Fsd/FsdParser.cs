@@ -15,7 +15,7 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Parses an FSD file into a service definition.
 		/// </summary>
-		public ServiceDefinitionInfo ParseDefinition(ServiceTextSource source)
+		public ServiceInfo ParseDefinition(ServiceTextSource source)
 		{
 			IReadOnlyList<string> definitionLines = null;
 			var remarksSections = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
@@ -69,10 +69,10 @@ namespace Facility.Definition.Fsd
 
 			source = new ServiceTextSource(source.Name, string.Join("\n", definitionLines));
 
-			ServiceDefinitionInfo definition;
+			ServiceInfo service;
 			try
 			{
-				definition = FsdParsers.ParseDefinition(source, remarksSections);
+				service = FsdParsers.ParseDefinition(source, remarksSections);
 			}
 			catch (ParseException exception)
 			{
@@ -96,11 +96,11 @@ namespace Facility.Definition.Fsd
 			foreach (var remarksSection in remarksSections.Values)
 			{
 				string sectionName = remarksSection.Name;
-				if (definition.Service.Name != sectionName && definition.Service.FindMember(sectionName) == null)
+				if (service.Name != sectionName && service.FindMember(sectionName) == null)
 					throw new ServiceDefinitionException($"Unused remarks heading: {sectionName}", remarksSection.Position);
 			}
 
-			return definition;
+			return service;
 		}
 
 		private static int GetExpectationNameRank(string name)

@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests
 
 		public static ServiceInfo ParseTestApi(string text)
 		{
-			return new FsdParser().ParseDefinition(new ServiceTextSource("TestApi.fsd", text)).Service;
+			return new FsdParser().ParseDefinition(new ServiceTextSource("TestApi.fsd", text));
 		}
 
 		public static ServiceDefinitionException ParseInvalidTestApi(string text)
@@ -49,7 +49,7 @@ namespace Facility.Definition.UnitTests
 		public static string[] GenerateFsd(ServiceInfo service)
 		{
 			var generator = new FsdGenerator { GeneratorName = "TestUtility" };
-			return generator.GenerateOutput(new ServiceDefinitionInfo(service)).Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+			return generator.GenerateOutput(service).Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 		}
 	}
 }
