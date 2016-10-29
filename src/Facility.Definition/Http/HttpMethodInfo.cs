@@ -28,11 +28,6 @@ namespace Facility.Definition.Http
 		public string Path { get; }
 
 		/// <summary>
-		/// The status code used by the default response. (See ValidResponses.)
-		/// </summary>
-		public HttpStatusCode? StatusCode { get; }
-
-		/// <summary>
 		/// The fields of the request DTO that correspond to path parameters.
 		/// </summary>
 		public IReadOnlyList<HttpPathFieldInfo> PathFields { get; }
@@ -58,22 +53,12 @@ namespace Facility.Definition.Http
 		public IReadOnlyList<HttpHeaderFieldInfo> RequestHeaderFields { get; }
 
 		/// <summary>
-		/// The fields of the response DTO that correspond to normal fields in the body of the default response. (See ValidResponses.)
-		/// </summary>
-		public IReadOnlyList<HttpNormalFieldInfo> ResponseNormalFields { get; }
-
-		/// <summary>
-		/// The fields of the response DTO that correspond to the entire response body of valid responses. (See ValidResponses.)
-		/// </summary>
-		public IReadOnlyList<HttpBodyFieldInfo> ResponseBodyFields { get; }
-
-		/// <summary>
 		/// The fields of the response DTO that correspond to HTTP headers.
 		/// </summary>
 		public IReadOnlyList<HttpHeaderFieldInfo> ResponseHeaderFields { get; }
 
 		/// <summary>
-		/// The valid responses, as inferred from ResponseNormalFields, ResponseBodyFields, and StatusCode.
+		/// The valid responses.
 		/// </summary>
 		public IReadOnlyList<HttpResponseInfo> ValidResponses { get; }
 
@@ -90,6 +75,7 @@ namespace Facility.Definition.Http
 
 			Method = HttpMethod.Post;
 			Path = $"/{methodInfo.Name}";
+			HttpStatusCode? statusCode = null;
 
 			foreach (var methodParameter in methodInfo.GetHttpParameters())
 			{
@@ -98,7 +84,7 @@ namespace Facility.Definition.Http
 				else if (methodParameter.Name == "path")
 					Path = methodParameter.Value;
 				else if (methodParameter.Name == "code")
-					StatusCode = HttpAttributeUtility.ParseStatusCodeInteger(methodParameter);
+					statusCode = HttpAttributeUtility.ParseStatusCodeInteger(methodParameter);
 				else
 					throw methodParameter.CreateInvalidHttpParameterException();
 			}
@@ -228,11 +214,8 @@ namespace Facility.Definition.Http
 				}
 			}
 
-			ResponseNormalFields = responseNormalFields;
-			ResponseBodyFields = responseBodyFields;
 			ResponseHeaderFields = responseHeaderFields;
-
-			ValidResponses = DoGetValidResponses(serviceInfo).OrderBy(x => x.StatusCode).ToList();
+			ValidResponses = DoGetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode).ToList();
 
 			var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
 			if (duplicateStatusCode != null)
@@ -278,58 +261,42 @@ namespace Facility.Definition.Http
 			return fieldTypeKind == ServiceTypeKind.Dto || fieldTypeKind == ServiceTypeKind.Boolean;
 		}
 
-		private IEnumerable<HttpResponseInfo> DoGetValidResponses(ServiceInfo serviceInfo)
+		private IEnumerable<HttpResponseInfo> DoGetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
 		{
-			foreach (var responseBodyField in ResponseBodyFields)
+			foreach (var responseBodyField in responseBodyFields)
 			{
-				var fieldType = serviceInfo.GetFieldType(responseBodyField.ServiceField);
+				// use the status code on the field, or the status code on the method, or the default: OK or NoContent
+				HttpStatusCode bodyStatusCode;
+				if (responseBodyField.StatusCode != null)
+					bodyStatusCode = responseBodyField.StatusCode.Value;
+				else if (statusCode != null)
+					bodyStatusCode = statusCode.Value;
+				else if (serviceInfo.GetFieldType(responseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean)
+					bodyStatusCode = HttpStatusCode.NoContent;
+				else
+					bodyStatusCode = HttpStatusCode.OK;
 
 				yield return new HttpResponseInfo(
-					statusCode: GetBodyInfoStatusCode(responseBodyField, serviceInfo),
-					hasResponseFields: fieldType.Kind == ServiceTypeKind.Dto && fieldType.Dto.Fields.Count != 0,
-					responseBodyField: responseBodyField);
+					statusCode: bodyStatusCode,
+					bodyField: responseBodyField);
 			}
 
-			var responseDtoStatusCode = GetResponseDtoStatusCode();
-			if (responseDtoStatusCode != null)
-			{
-				yield return new HttpResponseInfo(
-					statusCode: responseDtoStatusCode.Value,
-					hasResponseFields: ResponseNormalFields.Count != 0,
-					responseBodyField: null);
-			}
-		}
-
-		private HttpStatusCode GetBodyInfoStatusCode(HttpBodyFieldInfo bodyFieldInfo, ServiceInfo serviceInfo)
-		{
-			// use the status code on the field
-			if (bodyFieldInfo.StatusCode != null)
-				return bodyFieldInfo.StatusCode.Value;
-
-			// or the status code on the method
-			if (StatusCode != null)
-				return StatusCode.Value;
-
-			// or the default: OK or NoContent
-			return serviceInfo.GetFieldType(bodyFieldInfo.ServiceField).Kind == ServiceTypeKind.Boolean ? HttpStatusCode.NoContent : HttpStatusCode.OK;
-		}
-
-		private HttpStatusCode? GetResponseDtoStatusCode()
-		{
 			// if there are any normal fields, the DTO must represent a status code
-			if (ResponseNormalFields.Count != 0)
-				return StatusCode ?? HttpStatusCode.OK;
-
 			// if there are no body fields, the DTO must represent a status code
-			if (ResponseBodyFields.Count == 0)
-				return StatusCode ?? HttpStatusCode.NoContent;
-
 			// if the DTO has a status code and none of the body fields inherit it, the DTO must represent a status code
-			if (StatusCode != null && ResponseBodyFields.All(x => x.StatusCode != null))
-				return StatusCode;
-
-			// the DTO does not represent a status code
-			return null;
+			HttpStatusCode? responseStatusCode = null;
+			if (responseNormalFields.Count != 0)
+				responseStatusCode = statusCode ?? HttpStatusCode.OK;
+			else if (responseBodyFields.Count == 0)
+				responseStatusCode = statusCode ?? HttpStatusCode.NoContent;
+			else if (statusCode != null && responseBodyFields.All(x => x.StatusCode != null))
+				responseStatusCode = statusCode;
+			if (responseStatusCode != null)
+			{
+				yield return new HttpResponseInfo(
+					statusCode: responseStatusCode.Value,
+					normalFields: responseNormalFields);
+			}
 		}
 
 		private static IReadOnlyList<string> GetPathParameterNames(string routePath)

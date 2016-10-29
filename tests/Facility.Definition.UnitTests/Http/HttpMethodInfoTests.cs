@@ -17,20 +17,17 @@ namespace Facility.Definition.UnitTests.Http
 			method.ServiceMethod.Name.ShouldBe("do");
 			method.Method.ShouldBe(HttpMethod.Post);
 			method.Path.ShouldBe("/do");
-			method.StatusCode.ShouldBe(null);
 			method.PathFields.Count.ShouldBe(0);
 			method.QueryFields.Count.ShouldBe(0);
 			method.RequestNormalFields.Count.ShouldBe(0);
 			method.RequestBodyField.ShouldBe(null);
 			method.RequestHeaderFields.Count.ShouldBe(0);
-			method.ResponseNormalFields.Count.ShouldBe(0);
-			method.ResponseBodyFields.Count.ShouldBe(0);
 			method.ResponseHeaderFields.Count.ShouldBe(0);
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-			response.HasResponseFields.ShouldBe(false);
-			response.ResponseBodyField.ShouldBe(null);
+			response.NormalFields.Count.ShouldBe(0);
+			response.BodyField.ShouldBe(null);
 		}
 
 		[Test]
@@ -107,7 +104,6 @@ namespace Facility.Definition.UnitTests.Http
 		public void MethodStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: get, code: 202)] method do {}: {} }").Methods.Single();
-			method.StatusCode.ShouldBe(HttpStatusCode.Accepted);
 			method.ValidResponses.Single().StatusCode.ShouldBe(HttpStatusCode.Accepted);
 		}
 
@@ -316,24 +312,22 @@ namespace Facility.Definition.UnitTests.Http
 		public void ImplicitNormalResponseField()
 		{
 			var method = ParseHttpApi("service TestApi { method do {}: { id: string; } }").Methods.Single();
-			method.ResponseNormalFields.Single().ServiceField.Name.ShouldBe("id");
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			response.HasResponseFields.ShouldBe(true);
-			response.ResponseBodyField.ShouldBe(null);
+			response.NormalFields.Single().ServiceField.Name.ShouldBe("id");
+			response.BodyField.ShouldBe(null);
 		}
 
 		[Test]
 		public void ExplicitNormalResponseField()
 		{
 			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: normal)] id: string; } }").Methods.Single();
-			method.ResponseNormalFields.Single().ServiceField.Name.ShouldBe("id");
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			response.HasResponseFields.ShouldBe(true);
-			response.ResponseBodyField.ShouldBe(null);
+			response.NormalFields.Single().ServiceField.Name.ShouldBe("id");
+			response.BodyField.ShouldBe(null);
 		}
 
 		[Test]
@@ -347,108 +341,89 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyResponseField()
 		{
 			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }").Methods.Single();
-			var bodyField = method.ResponseBodyFields.Single();
-			bodyField.ServiceField.Name.ShouldBe("body");
-			bodyField.StatusCode.ShouldBe(null);
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			response.HasResponseFields.ShouldBe(true);
-			response.ResponseBodyField.ShouldBe(bodyField);
+			response.NormalFields.ShouldBe(null);
+			response.BodyField.ServiceField.Name.ShouldBe("body");
+			response.BodyField.StatusCode.ShouldBe(null);
 		}
 
 		[Test]
 		public void BodyResponseFieldWithMethodStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: post, code: 202)] method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }").Methods.Single();
-			var bodyField = method.ResponseBodyFields.Single();
-			bodyField.ServiceField.Name.ShouldBe("body");
-			bodyField.StatusCode.ShouldBe(null);
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.Accepted);
-			response.HasResponseFields.ShouldBe(true);
-			response.ResponseBodyField.ShouldBe(bodyField);
+			response.NormalFields.ShouldBe(null);
+			response.BodyField.ServiceField.Name.ShouldBe("body");
+			response.BodyField.StatusCode.ShouldBe(null);
 		}
 
 		[Test]
 		public void TwoBodyResponseFields()
 		{
 			var method = ParseHttpApi("service TestApi { data Empty {} method do {}: { [http(from: body)] body1: Empty; [http(from: body, code: 201)] body2: Thing; } data Thing { id: string; } }").Methods.Single();
-			var bodyField1 = method.ResponseBodyFields[0];
-			bodyField1.ServiceField.Name.ShouldBe("body1");
-			bodyField1.StatusCode.ShouldBe(null);
-			var bodyField2 = method.ResponseBodyFields[1];
-			bodyField2.ServiceField.Name.ShouldBe("body2");
-			bodyField2.StatusCode.ShouldBe(HttpStatusCode.Created);
 
 			var responses = method.ValidResponses;
 			responses.Count.ShouldBe(2);
 			responses[0].StatusCode.ShouldBe(HttpStatusCode.OK);
-			responses[0].HasResponseFields.ShouldBe(false);
-			responses[0].ResponseBodyField.ShouldBe(bodyField1);
+			responses[0].NormalFields.ShouldBe(null);
+			responses[0].BodyField.ServiceField.Name.ShouldBe("body1");
+			responses[0].BodyField.StatusCode.ShouldBe(null);
 			responses[1].StatusCode.ShouldBe(HttpStatusCode.Created);
-			responses[1].HasResponseFields.ShouldBe(true);
-			responses[1].ResponseBodyField.ShouldBe(bodyField2);
+			responses[1].NormalFields.ShouldBe(null);
+			responses[1].BodyField.ServiceField.Name.ShouldBe("body2");
+			responses[1].BodyField.StatusCode.ShouldBe(HttpStatusCode.Created);
 		}
 
 		[Test]
 		public void TwoBodyResponseFieldsWithInheritedStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: post, code: 400)] method do {}: { [http(from: body)] body1: Empty; [http(from: body, code: 201)] body2: Thing; } data Thing { id: string; } data Empty {} }").Methods.Single();
-			var bodyField1 = method.ResponseBodyFields[0];
-			bodyField1.ServiceField.Name.ShouldBe("body1");
-			bodyField1.StatusCode.ShouldBe(null);
-			var bodyField2 = method.ResponseBodyFields[1];
-			bodyField2.ServiceField.Name.ShouldBe("body2");
-			bodyField2.StatusCode.ShouldBe(HttpStatusCode.Created);
 
 			var responses = method.ValidResponses;
 			responses.Count.ShouldBe(2);
 			responses[0].StatusCode.ShouldBe(HttpStatusCode.Created);
-			responses[0].HasResponseFields.ShouldBe(true);
-			responses[0].ResponseBodyField.ShouldBe(bodyField2);
+			responses[0].NormalFields.ShouldBe(null);
+			responses[0].BodyField.ServiceField.Name.ShouldBe("body2");
+			responses[0].BodyField.StatusCode.ShouldBe(HttpStatusCode.Created);
 			responses[1].StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-			responses[1].HasResponseFields.ShouldBe(false);
-			responses[1].ResponseBodyField.ShouldBe(bodyField1);
+			responses[1].NormalFields.ShouldBe(null);
+			responses[1].BodyField.ServiceField.Name.ShouldBe("body1");
+			responses[1].BodyField.StatusCode.ShouldBe(null);
 		}
 
 		[Test]
 		public void TwoBodyResponseFieldsWithExtraStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: post, code: 204)] method do {}: { [http(from: body, code: 200)] body1: Empty; [http(from: body, code: 201)] body2: Thing; } data Thing { id: string; } data Empty {} }").Methods.Single();
-			var bodyField1 = method.ResponseBodyFields[0];
-			bodyField1.ServiceField.Name.ShouldBe("body1");
-			bodyField1.StatusCode.ShouldBe(HttpStatusCode.OK);
-			var bodyField2 = method.ResponseBodyFields[1];
-			bodyField2.ServiceField.Name.ShouldBe("body2");
-			bodyField2.StatusCode.ShouldBe(HttpStatusCode.Created);
 
 			var responses = method.ValidResponses;
 			responses.Count.ShouldBe(3);
 			responses[0].StatusCode.ShouldBe(HttpStatusCode.OK);
-			responses[0].HasResponseFields.ShouldBe(false);
-			responses[0].ResponseBodyField.ShouldBe(bodyField1);
+			responses[0].NormalFields.ShouldBe(null);
+			responses[0].BodyField.ServiceField.Name.ShouldBe("body1");
+			responses[0].BodyField.StatusCode.ShouldBe(HttpStatusCode.OK);
 			responses[1].StatusCode.ShouldBe(HttpStatusCode.Created);
-			responses[1].HasResponseFields.ShouldBe(true);
-			responses[1].ResponseBodyField.ShouldBe(bodyField2);
+			responses[1].NormalFields.ShouldBe(null);
+			responses[1].BodyField.ServiceField.Name.ShouldBe("body2");
+			responses[1].BodyField.StatusCode.ShouldBe(HttpStatusCode.Created);
 			responses[2].StatusCode.ShouldBe(HttpStatusCode.NoContent);
-			responses[2].HasResponseFields.ShouldBe(false);
-			responses[2].ResponseBodyField.ShouldBe(null);
+			responses[2].NormalFields.Count.ShouldBe(0);
+			responses[2].BodyField.ShouldBe(null);
 		}
 
 		[Test]
 		public void BooleanResponseField()
 		{
 			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body)] body: boolean; } }").Methods.Single();
-			var bodyField = method.ResponseBodyFields.Single();
-			bodyField.ServiceField.Name.ShouldBe("body");
-			bodyField.StatusCode.ShouldBe(null);
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-			response.HasResponseFields.ShouldBe(false);
-			response.ResponseBodyField.ShouldBe(bodyField);
+			response.BodyField.ServiceField.Name.ShouldBe("body");
+			response.BodyField.StatusCode.ShouldBe(null);
 		}
 
 		[Test]

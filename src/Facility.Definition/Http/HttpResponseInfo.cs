@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 
 namespace Facility.Definition.Http
@@ -13,20 +14,25 @@ namespace Facility.Definition.Http
 		public HttpStatusCode StatusCode { get; }
 
 		/// <summary>
-		/// True if the response has any fields.
+		/// The fields from the response DTO that correspond to the response body.
 		/// </summary>
-		public bool HasResponseFields { get; }
+		public IReadOnlyList<HttpNormalFieldInfo> NormalFields { get; }
 
 		/// <summary>
-		/// The field that corresponds to the entire response body; if null, the ResponseNormalFields are used, if any.
+		/// The field that corresponds to the entire response body.
 		/// </summary>
-		public HttpBodyFieldInfo ResponseBodyField { get; }
+		public HttpBodyFieldInfo BodyField { get; }
 
-		internal HttpResponseInfo(HttpStatusCode statusCode, bool hasResponseFields, HttpBodyFieldInfo responseBodyField)
+		internal HttpResponseInfo(HttpStatusCode statusCode, IReadOnlyList<HttpNormalFieldInfo> normalFields)
 		{
 			StatusCode = statusCode;
-			HasResponseFields = hasResponseFields;
-			ResponseBodyField = responseBodyField;
+			NormalFields = normalFields;
+		}
+
+		internal HttpResponseInfo(HttpStatusCode statusCode, HttpBodyFieldInfo bodyField)
+		{
+			StatusCode = statusCode;
+			BodyField = bodyField;
 		}
 	}
 }
