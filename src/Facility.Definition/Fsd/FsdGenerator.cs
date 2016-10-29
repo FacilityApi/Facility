@@ -100,7 +100,7 @@ namespace Facility.Definition.Fsd
 				foreach (string remark in remarks)
 					code.WriteLine(remark);
 
-				return new ServiceTextSource(name: service.Name + ".fsd", text: stringWriter.ToString());
+				return new ServiceTextSource(stringWriter.ToString()).WithName(service.Name + ".fsd");
 			}
 		}
 

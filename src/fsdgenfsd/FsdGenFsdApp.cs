@@ -34,8 +34,8 @@ namespace fsdgenfsd
 		private int RunCore(IReadOnlyList<string> args)
 		{
 			var input = args.Count <= 0 || args[0] == "-" ?
-				new ServiceTextSource("input", Console.In.ReadToEnd()) :
-				new ServiceTextSource(Path.GetFileName(args[0]), File.ReadAllText(args[0]));
+				new ServiceTextSource(Console.In.ReadToEnd()) :
+				new ServiceTextSource(File.ReadAllText(args[0])).WithName(Path.GetFileName(args[0]));
 
 			var parser = new FsdParser();
 			var definition = parser.ParseDefinition(input);

@@ -1,3 +1,5 @@
+using System;
+
 namespace Facility.Definition
 {
 	/// <summary>
@@ -6,13 +8,17 @@ namespace Facility.Definition
 	public sealed class ServiceTextSource
 	{
 		/// <summary>
-		/// Creates an instance.
+		/// Creates an instance from text.
 		/// </summary>
-		public ServiceTextSource(string name, string text)
+		public ServiceTextSource(string text)
+			: this(text, "")
 		{
-			Name = name;
-			Text = text;
 		}
+
+		/// <summary>
+		/// The text of the source.
+		/// </summary>
+		public string Text { get; }
 
 		/// <summary>
 		/// The name of the source.
@@ -20,8 +26,22 @@ namespace Facility.Definition
 		public string Name { get; }
 
 		/// <summary>
-		/// The text of the source.
+		/// Assigns a name to the text source.
 		/// </summary>
-		public string Text { get; }
+		public ServiceTextSource WithName(string name)
+		{
+			return new ServiceTextSource(Text, name);
+		}
+
+		private ServiceTextSource(string text, string name)
+		{
+			if (text == null)
+				throw new ArgumentNullException(nameof(text));
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+
+			Text = text;
+			Name = name;
+		}
 	}
 }

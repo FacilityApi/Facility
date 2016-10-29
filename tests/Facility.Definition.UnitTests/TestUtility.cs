@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests
 
 		public static ServiceInfo ParseTestApi(string text)
 		{
-			return new FsdParser().ParseDefinition(new ServiceTextSource("TestApi.fsd", text));
+			return new FsdParser().ParseDefinition(new ServiceTextSource(text).WithName("TestApi.fsd"));
 		}
 
 		public static ServiceDefinitionException ParseInvalidTestApi(string text)

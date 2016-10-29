@@ -67,7 +67,7 @@ namespace Facility.Definition.Fsd
 				}
 			}
 
-			source = new ServiceTextSource(source.Name, string.Join("\n", definitionLines));
+			source = new ServiceTextSource(string.Join("\n", definitionLines)).WithName(source.Name);
 
 			ServiceInfo service;
 			try
