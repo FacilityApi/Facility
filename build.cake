@@ -86,7 +86,7 @@ Task("SourceIndex")
 		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
 	});
 
-Task("NuGetPack")
+Task("NuGetPackage")
 	.IsDependentOn("SourceIndex")
 	.Does(() =>
 	{
@@ -102,9 +102,9 @@ Task("NuGetPack")
 		}
 	});
 
-Task("NuGetPublishOnly")
-	.IsDependentOn("NuGetPack")
-	.WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey))
+Task("NuGetPublish")
+	.IsDependentOn("NuGetPackage")
+	.WithCriteria(() => !string.IsNullOrEmpty(nugetApiKey) && !string.IsNullOrEmpty(githubApiKey))
 	.Does(() =>
 	{
 		foreach (var nupkgPath in GetFiles($"release/*.nupkg"))
@@ -115,22 +115,12 @@ Task("NuGetPublishOnly")
 				Source = nugetSource,
 			});
 		}
-	});
 
-Task("NuGetTagOnly")
-	.IsDependentOn("NuGetPack")
-	.WithCriteria(() => !string.IsNullOrEmpty(githubApiKey))
-	.Does(() =>
-	{
 		var tagName = $"nuget-{version}";
 		Information($"Creating git tag '{tagName}'...");
 		githubClient.Git.Reference.Create(githubOwner, githubRepo,
 			new Octokit.NewReference($"refs/tags/{tagName}", headSha)).GetAwaiter().GetResult();
 	});
-
-Task("NuGetPublish")
-	.IsDependentOn("NuGetPublishOnly")
-	.IsDependentOn("NuGetTagOnly");
 
 Task("Coverage")
 	.IsDependentOn("Build")
