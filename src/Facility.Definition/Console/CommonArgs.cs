@@ -8,23 +8,19 @@ namespace Facility.Definition.Console
 	public static class CommonArgs
 	{
 		/// <summary>
+		/// Reads the help flag.
+		/// </summary>
+		public static bool ReadHelpFlag(this ArgsReader args)
+		{
+			return args.ReadFlag("help|h|?");
+		}
+
+		/// <summary>
 		/// Reads the indent option.
 		/// </summary>
 		public static string ReadIndentOption(this ArgsReader args)
 		{
-			return ParseIndentOption(args.ReadOption("indent"));
-		}
-
-		/// <summary>
-		/// Reads the new line option.
-		/// </summary>
-		public static string ReadNewLineOption(this ArgsReader args)
-		{
-			return ParseNewLineOption(args.ReadOption("newline"));
-		}
-
-		private static string ParseIndentOption(string value)
-		{
+			string value = args.ReadOption("indent");
 			if (value == null)
 				return null;
 
@@ -38,8 +34,12 @@ namespace Facility.Definition.Console
 			throw new ArgsReaderException($"Invalid indent '{value}'. (Should be 'tab' or the number of spaces.)");
 		}
 
-		private static string ParseNewLineOption(string value)
+		/// <summary>
+		/// Reads the new line option.
+		/// </summary>
+		public static string ReadNewLineOption(this ArgsReader args)
 		{
+			string value = args.ReadOption("newline");
 			if (value == null)
 				return null;
 

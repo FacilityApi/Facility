@@ -27,6 +27,10 @@ namespace Facility.Definition.Console
 			if (name.Length == 0)
 				throw new ArgumentException("Flag name must not be empty.", nameof(name));
 
+			var names = name.Split('|');
+			if (names.Length > 1)
+				return names.Any(ReadFlag);
+
 			int index = m_args.IndexOf(RenderOption(name));
 			if (index == -1)
 				return false;
@@ -44,6 +48,10 @@ namespace Facility.Definition.Console
 				throw new ArgumentNullException(nameof(name));
 			if (name.Length == 0)
 				throw new ArgumentException("Option name must not be empty.", nameof(name));
+
+			var names = name.Split('|');
+			if (names.Length > 1)
+				return names.Select(ReadOption).FirstOrDefault(x => x != null);
 
 			int index = m_args.IndexOf(RenderOption(name));
 			if (index == -1)
