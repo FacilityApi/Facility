@@ -43,6 +43,9 @@
     </Compile>
     <Compile Include="CodeGen\CodeGenUtility.cs" />
     <Compile Include="CodeGen\CodeWriter.cs" />
+    <Compile Include="Console\ArgsReader.cs" />
+    <Compile Include="Console\ArgsReaderException.cs" />
+    <Compile Include="Console\CommonArgs.cs" />
     <Compile Include="Fsd\FsdGenerator.cs" />
     <Compile Include="Fsd\FsdRemarksSection.cs" />
     <Compile Include="Http\HttpAttributeUtility.cs" />

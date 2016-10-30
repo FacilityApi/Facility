@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Facility.Definition;
+using Facility.Definition.Console;
 using Facility.Definition.Fsd;
 
 namespace fsdgenfsd
@@ -10,16 +10,14 @@ namespace fsdgenfsd
 	{
 		public static int Main(string[] args)
 		{
-			return new FsdGenFsdApp().Run(args);
-		}
-
-		public int Run(IReadOnlyList<string> args)
-		{
 			try
 			{
-				return RunCore(args);
+				var argParser = new ArgsReader(args);
+				var app = new FsdGenFsdApp(argParser);
+				argParser.VerifyComplete();
+				return app.Run();
 			}
-			catch (Exception exception) when (exception is ApplicationException || exception is ServiceDefinitionException)
+			catch (Exception exception) when (exception is ApplicationException || exception is ArgsReaderException || exception is ServiceDefinitionException)
 			{
 				Console.Error.WriteLine(exception.Message);
 				return 1;
@@ -31,24 +29,40 @@ namespace fsdgenfsd
 			}
 		}
 
-		private int RunCore(IReadOnlyList<string> args)
+		public FsdGenFsdApp(ArgsReader args)
 		{
-			var input = args.Count <= 0 || args[0] == "-" ?
+			m_generator = new FsdGenerator
+			{
+				GeneratorName = "fsdgenfsd",
+				IndentText = args.ReadIndentOption(),
+				NewLine = args.ReadNewLineOption(),
+			};
+
+			m_inputFile = args.ReadArgument();
+			m_outputFile = args.ReadArgument();
+		}
+
+		public int Run()
+		{
+			var input = m_inputFile == null || m_inputFile == "-" ?
 				new ServiceTextSource(Console.In.ReadToEnd()) :
-				new ServiceTextSource(File.ReadAllText(args[0])).WithName(Path.GetFileName(args[0]));
+				new ServiceTextSource(File.ReadAllText(m_inputFile)).WithName(Path.GetFileName(m_inputFile));
 
 			var parser = new FsdParser();
 			var definition = parser.ParseDefinition(input);
 
-			var generator = new FsdGenerator { GeneratorName = "fsdgenfsd" };
-			var output = generator.GenerateOutput(definition);
+			var output = m_generator.GenerateOutput(definition);
 
-			if (args.Count <= 1)
+			if (m_outputFile == null)
 				Console.Out.Write(output.Text);
 			else
-				File.WriteAllText(args[1], output.Text);
+				File.WriteAllText(m_outputFile, output.Text);
 
 			return 0;
 		}
+
+		readonly FsdGenerator m_generator;
+		readonly string m_inputFile;
+		readonly string m_outputFile;
 	}
 }
