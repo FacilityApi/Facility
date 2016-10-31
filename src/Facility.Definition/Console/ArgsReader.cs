@@ -12,8 +12,11 @@ namespace Facility.Definition.Console
 		/// <summary>
 		/// Creates a reader for the specified command-line arguments.
 		/// </summary>
-		public ArgsReader(IReadOnlyList<string> args)
+		public ArgsReader(IEnumerable<string> args)
 		{
+			if (args == null)
+				throw new ArgumentNullException(nameof(args));
+
 			m_args = args.ToList();
 		}
 
@@ -61,7 +64,7 @@ namespace Facility.Definition.Console
 				throw new ArgsReaderException($"Missing value after '{RenderOption(name)}'.");
 
 			string value = m_args[index + 1];
-			if (value[0] == '-')
+			if (IsOption(value))
 				throw new ArgsReaderException($"Missing value after '{RenderOption(name)}'.");
 
 			m_args.RemoveAt(index);
@@ -78,7 +81,7 @@ namespace Facility.Definition.Console
 				return null;
 
 			string value = m_args[0];
-			if (value[0] == '-')
+			if (IsOption(value))
 				throw new ArgsReaderException($"Unexpected option '{value}'.");
 
 			m_args.RemoveAt(0);
@@ -91,7 +94,12 @@ namespace Facility.Definition.Console
 		public void VerifyComplete()
 		{
 			if (m_args.Count != 0)
-				throw new ArgsReaderException($"Unexpected {(m_args[0][0] == '-' ? "option" : "argument")} '{m_args[0]}'.");
+				throw new ArgsReaderException($"Unexpected {(IsOption(m_args[0]) ? "option" : "argument")} '{m_args[0]}'.");
+		}
+
+		private static bool IsOption(string value)
+		{
+			return value.Length >= 2 && value[0] == '-' && value != "--";
 		}
 
 		private static string RenderOption(string name)
