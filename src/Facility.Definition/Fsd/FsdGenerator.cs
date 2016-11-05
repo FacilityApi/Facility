@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Facility.Definition.CodeGen;
@@ -9,38 +8,15 @@ namespace Facility.Definition.Fsd
 	/// <summary>
 	/// Generates an FSD file for a service definition.
 	/// </summary>
-	public sealed class FsdGenerator
+	public sealed class FsdGenerator : CodeGenerator
 	{
-		/// <summary>
-		/// The name of the generator (for comments).
-		/// </summary>
-		public string GeneratorName { get; set; }
-
-		/// <summary>
-		/// The text to use for each indent (null for tab).
-		/// </summary>
-		public string IndentText { get; set; }
-
-		/// <summary>
-		/// The text to use for each new line (null for default).
-		/// </summary>
-		public string NewLine { get; set; }
-
 		/// <summary>
 		/// Generates an FSD file for a service definition.
 		/// </summary>
 		public ServiceTextSource GenerateOutput(ServiceInfo service)
 		{
-			using (var stringWriter = new StringWriter())
+			return CreateOutput(service.Name + ".fsd", code =>
 			{
-				if (NewLine != null)
-					stringWriter.NewLine = NewLine;
-
-				var code = new CodeWriter(stringWriter);
-
-				if (IndentText != null)
-					code.IndentText = IndentText;
-
 				if (!string.IsNullOrWhiteSpace(GeneratorName))
 				{
 					code.WriteLine("// " + CodeGenUtility.GetCodeGenComment(GeneratorName));
@@ -115,9 +91,7 @@ namespace Facility.Definition.Fsd
 
 				foreach (string remark in remarks)
 					code.WriteLine(remark);
-
-				return new ServiceTextSource(stringWriter.ToString()).WithName(service.Name + ".fsd");
-			}
+			});
 		}
 
 		private void WriteSummaryAndAttributes(CodeWriter code, IServiceElementInfo info)

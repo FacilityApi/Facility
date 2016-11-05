@@ -41,6 +41,7 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGen\CodeGenerator.cs" />
     <Compile Include="CodeGen\CodeGenUtility.cs" />
     <Compile Include="CodeGen\CodeWriter.cs" />
     <Compile Include="Console\ArgsReader.cs" />
