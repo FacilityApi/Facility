@@ -49,7 +49,7 @@ namespace Facility.Definition.UnitTests
 		public static string[] GenerateFsd(ServiceInfo service)
 		{
 			var generator = new FsdGenerator { GeneratorName = "TestUtility" };
-			return generator.GenerateOutput(service).Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+			return generator.GenerateOutput(service)[0].Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 		}
 	}
 }

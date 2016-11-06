@@ -69,7 +69,7 @@ namespace fsdgenfsd
 			var parser = new FsdParser();
 			var definition = parser.ParseDefinition(input);
 
-			var output = m_generator.GenerateOutput(definition);
+			var output = m_generator.GenerateOutput(definition)[0];
 
 			if (m_outputFile == null)
 				Console.Out.Write(output.Text);

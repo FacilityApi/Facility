@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Facility.Definition.CodeGen
@@ -22,6 +23,11 @@ namespace Facility.Definition.CodeGen
 		/// The text to use for each new line (null for default).
 		/// </summary>
 		public string NewLine { get; set; }
+
+		/// <summary>
+		/// Generates output for the specified service.
+		/// </summary>
+		public abstract IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceInfo service);
 
 		/// <summary>
 		/// Creates a text source from a name and code writer.
