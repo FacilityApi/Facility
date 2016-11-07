@@ -7,6 +7,10 @@
 
 A library for processing Facility Service Definitions. [![NuGet](https://img.shields.io/nuget/v/Facility.Definition.svg)](https://www.nuget.org/packages/Facility.Definition)
 
+## Facility.Console
+
+A library for writing Facility code generators. [![NuGet](https://img.shields.io/nuget/v/Facility.Console.svg)](https://www.nuget.org/packages/Facility.Console)
+
 ## fsdgenfsd
 
 A command-line tool that generates Facility Service Definitions. [![NuGet](https://img.shields.io/nuget/v/fsdgenfsd.svg)](https://www.nuget.org/packages/fsdgenfsd)
