@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, ServiceTextPosition position = null)
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -51,6 +51,6 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the field in the definition.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 	}
 }

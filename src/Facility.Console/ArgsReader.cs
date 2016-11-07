@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Facility.Definition.Console
+namespace Facility.Console
 {
 	/// <summary>
 	/// Helps process command-line arguments.

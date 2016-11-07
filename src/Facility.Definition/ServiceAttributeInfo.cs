@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, ServiceTextPosition position = null)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -37,6 +37,6 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the attribute.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 	}
 }

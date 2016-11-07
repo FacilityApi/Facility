@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an enum.
 		/// </summary>
-		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, ServiceTextPosition position = null)
+		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -55,6 +55,6 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the enumerated type in the definition.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 	}
 }

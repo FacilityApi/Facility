@@ -51,13 +51,13 @@ namespace Facility.Definition
 			return element.TryGetAttribute("obsolete") != null;
 		}
 
-		internal static void ValidateName(string name, ServiceTextPosition position)
+		internal static void ValidateName(string name, NamedTextPosition position)
 		{
 			if (!s_validNameRegex.IsMatch(name))
 				throw new ServiceDefinitionException($"Invalid name '{name}'.", position);
 		}
 
-		internal static void ValidateTypeName(string name, ServiceTextPosition position)
+		internal static void ValidateTypeName(string name, NamedTextPosition position)
 		{
 			ServiceTypeInfo.Parse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position);
 		}

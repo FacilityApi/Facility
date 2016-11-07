@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, ServiceTextPosition position = null)
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -55,6 +55,6 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the error set in the definition.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 	}
 }

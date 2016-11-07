@@ -16,6 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fsdgenfsd", "src\fsdgenfsd\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{53E160D7-72A0-4804-BCE9-DD14EB1CB92D}"
 	ProjectSection(SolutionItems) = preProject
+		src\Facility.Console.nuspec = src\Facility.Console.nuspec
 		src\Facility.Definition.nuspec = src\Facility.Definition.nuspec
 		src\fsdgenfsd.nuspec = src\fsdgenfsd.nuspec
 		src\README.md = src\README.md
@@ -27,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD
 	ProjectSection(SolutionItems) = preProject
 		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Console", "src\Facility.Console\Facility.Console.csproj", "{CA33BB9E-8557-4911-809C-D89C7408A182}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +49,10 @@ Global
 		{999A87D4-79C9-4412-92A2-573174CC7114}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{999A87D4-79C9-4412-92A2-573174CC7114}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{999A87D4-79C9-4412-92A2-573174CC7114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA33BB9E-8557-4911-809C-D89C7408A182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA33BB9E-8557-4911-809C-D89C7408A182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA33BB9E-8557-4911-809C-D89C7408A182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA33BB9E-8557-4911-809C-D89C7408A182}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

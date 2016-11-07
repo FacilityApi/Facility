@@ -13,6 +13,6 @@
 		/// <summary>
 		/// The position in the definition.
 		/// </summary>
-		ServiceTextPosition Position { get; }
+		NamedTextPosition Position { get; }
 	}
 }

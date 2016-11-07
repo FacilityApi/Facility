@@ -8,7 +8,7 @@ namespace Facility.Definition.Fsd
 {
 	internal static class FsdParsers
 	{
-		public static ServiceInfo ParseDefinition(ServiceTextSource source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+		public static ServiceInfo ParseDefinition(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
 		{
 			return DefinitionParser(new Context(source, remarksSections)).Parse(source.Text);
 		}
@@ -180,16 +180,16 @@ namespace Facility.Definition.Fsd
 
 		sealed class Context
 		{
-			public Context(ServiceTextSource source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+			public Context(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
 			{
 				m_source = source;
 				m_remarksSections = remarksSections;
 			}
 
-			public ServiceTextPosition GetPosition(TextPosition position)
+			public NamedTextPosition GetPosition(TextPosition position)
 			{
 				var lineColumn = position.GetLineColumn();
-				return new ServiceTextPosition(m_source.Name, lineColumn.LineNumber, lineColumn.ColumnNumber);
+				return new NamedTextPosition(m_source.Name, lineColumn.LineNumber, lineColumn.ColumnNumber);
 			}
 
 			public FsdRemarksSection GetRemarksSection(string name)
@@ -199,7 +199,7 @@ namespace Facility.Definition.Fsd
 				return section;
 			}
 
-			readonly ServiceTextSource m_source;
+			readonly NamedText m_source;
 			readonly IReadOnlyDictionary<string, FsdRemarksSection> m_remarksSections;
 		}
 	}

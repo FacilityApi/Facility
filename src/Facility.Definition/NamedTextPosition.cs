@@ -3,19 +3,19 @@
 namespace Facility.Definition
 {
 	/// <summary>
-	/// A position in a named text source.
+	/// A position in a named text.
 	/// </summary>
-	public sealed class ServiceTextPosition
+	public sealed class NamedTextPosition
 	{
 		/// <summary>
 		/// Creates a position.
 		/// </summary>
-		public ServiceTextPosition(string sourceName, int lineNumber = 0, int columnNumber = 0)
+		public NamedTextPosition(string name, int lineNumber = 0, int columnNumber = 0)
 		{
-			if (sourceName == null)
-				throw new ArgumentNullException(nameof(sourceName));
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
 
-			SourceName = sourceName;
+			Name = name;
 			LineNumber = lineNumber;
 			ColumnNumber = columnNumber;
 		}
@@ -23,7 +23,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The source name.
 		/// </summary>
-		public string SourceName { get; }
+		public string Name { get; }
 
 		/// <summary>
 		/// The line number.
@@ -41,11 +41,11 @@ namespace Facility.Definition
 		public override string ToString()
 		{
 			if (ColumnNumber > 0)
-				return $"{SourceName}({LineNumber},{ColumnNumber})";
+				return $"{Name}({LineNumber},{ColumnNumber})";
 			else if (LineNumber > 0)
-				return $"{SourceName}({LineNumber})";
+				return $"{Name}({LineNumber})";
 			else
-				return SourceName;
+				return Name;
 		}
 	}
 }

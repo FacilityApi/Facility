@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{CA33BB9E-8557-4911-809C-D89C7408A182}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>fsdgenfsd</RootNamespace>
-    <AssemblyName>fsdgenfsd</AssemblyName>
+    <RootNamespace>Facility.Console</RootNamespace>
+    <AssemblyName>Facility.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,10 +22,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DocumentationFile>bin\Debug\Facility.Console.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,12 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Release\Facility.Console.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Faithlife.Parsing.1.0.0\lib\dotnet\Faithlife.Parsing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,18 +48,13 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="FsdGenFsdApp.cs" />
+    <Compile Include="ArgsReader.cs" />
+    <Compile Include="ArgsReaderException.cs" />
+    <Compile Include="CodeGeneratorApp.cs" />
+    <Compile Include="CommonArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Facility.Console\Facility.Console.csproj">
-      <Project>{ca33bb9e-8557-4911-809c-d89c7408a182}</Project>
-      <Name>Facility.Console</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Facility.Definition\Facility.Definition.csproj">
       <Project>{64db00a4-5fa3-4598-ba61-ed1fa891043c}</Project>
       <Name>Facility.Definition</Name>

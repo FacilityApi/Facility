@@ -13,6 +13,7 @@ var configuration = Argument("configuration", "Release");
 var nugetApiKey = Argument("nugetApiKey", "");
 var githubApiKey = Argument("githubApiKey", "");
 var coverallsApiKey = Argument("coverallsApiKey", "");
+var prerelease = Argument("prerelease", "");
 
 var solutionFileName = "Facility.sln";
 var githubOwner = "FacilityApi";
@@ -27,13 +28,16 @@ var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("buil
 if (!string.IsNullOrEmpty(githubApiKey))
 	githubClient.Credentials = new Octokit.Credentials(githubApiKey);
 
-string headSha = null;
 string version = null;
+string headSha = null;
 
 string GetSemVerFromFile(string path)
 {
 	var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
-	return $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
+	var semver = $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
+	if (prerelease.Length != 0)
+		semver += $"-{prerelease}";
+	return semver;
 }
 
 Task("Clean")
@@ -63,25 +67,32 @@ Task("SourceIndex")
 	.WithCriteria(() => configuration == "Release")
 	.Does(() =>
 	{
-		var dirtyEntry = gitRepository.RetrieveStatus().FirstOrDefault(x => x.State != FileStatus.Unaltered && x.State != FileStatus.Ignored);
-		if (dirtyEntry != null)
-			throw new InvalidOperationException($"The git working directory must be clean, but '{dirtyEntry.FilePath}' is dirty.");
+		if (prerelease.Length == 0)
+		{
+			var dirtyEntry = gitRepository.RetrieveStatus().FirstOrDefault(x => x.State != FileStatus.Unaltered && x.State != FileStatus.Ignored);
+			if (dirtyEntry != null)
+				throw new InvalidOperationException($"The git working directory must be clean, but '{dirtyEntry.FilePath}' is dirty.");
 
-		headSha = gitRepository.Head.Tip.Sha;
-		try
-		{
-			githubClient.Repository.Commit.GetSha1(githubOwner, githubRepo, headSha).GetAwaiter().GetResult();
-		}
-		catch (Octokit.NotFoundException exception)
-		{
-			throw new InvalidOperationException($"The current commit '{headSha}' must be pushed to GitHub.", exception);
-		}
+			headSha = gitRepository.Head.Tip.Sha;
+			try
+			{
+				githubClient.Repository.Commit.GetSha1(githubOwner, githubRepo, headSha).GetAwaiter().GetResult();
+			}
+			catch (Octokit.NotFoundException exception)
+			{
+				throw new InvalidOperationException($"The current commit '{headSha}' must be pushed to GitHub.", exception);
+			}
 
-		GitLink(MakeAbsolute(Directory(".")).FullPath, new GitLinkSettings
+			GitLink(MakeAbsolute(Directory(".")).FullPath, new GitLinkSettings
+			{
+				RepositoryUrl = $"{githubRawUri}/{githubOwner}/{githubRepo}",
+				ArgumentCustomization = args => args.Append($"-ignore Bom,BomTest"),
+			});
+		}
+		else
 		{
-			RepositoryUrl = $"{githubRawUri}/{githubOwner}/{githubRepo}",
-			ArgumentCustomization = args => args.Append($"-ignore Bom,BomTest"),
-		});
+			Warning("Skipping source index for prerelease.");
+		}
 
 		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
 	});
@@ -116,10 +127,17 @@ Task("NuGetPublish")
 			});
 		}
 
-		var tagName = $"nuget-{version}";
-		Information($"Creating git tag '{tagName}'...");
-		githubClient.Git.Reference.Create(githubOwner, githubRepo,
-			new Octokit.NewReference($"refs/tags/{tagName}", headSha)).GetAwaiter().GetResult();
+		if (headSha != null)
+		{
+			var tagName = $"nuget-{version}";
+			Information($"Creating git tag '{tagName}'...");
+			githubClient.Git.Reference.Create(githubOwner, githubRepo,
+				new Octokit.NewReference($"refs/tags/{tagName}", headSha)).GetAwaiter().GetResult();
+		}
+		else
+		{
+			Warning("Skipping git tag for prerelease.");
+		}
 	});
 
 Task("Coverage")

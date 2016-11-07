@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Facility.Definition.CodeGen
@@ -27,12 +26,17 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Generates output for the specified service.
 		/// </summary>
-		public abstract IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceInfo service);
+		public CodeGenOutput GenerateOutput(ServiceInfo service) => GenerateOutputCore(service);
+
+		/// <summary>
+		/// Generates output for the specified service.
+		/// </summary>
+		protected abstract CodeGenOutput GenerateOutputCore(ServiceInfo service);
 
 		/// <summary>
 		/// Creates a text source from a name and code writer.
 		/// </summary>
-		protected ServiceTextSource CreateOutput(string name, Action<CodeWriter> writeTo)
+		protected NamedText CreateNamedText(string name, Action<CodeWriter> writeTo)
 		{
 			using (var stringWriter = new StringWriter())
 			{
@@ -46,7 +50,7 @@ namespace Facility.Definition.CodeGen
 
 				writeTo(code);
 
-				return new ServiceTextSource(stringWriter.ToString()).WithName(name);
+				return new NamedText(name, stringWriter.ToString());
 			}
 		}
 	}

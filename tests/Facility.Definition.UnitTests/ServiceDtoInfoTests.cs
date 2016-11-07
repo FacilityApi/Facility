@@ -7,7 +7,7 @@ namespace Facility.Definition.UnitTests
 		[Test]
 		public void InvalidNameThrows()
 		{
-			var position = new ServiceTextPosition("source");
+			var position = new NamedTextPosition("source");
 			TestUtility.ThrowsServiceDefinitionException(() => new ServiceDtoInfo(name: "4u", position: position), position);
 		}
 
@@ -16,8 +16,8 @@ namespace Facility.Definition.UnitTests
 		{
 			var fields = new[]
 			{
-				new ServiceFieldInfo("why", "int32", position: new ServiceTextPosition("source", 1)),
-				new ServiceFieldInfo("Why", "int32", position: new ServiceTextPosition("source", 2)),
+				new ServiceFieldInfo("why", "int32", position: new NamedTextPosition("source", 1)),
+				new ServiceFieldInfo("Why", "int32", position: new NamedTextPosition("source", 2)),
 			};
 			TestUtility.ThrowsServiceDefinitionException(() => new ServiceDtoInfo(name: "x", fields: fields), fields[1].Position);
 		}

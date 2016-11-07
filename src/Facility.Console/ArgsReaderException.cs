@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Facility.Definition.Console
+namespace Facility.Console
 {
 	/// <summary>
 	/// Thrown when an error occurs while processing command-line arguments.

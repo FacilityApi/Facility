@@ -50,7 +50,7 @@ namespace Facility.Definition
 			}
 		}
 
-		internal static ServiceTypeInfo Parse(string text, Func<string, IServiceMemberInfo> findMember, ServiceTextPosition position = null)
+		internal static ServiceTypeInfo Parse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position = null)
 		{
 			if (text == null)
 				throw new ArgumentNullException(nameof(text));
@@ -118,7 +118,7 @@ namespace Facility.Definition
 			return new ServiceTypeInfo(ServiceTypeKind.Enum, @enum: @enum);
 		}
 
-		private static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, ServiceTextPosition position)
+		private static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, NamedTextPosition position)
 		{
 			if (valueType.Kind != ServiceTypeKind.Dto)
 				throw new ServiceDefinitionException($"Service result value type '{valueType}' is not a DTO.", position);
@@ -126,7 +126,7 @@ namespace Facility.Definition
 			return new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
 		}
 
-		private static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, ServiceTextPosition position)
+		private static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, NamedTextPosition position)
 		{
 			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
 				throw new ServiceDefinitionException($"Array value type '{valueType}' must not be an array or map.", position);
@@ -134,7 +134,7 @@ namespace Facility.Definition
 			return new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
 		}
 
-		private static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, ServiceTextPosition position = null)
+		private static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, NamedTextPosition position = null)
 		{
 			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
 				throw new ServiceDefinitionException($"Map value type '{valueType}' must not be an array or map.", position);

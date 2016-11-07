@@ -7,7 +7,7 @@ namespace Facility.Definition.UnitTests
 		[Test]
 		public void InvalidNameThrows()
 		{
-			var position = new ServiceTextPosition("source");
+			var position = new NamedTextPosition("source");
 			TestUtility.ThrowsServiceDefinitionException(() => new ServiceAttributeParameterInfo(name: "4u", value: "", position: position), position);
 		}
 	}

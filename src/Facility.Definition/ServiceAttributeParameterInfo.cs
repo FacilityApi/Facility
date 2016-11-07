@@ -10,7 +10,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, ServiceTextPosition position = null)
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -37,6 +37,6 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the parameter.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 	}
 }

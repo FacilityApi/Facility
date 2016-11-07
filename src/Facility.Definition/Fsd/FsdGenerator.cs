@@ -13,9 +13,9 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Generates an FSD file for a service definition.
 		/// </summary>
-		public override IReadOnlyList<ServiceTextSource> GenerateOutput(ServiceInfo service)
+		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
 		{
-			var output = CreateOutput(service.Name + ".fsd", code =>
+			var output = CreateNamedText(service.Name + ".fsd", code =>
 			{
 				if (!string.IsNullOrWhiteSpace(GeneratorName))
 				{
@@ -92,7 +92,7 @@ namespace Facility.Definition.Fsd
 				foreach (string remark in remarks)
 					code.WriteLine(remark);
 			});
-			return new[] { output };
+			return new CodeGenOutput(output);
 		}
 
 		private void WriteSummaryAndAttributes(CodeWriter code, IServiceElementInfo info)

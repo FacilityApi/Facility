@@ -42,11 +42,10 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="CodeGen\CodeGenerator.cs" />
+    <Compile Include="CodeGen\CodeGenOutput.cs" />
     <Compile Include="CodeGen\CodeGenUtility.cs" />
     <Compile Include="CodeGen\CodeWriter.cs" />
-    <Compile Include="Console\ArgsReader.cs" />
-    <Compile Include="Console\ArgsReaderException.cs" />
-    <Compile Include="Console\CommonArgs.cs" />
+    <Compile Include="CodeGen\CodeGenPattern.cs" />
     <Compile Include="Fsd\FsdGenerator.cs" />
     <Compile Include="Fsd\FsdRemarksSection.cs" />
     <Compile Include="Http\HttpAttributeUtility.cs" />
@@ -76,12 +75,12 @@
     <Compile Include="ServiceErrorInfo.cs" />
     <Compile Include="ServiceErrorSetInfo.cs" />
     <Compile Include="ServiceFieldInfo.cs" />
-    <Compile Include="ServiceTextSource.cs" />
+    <Compile Include="NamedText.cs" />
     <Compile Include="ServiceTypeInfo.cs" />
     <Compile Include="ServiceTypeKind.cs" />
     <Compile Include="ServiceInfo.cs" />
     <Compile Include="ServiceMethodInfo.cs" />
-    <Compile Include="ServiceTextPosition.cs" />
+    <Compile Include="NamedTextPosition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

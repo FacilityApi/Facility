@@ -6,7 +6,7 @@ namespace Facility.Definition.UnitTests
 {
 	internal static class TestUtility
 	{
-		public static void ThrowsServiceDefinitionException(Action action, ServiceTextPosition position)
+		public static void ThrowsServiceDefinitionException(Action action, NamedTextPosition position)
 		{
 			try
 			{
@@ -19,7 +19,7 @@ namespace Facility.Definition.UnitTests
 			}
 		}
 
-		public static void ThrowsServiceDefinitionException(Func<object> func, ServiceTextPosition position)
+		public static void ThrowsServiceDefinitionException(Func<object> func, NamedTextPosition position)
 		{
 			ThrowsServiceDefinitionException(
 				() =>
@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests
 
 		public static ServiceInfo ParseTestApi(string text)
 		{
-			return new FsdParser().ParseDefinition(new ServiceTextSource(text).WithName("TestApi.fsd"));
+			return new FsdParser().ParseDefinition(new NamedText("TestApi.fsd", text));
 		}
 
 		public static ServiceDefinitionException ParseInvalidTestApi(string text)
@@ -49,7 +49,7 @@ namespace Facility.Definition.UnitTests
 		public static string[] GenerateFsd(ServiceInfo service)
 		{
 			var generator = new FsdGenerator { GeneratorName = "TestUtility" };
-			return generator.GenerateOutput(service)[0].Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+			return generator.GenerateOutput(service).NamedTexts[0].Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 		}
 	}
 }

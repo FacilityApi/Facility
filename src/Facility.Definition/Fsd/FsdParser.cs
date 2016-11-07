@@ -15,7 +15,7 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Parses an FSD file into a service definition.
 		/// </summary>
-		public ServiceInfo ParseDefinition(ServiceTextSource source)
+		public ServiceInfo ParseDefinition(NamedText source)
 		{
 			IReadOnlyList<string> definitionLines = null;
 			var remarksSections = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
@@ -47,7 +47,7 @@ namespace Facility.Definition.Fsd
 							while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[lines.Count - 1]))
 								lines.RemoveAt(lines.Count - 1);
 
-							var position = new ServiceTextPosition(source.Name, headingLineNumber, 1);
+							var position = new NamedTextPosition(source.Name, headingLineNumber, 1);
 							if (remarksSections.ContainsKey(name))
 								throw new ServiceDefinitionException("Duplicate remarks heading: " + name, position);
 							remarksSections.Add(name, new FsdRemarksSection(name, lines, position));
@@ -67,7 +67,7 @@ namespace Facility.Definition.Fsd
 				}
 			}
 
-			source = new ServiceTextSource(string.Join("\n", definitionLines)).WithName(source.Name);
+			source = new NamedText(source.Name, string.Join("\n", definitionLines));
 
 			ServiceInfo service;
 			try
@@ -88,7 +88,7 @@ namespace Facility.Definition.Fsd
 
 				throw new ServiceDefinitionException(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
-					new ServiceTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
+					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
 					exception);
 			}
 

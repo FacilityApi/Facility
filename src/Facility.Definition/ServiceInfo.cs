@@ -13,7 +13,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, ServiceTextPosition position = null)
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -93,7 +93,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the service.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 
 		/// <summary>
 		/// Finds the member of the specified name.

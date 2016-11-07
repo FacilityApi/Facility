@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Facility.Console</id>
+    <version>$version$</version>
+    <authors>Ed Ball</authors>
+    <owners>Ed Ball</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library for writing Facility code generators.</description>
+    <copyright>Copyright 2016 Ed Ball</copyright>
+    <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <dependencies>
+      <dependency id="Faithlife.Parsing" version="1.0.0" />
+      <dependency id="Facility.Definition" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Facility.Console\bin\Release\Facility.Console.*" target="lib/net45" />
+  </files>
+</package>

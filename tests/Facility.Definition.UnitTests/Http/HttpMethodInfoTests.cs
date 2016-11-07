@@ -534,7 +534,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void ByRouteComparer(string leftHttp, string rightHttp, int expected)
 		{
 			string fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);
-			var service = new HttpServiceInfo(new FsdParser().ParseDefinition(new ServiceTextSource(fsdText)));
+			var service = new HttpServiceInfo(new FsdParser().ParseDefinition(new NamedText("", fsdText)));
 			var left = service.Methods.Single(x => x.ServiceMethod.Name == "left");
 			var right = service.Methods.Single(x => x.ServiceMethod.Name == "right");
 			int actual = HttpMethodInfo.ByRouteComparer.Compare(left, right);

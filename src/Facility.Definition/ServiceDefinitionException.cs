@@ -10,7 +10,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an exception.
 		/// </summary>
-		public ServiceDefinitionException(string error, ServiceTextPosition position = null, Exception innerException = null)
+		public ServiceDefinitionException(string error, NamedTextPosition position = null, Exception innerException = null)
 			: base("", innerException)
 		{
 			if (error == null)
@@ -28,7 +28,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position where the error took place, if any.
 		/// </summary>
-		public ServiceTextPosition Position { get; }
+		public NamedTextPosition Position { get; }
 
 		/// <summary>
 		/// The exception message, which displays the file name, line number, column number, and error message.
