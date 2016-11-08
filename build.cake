@@ -1,10 +1,10 @@
-#addin "nuget:?package=Cake.Git"
-#addin "nuget:?package=Octokit"
-#tool "nuget:?package=coveralls.io"
-#tool "nuget:?package=gitlink"
-#tool "nuget:?package=NUnit.ConsoleRunner"
-#tool "nuget:?package=OpenCover"
-#tool "nuget:?package=ReportGenerator"
+#addin "nuget:?package=Cake.Git&version=0.10.0"
+#addin "nuget:?package=Octokit&version=0.23.0"
+#tool "nuget:?package=coveralls.io&version=1.3.4"
+#tool "nuget:?package=gitlink&version=2.3.0"
+#tool "nuget:?package=NUnit.ConsoleRunner&version=3.5.0"
+#tool "nuget:?package=OpenCover&version=4.6.519"
+#tool "nuget:?package=ReportGenerator&version=2.5.0"
 
 using LibGit2Sharp;
 
