@@ -102,7 +102,8 @@ namespace Facility.Console
 						string existingFilePath = Path.Combine(outputPath, namedText.Name);
 						if (File.Exists(existingFilePath))
 						{
-							if (namedText.Text != File.ReadAllText(existingFilePath))
+							// ignore CR when comparing files
+							if (namedText.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
 							{
 								namedTextsToWrite.Add(namedText);
 								if (!isQuiet)
