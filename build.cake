@@ -14,6 +14,7 @@ var nugetApiKey = Argument("nugetApiKey", "");
 var githubApiKey = Argument("githubApiKey", "");
 var coverallsApiKey = Argument("coverallsApiKey", "");
 var prerelease = Argument("prerelease", "");
+var sourceIndex = Argument("sourceIndex", true);
 
 var solutionFileName = "Facility.sln";
 var githubOwner = "FacilityApi";
@@ -67,7 +68,7 @@ Task("SourceIndex")
 	.WithCriteria(() => configuration == "Release")
 	.Does(() =>
 	{
-		if (prerelease.Length == 0)
+		if (sourceIndex)
 		{
 			var dirtyEntry = gitRepository.RetrieveStatus().FirstOrDefault(x => x.State != FileStatus.Unaltered && x.State != FileStatus.Ignored);
 			if (dirtyEntry != null)
@@ -91,7 +92,7 @@ Task("SourceIndex")
 		}
 		else
 		{
-			Warning("Skipping source index for prerelease.");
+			Warning("Skipping source index.");
 		}
 
 		version = GetSemVerFromFile(GetFiles($"src/**/bin/**/{coverageAssemblies[0]}.dll").First().ToString());
@@ -103,7 +104,7 @@ Task("NuGetPackage")
 	{
 		CreateDirectory("release");
 
-		foreach (var nuspecPath in GetFiles($"src/*.nuspec"))
+		foreach (var nuspecPath in GetFiles($"src/**/*.nuspec"))
 		{
 			NuGetPack(nuspecPath, new NuGetPackSettings
 			{

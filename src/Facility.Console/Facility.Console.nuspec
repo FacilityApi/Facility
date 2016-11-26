@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
-    <id>fsdgenfsd</id>
+    <id>Facility.Console</id>
     <version>$version$</version>
     <authors>Ed Ball</authors>
     <owners>Ed Ball</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A command-line tool that generates Facility Service Definitions.</description>
+    <description>A library for writing Facility code generators.</description>
     <copyright>Copyright 2016 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <dependencies>
+      <dependency id="Faithlife.Parsing" version="1.0.0" />
+      <dependency id="Facility.Definition" version="$version$" />
+    </dependencies>
   </metadata>
   <files>
-    <file src="fsdgenfsd\bin\Release\*.exe" target="tools" />
-    <file src="fsdgenfsd\bin\Release\*.dll" target="tools" />
-    <file src="fsdgenfsd\bin\Release\*.config" target="tools" />
+    <file src="bin\Release\Facility.Console.*" target="lib/net45" />
   </files>
 </package>

@@ -14,14 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fsdgenfsd", "src\fsdgenfsd\fsdgenfsd.csproj", "{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{53E160D7-72A0-4804-BCE9-DD14EB1CB92D}"
-	ProjectSection(SolutionItems) = preProject
-		src\Facility.Console.nuspec = src\Facility.Console.nuspec
-		src\Facility.Definition.nuspec = src\Facility.Definition.nuspec
-		src\fsdgenfsd.nuspec = src\fsdgenfsd.nuspec
-		src\README.md = src\README.md
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{999A87D4-79C9-4412-92A2-573174CC7114}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD5-46BE-9606-4121422F686B}"

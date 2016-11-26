@@ -15,7 +15,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Facility.Definition\bin\Release\Facility.Definition.*" target="lib/dotnet" />
-    <file src="Facility.Definition\bin\Release\Facility.Definition.*" target="lib/portable-net45+netcore45+wpa81" />
+    <file src="bin\Release\Facility.Definition.*" target="lib/dotnet" />
+    <file src="bin\Release\Facility.Definition.*" target="lib/portable-net45+netcore45+wpa81" />
   </files>
 </package>
