@@ -47,17 +47,17 @@ namespace Facility.Console
 				bool isDryRun = argsReader.ReadDryRunFlag();
 
 				string inputPath = argsReader.ReadArgument();
-				if (inputPath == null && !SupportsSingleOutput)
+				if (inputPath == null)
 					throw new ArgsReaderException("Missing input path.");
 
 				string outputPath = argsReader.ReadArgument();
-				if (outputPath == null && !SupportsSingleOutput)
+				if (outputPath == null)
 					throw new ArgsReaderException("Missing output path.");
 
 				argsReader.VerifyComplete();
 
 				NamedText input;
-				if (inputPath == null || inputPath == "-")
+				if (inputPath == "-")
 				{
 					input = new NamedText("", System.Console.In.ReadToEnd());
 				}
@@ -73,8 +73,10 @@ namespace Facility.Console
 				PrepareGenerator(generator, service, outputPath);
 				var output = generator.GenerateOutput(service);
 
-				if (SupportsSingleOutput && (outputPath == null ||
-					(!outputPath.EndsWith("/", StringComparison.Ordinal) && !outputPath.EndsWith("\\", StringComparison.Ordinal) && !Directory.Exists(outputPath))))
+				if (SupportsSingleOutput &&
+					!outputPath.EndsWith("/", StringComparison.Ordinal) &&
+					!outputPath.EndsWith("\\", StringComparison.Ordinal) &&
+					!Directory.Exists(outputPath))
 				{
 					if (output.NamedTexts.Count > 1)
 						throw new InvalidOperationException("Multiple outputs not expected.");
@@ -83,7 +85,7 @@ namespace Facility.Console
 					{
 						var namedText = output.NamedTexts[0];
 
-						if (outputPath == null)
+						if (outputPath == "-")
 							System.Console.Write(namedText.Text);
 						else if (ShouldWriteByteOrderMark(namedText.Name))
 							File.WriteAllText(outputPath, namedText.Text, s_utf8WithBom);
@@ -267,12 +269,15 @@ namespace Facility.Console
 
 		private void WriteUsage()
 		{
-			System.Console.WriteLine($"Usage: {s_assemblyName} {(SupportsSingleOutput ? "[input]" : "input")} {(SupportsSingleOutput ? "[output]" : "output")} [options]");
+			System.Console.WriteLine($"Usage: {s_assemblyName} input output [options]");
 			System.Console.WriteLine();
 			System.Console.WriteLine("   input");
-			System.Console.WriteLine("      The path to the input FSD file. (Standard input if \"-\".)");
+			System.Console.WriteLine("      The path to the input FSD file (- for stdin).");
 			System.Console.WriteLine("   output");
-			System.Console.WriteLine($"      The path to the output {(SupportsSingleOutput ? "file or " : "")}directory.");
+			if (SupportsSingleOutput)
+				System.Console.WriteLine($"      The path to the output directory or file (- for stdout).");
+			else
+				System.Console.WriteLine($"      The path to the output directory.");
 			System.Console.WriteLine();
 
 			foreach (var usage in ExtraUsage)
