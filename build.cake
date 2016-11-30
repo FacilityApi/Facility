@@ -41,6 +41,16 @@ string GetSemVerFromFile(string path)
 	return semver;
 }
 
+void CodeGen(bool verify)
+{
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
+		@"example\ExampleApi.fsd example\fsd\" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
+		@"example\ExampleApi.fsd example\swagger\ --swagger" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
+		@"example\ExampleApi.fsd example\swagger\ --swagger --yaml" + (verify ? " --verify" : ""));
+}
+
 Task("Clean")
 	.Does(() =>
 	{
@@ -59,8 +69,16 @@ Task("Build")
 		MSBuild(solutionFileName, settings => settings.SetConfiguration(configuration));
 	});
 
-Task("Test")
+Task("CodeGen")
 	.IsDependentOn("Build")
+	.Does(() => CodeGen(verify: false));
+
+Task("VerifyCodeGen")
+	.IsDependentOn("Build")
+	.Does(() => CodeGen(verify: true));
+
+Task("Test")
+	.IsDependentOn("VerifyCodeGen")
 	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")

@@ -13,7 +13,7 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public CodeWriter(TextWriter textWriter)
 		{
-			m_textWriter = textWriter;
+			TextWriter = textWriter;
 			m_isNewLine = true;
 
 			IndentText = "\t";
@@ -35,6 +35,11 @@ namespace Facility.Definition.CodeGen
 		/// The text written on the line after a block (default "}", null for none).
 		/// </summary>
 		public string BlockAfterText { get; set; }
+
+		/// <summary>
+		/// The text writer.
+		/// </summary>
+		public TextWriter TextWriter { get; }
 
 		/// <summary>
 		/// Indents lines written within the scope.
@@ -90,7 +95,7 @@ namespace Facility.Definition.CodeGen
 		public void Write(string text)
 		{
 			WriteIndent();
-			m_textWriter.Write(text);
+			TextWriter.Write(text);
 		}
 
 		/// <summary>
@@ -98,7 +103,7 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public void WriteLine()
 		{
-			m_textWriter.WriteLine();
+			TextWriter.WriteLine();
 			m_isNewLine = true;
 		}
 
@@ -127,7 +132,7 @@ namespace Facility.Definition.CodeGen
 			if (m_isNewLine)
 			{
 				for (int i = 0; i < m_indentDepth; i++)
-					m_textWriter.Write(IndentText);
+					TextWriter.Write(IndentText);
 				m_isNewLine = false;
 			}
 		}
@@ -151,7 +156,6 @@ namespace Facility.Definition.CodeGen
 			Action m_action;
 		}
 
-		readonly TextWriter m_textWriter;
 		int m_indentDepth;
 		bool m_isNewLine;
 		bool m_wasWriteLineSkipped;
