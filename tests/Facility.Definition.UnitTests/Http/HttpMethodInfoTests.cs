@@ -270,7 +270,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void HttpDeleteNormalRequestField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: delete)] method do { [http(from: normal)] id: string; }: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,72): HTTP DELETE does not support normal fields.");
+				.Message.ShouldBe("TestApi.fsd(1,75): HTTP DELETE does not support normal fields.");
 		}
 
 		[Test]
