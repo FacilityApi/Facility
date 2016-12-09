@@ -180,9 +180,18 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void ImplicitQueryField()
+		public void ImplicitQueryFieldGet()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: get)] method do { id: string; }: {} }").Methods.Single();
+			var field = method.QueryFields.Single();
+			field.Name.ShouldBe("id");
+			field.ServiceField.Name.ShouldBe("id");
+		}
+
+		[Test]
+		public void ImplicitQueryFieldDelete()
+		{
+			var method = ParseHttpApi("service TestApi { [http(method: delete)] method do { id: string; }: {} }").Methods.Single();
 			var field = method.QueryFields.Single();
 			field.Name.ShouldBe("id");
 			field.ServiceField.Name.ShouldBe("id");
@@ -255,6 +264,13 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: normal)] id: string; }: {} }")
 				.Message.ShouldBe("TestApi.fsd(1,72): HTTP GET does not support normal fields.");
+		}
+
+		[Test]
+		public void HttpDeleteNormalRequestField()
+		{
+			ParseInvalidHttpApi("service TestApi { [http(method: delete)] method do { [http(from: normal)] id: string; }: {} }")
+				.Message.ShouldBe("TestApi.fsd(1,72): HTTP DELETE does not support normal fields.");
 		}
 
 		[Test]

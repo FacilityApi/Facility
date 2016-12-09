@@ -118,8 +118,8 @@ namespace Facility.Definition.Http
 				}
 				else if (from == "normal")
 				{
-					if (Method == HttpMethod.Get)
-						throw new ServiceDefinitionException("HTTP GET does not support normal fields.", requestField.Position);
+					if (Method == HttpMethod.Get || Method == HttpMethod.Delete)
+						throw new ServiceDefinitionException($"HTTP {Method} does not support normal fields.", requestField.Position);
 					requestNormalFields.Add(new HttpNormalFieldInfo(requestField));
 				}
 				else if (from == "body")
@@ -149,7 +149,7 @@ namespace Facility.Definition.Http
 						throw new ServiceDefinitionException("Request field used in path must use a simple type.", requestField.Position);
 					requestPathFields.Add(new HttpPathFieldInfo(requestField));
 				}
-				else if (Method == HttpMethod.Get)
+				else if (Method == HttpMethod.Get || Method == HttpMethod.Delete)
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
 						throw new ServiceDefinitionException("Request field used in query must use a simple type.", requestField.Position);
