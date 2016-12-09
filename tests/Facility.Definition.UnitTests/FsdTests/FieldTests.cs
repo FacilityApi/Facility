@@ -156,33 +156,136 @@ namespace Facility.Definition.UnitTests.FsdTests
 		[Test]
 		public void TwoFieldsSameName()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: int32; X: int64;} }")
-				.Message.ShouldBe("TestApi.fsd(1,40): Duplicate field: X");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: int32; x: int64;} }")
+				.Message.ShouldBe("TestApi.fsd(1,40): Duplicate field: x");
 		}
 
 		[Test]
 		public void InvalidFieldType()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: x; } }")
-				.Message.ShouldBe("TestApi.fsd(1,30): Unknown field type 'x'.");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: X; } }")
+				.Message.ShouldBe("TestApi.fsd(1,30): Unknown field type 'X'.");
+		}
+
+		[Test]
+		public void ResultOfDto()
+		{
+			var service = TestUtility.ParseTestApi("service TestApi { data One { x: result<One>; } }");
+
+			var dto = service.Dtos.Single();
+			var field = dto.Fields.Single();
+			field.Name.ShouldBe("x");
+			field.Attributes.Count.ShouldBe(0);
+			field.Summary.ShouldBe("");
+			var type = service.GetFieldType(field);
+			type.Kind.ShouldBe(ServiceTypeKind.Result);
+			type.ValueType.Kind.ShouldBe(ServiceTypeKind.Dto);
+			type.ValueType.Dto.Name.ShouldBe("One");
+		}
+
+		[Test]
+		public void ResultOfPrimitiveInvalid()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<string>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<boolean>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<double>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<int32>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<int64>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<bytes>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<object>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<error>; } }");
+		}
+
+		[Test]
+		public void ResultOfEnumInvalid()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { enum Xs { x, xx }; data One { x: result<Xs>; } }");
 		}
 
 		[Test]
 		public void ResultOfArrayInvalid()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: result<int32[]>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<One[]>; } }");
 		}
 
 		[Test]
 		public void ResultOfResultInvalid()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: result<result<int32>>; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<result<One>>; } }");
+		}
+
+		[TestCase("string", ServiceTypeKind.String)]
+		[TestCase("boolean", ServiceTypeKind.Boolean)]
+		[TestCase("double", ServiceTypeKind.Double)]
+		[TestCase("int32", ServiceTypeKind.Int32)]
+		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("bytes", ServiceTypeKind.Bytes)]
+		[TestCase("object", ServiceTypeKind.Object)]
+		[TestCase("error", ServiceTypeKind.Error)]
+		[TestCase("Dto", ServiceTypeKind.Dto)]
+		[TestCase("Enum", ServiceTypeKind.Enum)]
+		[TestCase("result<Dto>", ServiceTypeKind.Result)]
+		public void ArrayOfAnything(string name, ServiceTypeKind kind)
+		{
+			var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: xyzzy[]; } }".Replace("xyzzy", name));
+
+			var dto = service.Dtos.Single();
+			var field = dto.Fields.Single();
+			field.Name.ShouldBe("x");
+			field.Attributes.Count.ShouldBe(0);
+			field.Summary.ShouldBe("");
+			var type = service.GetFieldType(field);
+			type.Kind.ShouldBe(ServiceTypeKind.Array);
+			type.ValueType.Kind.ShouldBe(kind);
 		}
 
 		[Test]
 		public void ArrayOfArrayInvalid()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { X: int32[][]; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: int32[][]; } }");
+		}
+
+		[Test]
+		public void ArrayOfMapInvalid()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<int32>[]; } }");
+		}
+
+		[TestCase("string", ServiceTypeKind.String)]
+		[TestCase("boolean", ServiceTypeKind.Boolean)]
+		[TestCase("double", ServiceTypeKind.Double)]
+		[TestCase("int32", ServiceTypeKind.Int32)]
+		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("bytes", ServiceTypeKind.Bytes)]
+		[TestCase("object", ServiceTypeKind.Object)]
+		[TestCase("error", ServiceTypeKind.Error)]
+		[TestCase("Dto", ServiceTypeKind.Dto)]
+		[TestCase("Enum", ServiceTypeKind.Enum)]
+		[TestCase("result<Dto>", ServiceTypeKind.Result)]
+		public void MapOfAnything(string name, ServiceTypeKind kind)
+		{
+			var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: map<xyzzy>; } }".Replace("xyzzy", name));
+
+			var dto = service.Dtos.Single();
+			var field = dto.Fields.Single();
+			field.Name.ShouldBe("x");
+			field.Attributes.Count.ShouldBe(0);
+			field.Summary.ShouldBe("");
+			var type = service.GetFieldType(field);
+			type.Kind.ShouldBe(ServiceTypeKind.Map);
+			type.ValueType.Kind.ShouldBe(kind);
+		}
+
+		[Test]
+		public void MapOfMapInvalid()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<map<int32>>; } }");
+		}
+
+		[Test]
+		public void MapOfArrayInvalid()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<int32[]>; } }");
 		}
 	}
 }
