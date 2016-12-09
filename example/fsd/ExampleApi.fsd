@@ -43,7 +43,7 @@ service ExampleApi
 	}
 
 	/// Creates a new widget.
-	[http(method: POST, path: "/widgets/", code: 201)]
+	[http(method: POST, path: "/widgets/")]
 	method createWidget
 	{
 		/// The widget to create.
@@ -52,7 +52,7 @@ service ExampleApi
 	}:
 	{
 		/// The created widget.
-		[http(from: body)]
+		[http(from: body, code: 201)]
 		widget: Widget;
 	}
 
