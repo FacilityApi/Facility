@@ -265,12 +265,10 @@ namespace Facility.Definition.Http
 		{
 			foreach (var responseBodyField in responseBodyFields)
 			{
-				// use the status code on the field, or the status code on the method, or the default: OK or NoContent
+				// use the status code on the field or the default: OK or NoContent
 				HttpStatusCode bodyStatusCode;
 				if (responseBodyField.StatusCode != null)
 					bodyStatusCode = responseBodyField.StatusCode.Value;
-				else if (statusCode != null)
-					bodyStatusCode = statusCode.Value;
 				else if (serviceInfo.GetFieldType(responseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean)
 					bodyStatusCode = HttpStatusCode.NoContent;
 				else
@@ -281,16 +279,14 @@ namespace Facility.Definition.Http
 					bodyField: responseBodyField);
 			}
 
-			// if there are any normal fields, the DTO must represent a status code
-			// if there are no body fields, the DTO must represent a status code
-			// if the DTO has a status code and none of the body fields inherit it, the DTO must represent a status code
+			// if the DTO has a status code, or there are any normal fields, or there are no body fields, the DTO must represent a status code
 			HttpStatusCode? responseStatusCode = null;
-			if (responseNormalFields.Count != 0)
-				responseStatusCode = statusCode ?? HttpStatusCode.OK;
-			else if (responseBodyFields.Count == 0)
-				responseStatusCode = statusCode ?? HttpStatusCode.NoContent;
-			else if (statusCode != null && responseBodyFields.All(x => x.StatusCode != null))
+			if (statusCode != null)
 				responseStatusCode = statusCode;
+			else if (responseNormalFields.Count != 0)
+				responseStatusCode = HttpStatusCode.OK;
+			else if (responseBodyFields.Count == 0)
+				responseStatusCode = HttpStatusCode.NoContent;
 			if (responseStatusCode != null)
 			{
 				yield return new HttpResponseInfo(

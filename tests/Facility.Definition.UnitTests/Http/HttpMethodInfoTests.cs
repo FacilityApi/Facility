@@ -350,15 +350,38 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void BodyResponseFieldWithMethodStatusCode()
+		public void BodyResponseFieldWithStatusCode()
 		{
-			var method = ParseHttpApi("service TestApi { [http(method: post, code: 202)] method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }").Methods.Single();
+			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body, code: 202)] body: Thing; } data Thing { id: string; } }").Methods.Single();
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.Accepted);
 			response.NormalFields.ShouldBe(null);
 			response.BodyField.ServiceField.Name.ShouldBe("body");
-			response.BodyField.StatusCode.ShouldBe(null);
+			response.BodyField.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+		}
+
+		[Test]
+		public void BodyResponseFieldWithMethodStatusCode()
+		{
+			var method = ParseHttpApi("service TestApi { [http(method: post, code: 202)] method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }").Methods.Single();
+
+			var responses = method.ValidResponses;
+			responses.Count.ShouldBe(2);
+			responses[0].StatusCode.ShouldBe(HttpStatusCode.OK);
+			responses[0].NormalFields.ShouldBe(null);
+			responses[0].BodyField.ServiceField.Name.ShouldBe("body");
+			responses[0].BodyField.StatusCode.ShouldBe(null);
+			responses[1].StatusCode.ShouldBe(HttpStatusCode.Accepted);
+			responses[1].NormalFields.Count.ShouldBe(0);
+			responses[1].BodyField.ShouldBe(null);
+		}
+
+		[Test]
+		public void BodyResponseFieldWithMethodStatusCodeConflict()
+		{
+			ParseInvalidHttpApi("service TestApi { [http(method: post, code: 200)] method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }")
+				.Message.ShouldBe("TestApi.fsd(1,51): Multiple handlers for status code 200.");
 		}
 
 		[Test]
@@ -379,20 +402,23 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void TwoBodyResponseFieldsWithInheritedStatusCode()
+		public void TwoBodyResponseFieldsWithMethodStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: post, code: 400)] method do {}: { [http(from: body)] body1: Empty; [http(from: body, code: 201)] body2: Thing; } data Thing { id: string; } data Empty {} }").Methods.Single();
 
 			var responses = method.ValidResponses;
-			responses.Count.ShouldBe(2);
-			responses[0].StatusCode.ShouldBe(HttpStatusCode.Created);
+			responses.Count.ShouldBe(3);
+			responses[0].StatusCode.ShouldBe(HttpStatusCode.OK);
 			responses[0].NormalFields.ShouldBe(null);
-			responses[0].BodyField.ServiceField.Name.ShouldBe("body2");
-			responses[0].BodyField.StatusCode.ShouldBe(HttpStatusCode.Created);
-			responses[1].StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+			responses[0].BodyField.ServiceField.Name.ShouldBe("body1");
+			responses[0].BodyField.StatusCode.ShouldBe(null);
+			responses[1].StatusCode.ShouldBe(HttpStatusCode.Created);
 			responses[1].NormalFields.ShouldBe(null);
-			responses[1].BodyField.ServiceField.Name.ShouldBe("body1");
-			responses[1].BodyField.StatusCode.ShouldBe(null);
+			responses[1].BodyField.ServiceField.Name.ShouldBe("body2");
+			responses[1].BodyField.StatusCode.ShouldBe(HttpStatusCode.Created);
+			responses[2].StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+			responses[2].NormalFields.Count.ShouldBe(0);
+			responses[2].BodyField.ShouldBe(null);
 		}
 
 		[Test]
