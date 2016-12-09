@@ -273,18 +273,29 @@ namespace Facility.Definition.UnitTests.Http
 				.Message.ShouldBe("TestApi.fsd(1,75): HTTP DELETE does not support normal fields.");
 		}
 
-		[Test]
-		public void BodyRequestField()
+		[TestCase("Dto")]
+		public void BodyRequestField(string type)
 		{
-			var method = ParseHttpApi("service TestApi { method do { [http(from: body)] id: Thing; }: {} data Thing { id: string; } }").Methods.Single();
+			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type)).Methods.Single();
 			method.RequestBodyField.ServiceField.Name.ShouldBe("id");
 		}
 
-		[Test]
-		public void BodyRequestFieldInvalidType()
+		[TestCase("string")]
+		[TestCase("boolean")]
+		[TestCase("double")]
+		[TestCase("int32")]
+		[TestCase("int64")]
+		[TestCase("bytes")]
+		[TestCase("Enum")]
+		[TestCase("object")]
+		[TestCase("error")]
+		[TestCase("result<Dto>")]
+		[TestCase("Dto[]")]
+		[TestCase("map<Dto>")]
+		public void BodyRequestFieldInvalidType(string type)
 		{
-			ParseInvalidHttpApi("service TestApi { method do { [http(from: body)] id: string; }: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,50): Request fields with [http(from: body)] must use a DTO type.");
+			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type))
+				.Message.ShouldBe("TestApi.fsd(1,78): Request fields with [http(from: body)] must use a DTO type.");
 		}
 
 		[Test]
@@ -353,16 +364,33 @@ namespace Facility.Definition.UnitTests.Http
 				.Message.ShouldBe("TestApi.fsd(1,41): Unexpected 'http' parameter 'name'.");
 		}
 
-		[Test]
-		public void BodyResponseField()
+		[TestCase("Dto")]
+		public void BodyResponseField(string type)
 		{
-			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }").Methods.Single();
+			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type)).Methods.Single();
 
 			var response = method.ValidResponses.Single();
-			response.StatusCode.ShouldBe(HttpStatusCode.OK);
+			response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK);
 			response.NormalFields.ShouldBe(null);
-			response.BodyField.ServiceField.Name.ShouldBe("body");
+			response.BodyField.ServiceField.Name.ShouldBe("id");
 			response.BodyField.StatusCode.ShouldBe(null);
+		}
+
+		[TestCase("string")]
+		[TestCase("double")]
+		[TestCase("int32")]
+		[TestCase("int64")]
+		[TestCase("bytes")]
+		[TestCase("Enum")]
+		[TestCase("object")]
+		[TestCase("error")]
+		[TestCase("result<Dto>")]
+		[TestCase("Dto[]")]
+		[TestCase("map<Dto>")]
+		public void BodyResponseFieldInvalidType(string type)
+		{
+			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))
+				.Message.ShouldBe("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a DTO or a Boolean.");
 		}
 
 		[Test]
@@ -494,13 +522,6 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: query)] id: string; } }")
 				.Message.ShouldBe("TestApi.fsd(1,55): Response fields do not support '[http(from: query)]'.");
-		}
-
-		[Test]
-		public void BodyResponseFieldInvalidType()
-		{
-			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body)] id: string; } }")
-				.Message.ShouldBe("TestApi.fsd(1,54): Response fields with [http(from: body)] must be a DTO or a Boolean.");
 		}
 
 		[Test]
