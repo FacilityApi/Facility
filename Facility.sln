@@ -23,6 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Console", "src\Facility.Console\Facility.Console.csproj", "{CA33BB9E-8557-4911-809C-D89C7408A182}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{569B4B9E-C089-496A-9503-8D502A74B9BF}"
+	ProjectSection(SolutionItems) = preProject
+		example\ExampleApi.fsd = example\ExampleApi.fsd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
