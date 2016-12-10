@@ -233,9 +233,11 @@ paths:
           $ref: '#/definitions/GetWidgetBatchRequest'
       responses:
         '200':
-          description: The response body.
+          description: The widget results.
           schema:
-            $ref: '#/definitions/GetWidgetBatchResponse'
+            type: array
+            items:
+              $ref: '#/definitions/WidgetResult'
 definitions:
   GetWidgetsResponse:
     type: object
@@ -292,14 +294,15 @@ definitions:
         type: array
         items:
           type: string
-  GetWidgetBatchResponse:
+  WidgetResult:
     type: object
     properties:
-      results:
-        description: The widget results.
-        type: array
-        items:
-          $ref: '#/definitions/WidgetResult'
+      value:
+        $ref: '#/definitions/Widget'
+        description: The value.
+      error:
+        $ref: '#/definitions/Error'
+        description: The error.
   GetWidgetWeightResponse:
     type: object
     properties:
@@ -405,15 +408,6 @@ definitions:
     properties:
       sink:
         $ref: '#/definitions/KitchenSink'
-  WidgetResult:
-    type: object
-    properties:
-      value:
-        $ref: '#/definitions/Widget'
-        description: The value.
-      error:
-        $ref: '#/definitions/Error'
-        description: The error.
   Error:
     type: object
     properties:

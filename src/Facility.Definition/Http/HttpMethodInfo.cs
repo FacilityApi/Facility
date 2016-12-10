@@ -252,13 +252,19 @@ namespace Facility.Definition.Http
 
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			return serviceInfo.GetFieldType(fieldInfo).Kind == ServiceTypeKind.Dto;
+			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo).Kind;
+			return fieldTypeKind == ServiceTypeKind.Object ||
+				fieldTypeKind == ServiceTypeKind.Error ||
+				fieldTypeKind == ServiceTypeKind.Dto ||
+				fieldTypeKind == ServiceTypeKind.Result ||
+				fieldTypeKind == ServiceTypeKind.Array ||
+				fieldTypeKind == ServiceTypeKind.Map;
 		}
 
 		private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo).Kind;
-			return fieldTypeKind == ServiceTypeKind.Dto || fieldTypeKind == ServiceTypeKind.Boolean;
+			return IsValidRequestBodyField(fieldInfo, serviceInfo) ||
+				serviceInfo.GetFieldType(fieldInfo).Kind == ServiceTypeKind.Boolean;
 		}
 
 		private IEnumerable<HttpResponseInfo> DoGetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)

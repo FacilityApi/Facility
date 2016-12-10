@@ -119,6 +119,7 @@ service ExampleApi
 	}:
 	{
 		/// The widget results.
+		[http(from: body)]
 		results: result<Widget>[];
 	}
 

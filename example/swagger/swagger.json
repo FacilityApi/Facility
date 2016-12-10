@@ -346,9 +346,12 @@
         ],
         "responses": {
           "200": {
-            "description": "The response body.",
+            "description": "The widget results.",
             "schema": {
-              "$ref": "#/definitions/GetWidgetBatchResponse"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WidgetResult"
+              }
             }
           }
         }
@@ -434,15 +437,16 @@
         }
       }
     },
-    "GetWidgetBatchResponse": {
+    "WidgetResult": {
       "type": "object",
       "properties": {
-        "results": {
-          "description": "The widget results.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WidgetResult"
-          }
+        "value": {
+          "$ref": "#/definitions/Widget",
+          "description": "The value."
+        },
+        "error": {
+          "$ref": "#/definitions/Error",
+          "description": "The error."
         }
       }
     },
@@ -595,19 +599,6 @@
       "properties": {
         "sink": {
           "$ref": "#/definitions/KitchenSink"
-        }
-      }
-    },
-    "WidgetResult": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "$ref": "#/definitions/Widget",
-          "description": "The value."
-        },
-        "error": {
-          "$ref": "#/definitions/Error",
-          "description": "The error."
         }
       }
     },

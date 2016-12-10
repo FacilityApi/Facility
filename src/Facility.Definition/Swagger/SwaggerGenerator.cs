@@ -83,14 +83,14 @@ namespace Facility.Definition.Swagger
 				if (httpMethodInfo.RequestBodyField != null)
 					AddDtos(dtoInfos, GetDtosForType(service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField)));
 
-				AddDto(dtoInfos, TryCreateMethodRequestBodyDto(httpMethodInfo));
+				AddDto(dtoInfos, TryCreateMethodRequestBodyType(httpMethodInfo)?.Dto);
 
 				foreach (var httpResponseInfo in httpMethodInfo.ValidResponses)
 				{
 					if (httpResponseInfo.BodyField != null)
 						AddDtos(dtoInfos, GetDtosForType(service.GetFieldType(httpResponseInfo.BodyField.ServiceField)));
 
-					AddDto(dtoInfos, TryCreateMethodResponseBodyDto(httpMethodInfo, httpResponseInfo));
+					AddDto(dtoInfos, TryCreateMethodResponseBodyType(httpMethodInfo, httpResponseInfo)?.Dto);
 				}
 			}
 
@@ -123,24 +123,26 @@ namespace Facility.Definition.Swagger
 				dictionary[dto.Name] = dto;
 		}
 
-		private static ServiceDtoInfo TryCreateMethodRequestBodyDto(HttpMethodInfo httpMethodInfo)
+		private static ServiceTypeInfo TryCreateMethodRequestBodyType(HttpMethodInfo httpMethodInfo)
 		{
 			if (httpMethodInfo.RequestNormalFields == null || httpMethodInfo.RequestNormalFields.Count == 0)
 				return null;
 
-			return new ServiceDtoInfo(name: $"{CodeGenUtility.Capitalize(httpMethodInfo.ServiceMethod.Name)}Request",
+			return ServiceTypeInfo.CreateDto(new ServiceDtoInfo(
+				name: $"{CodeGenUtility.Capitalize(httpMethodInfo.ServiceMethod.Name)}Request",
 				fields: httpMethodInfo.RequestNormalFields.Select(x => x.ServiceField),
-				summary: $"The request body for {httpMethodInfo.ServiceMethod.Name}.");
+				summary: $"The request body for {httpMethodInfo.ServiceMethod.Name}."));
 		}
 
-		private static ServiceDtoInfo TryCreateMethodResponseBodyDto(HttpMethodInfo httpMethodInfo, HttpResponseInfo httpResponseInfo)
+		private static ServiceTypeInfo TryCreateMethodResponseBodyType(HttpMethodInfo httpMethodInfo, HttpResponseInfo httpResponseInfo)
 		{
 			if (httpResponseInfo.NormalFields == null || httpResponseInfo.NormalFields.Count == 0)
 				return null;
 
-			return new ServiceDtoInfo(name: $"{CodeGenUtility.Capitalize(httpMethodInfo.ServiceMethod.Name)}Response",
+			return ServiceTypeInfo.CreateDto(new ServiceDtoInfo(
+				name: $"{CodeGenUtility.Capitalize(httpMethodInfo.ServiceMethod.Name)}Response",
 				fields: httpResponseInfo.NormalFields.Select(x => x.ServiceField),
-				summary: $"The response body for {httpMethodInfo.ServiceMethod.Name}.");
+				summary: $"The response body for {httpMethodInfo.ServiceMethod.Name}."));
 		}
 
 		private IEnumerable<ServiceDtoInfo> GetDtosForType(ServiceTypeInfo type)
@@ -213,7 +215,7 @@ namespace Facility.Definition.Swagger
 
 			if (httpMethodInfo.RequestNormalFields.Count != 0 || httpMethodInfo.RequestBodyField != null)
 				operation.Consumes = new[] { "application/json" };
-			if (httpMethodInfo.ValidResponses.Any(x => (x.NormalFields != null && x.NormalFields.Count != 0) || (x.BodyField != null && service.GetFieldType(x.BodyField.ServiceField).Kind == ServiceTypeKind.Dto)))
+			if (httpMethodInfo.ValidResponses.Any(x => (x.NormalFields != null && x.NormalFields.Count != 0) || (x.BodyField != null && service.GetFieldType(x.BodyField.ServiceField).Kind != ServiceTypeKind.Boolean)))
 				operation.Produces = new[] { "application/json" };
 
 			var parameters = new List<SwaggerSchema>();
@@ -225,10 +227,10 @@ namespace Facility.Definition.Swagger
 				parameters.Add(CreateSwaggerParameter(service, httpQueryInfo.ServiceField, SwaggerParameterKind.Query, httpQueryInfo.Name));
 
 			var requestBodyFieldType = httpMethodInfo.RequestBodyField == null ? null : service.GetFieldType(httpMethodInfo.RequestBodyField.ServiceField);
-			if (requestBodyFieldType != null && requestBodyFieldType.Kind == ServiceTypeKind.Dto)
-				parameters.Add(CreateSwaggerRequestBodyParameter(requestBodyFieldType.Dto, "request", httpMethodInfo.RequestBodyField.ServiceField.Summary));
+			if (requestBodyFieldType != null && requestBodyFieldType.Kind != ServiceTypeKind.Boolean)
+				parameters.Add(CreateSwaggerRequestBodyParameter(requestBodyFieldType, "request", httpMethodInfo.RequestBodyField.ServiceField.Summary));
 			else if (httpMethodInfo.RequestNormalFields.Count != 0)
-				parameters.Add(CreateSwaggerRequestBodyParameter(TryCreateMethodRequestBodyDto(httpMethodInfo), "request"));
+				parameters.Add(CreateSwaggerRequestBodyParameter(TryCreateMethodRequestBodyType(httpMethodInfo), "request"));
 
 			operation.Parameters = parameters;
 
@@ -241,9 +243,9 @@ namespace Facility.Definition.Swagger
 				var bodyField = validResponse.BodyField;
 				var bodyFieldType = bodyField == null ? null : service.GetFieldType(bodyField.ServiceField);
 				if (bodyField != null)
-					responses[statusCodeString] = CreateSwaggerResponse(bodyFieldType.Dto, bodyField.ServiceField.Summary);
+					responses[statusCodeString] = CreateSwaggerResponse(bodyFieldType, bodyField.ServiceField.Summary);
 				else if (validResponse.NormalFields != null && validResponse.NormalFields.Count != 0)
-					responses[statusCodeString] = CreateSwaggerResponse(TryCreateMethodResponseBodyDto(httpMethodInfo, validResponse));
+					responses[statusCodeString] = CreateSwaggerResponse(TryCreateMethodResponseBodyType(httpMethodInfo, validResponse));
 				else
 					responses[statusCodeString] = new SwaggerResponse { Description = "Success." };
 			}
@@ -289,7 +291,7 @@ namespace Facility.Definition.Swagger
 			return parameterObject;
 		}
 
-		private static SwaggerSchema CreateSwaggerRequestBodyParameter(ServiceDtoInfo dto, string name, string description = null)
+		private static SwaggerSchema CreateSwaggerRequestBodyParameter(ServiceTypeInfo type, string name, string description = null)
 		{
 			return new SwaggerSchema
 			{
@@ -297,16 +299,18 @@ namespace Facility.Definition.Swagger
 				Name = name,
 				Description = !string.IsNullOrWhiteSpace(description) ? description : "The request body.",
 				Required = true,
-				Schema = GetDtoTypeRef(dto),
+				Schema = GetSwaggerType(type),
 			};
 		}
 
-		private static SwaggerResponse CreateSwaggerResponse(ServiceDtoInfo dto, string description = null)
+		private static SwaggerResponse CreateSwaggerResponse(ServiceTypeInfo type, string description = null)
 		{
+			bool hasBody = type != null && type.Kind != ServiceTypeKind.Boolean;
+
 			return new SwaggerResponse
 			{
-				Description = !string.IsNullOrWhiteSpace(description) ? description : dto != null ? "The response body." : "Success.",
-				Schema = dto != null ? GetDtoTypeRef(dto) : null,
+				Description = !string.IsNullOrWhiteSpace(description) ? description : hasBody ? "The response body." : "Success.",
+				Schema = hasBody ? GetSwaggerType(type) : null,
 			};
 		}
 

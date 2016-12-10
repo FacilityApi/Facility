@@ -274,6 +274,11 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[TestCase("Dto")]
+		[TestCase("object")]
+		[TestCase("error")]
+		[TestCase("result<Dto>")]
+		[TestCase("Dto[]")]
+		[TestCase("map<Dto>")]
 		public void BodyRequestField(string type)
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type)).Methods.Single();
@@ -287,11 +292,6 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("int64")]
 		[TestCase("bytes")]
 		[TestCase("Enum")]
-		[TestCase("object")]
-		[TestCase("error")]
-		[TestCase("result<Dto>")]
-		[TestCase("Dto[]")]
-		[TestCase("map<Dto>")]
 		public void BodyRequestFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type))
@@ -365,6 +365,11 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[TestCase("Dto")]
+		[TestCase("object")]
+		[TestCase("error")]
+		[TestCase("result<Dto>")]
+		[TestCase("Dto[]")]
+		[TestCase("map<Dto>")]
 		public void BodyResponseField(string type)
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type)).Methods.Single();
@@ -382,11 +387,6 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("int64")]
 		[TestCase("bytes")]
 		[TestCase("Enum")]
-		[TestCase("object")]
-		[TestCase("error")]
-		[TestCase("result<Dto>")]
-		[TestCase("Dto[]")]
-		[TestCase("map<Dto>")]
 		public void BodyResponseFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))

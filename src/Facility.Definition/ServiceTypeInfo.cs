@@ -9,6 +9,65 @@ namespace Facility.Definition
 	public sealed class ServiceTypeInfo
 	{
 		/// <summary>
+		/// Create a primitive type of the specified kind.
+		/// </summary>
+		public static ServiceTypeInfo CreatePrimitive(ServiceTypeKind kind)
+		{
+			if (kind == ServiceTypeKind.Dto || kind == ServiceTypeKind.Enum || kind == ServiceTypeKind.Result || kind == ServiceTypeKind.Array || kind == ServiceTypeKind.Map)
+				throw new ArgumentOutOfRangeException(nameof(kind), "Kind must be primitive.");
+			return new ServiceTypeInfo(kind);
+		}
+
+		/// <summary>
+		/// Create a DTO type.
+		/// </summary>
+		public static ServiceTypeInfo CreateDto(ServiceDtoInfo dto)
+		{
+			return new ServiceTypeInfo(ServiceTypeKind.Dto, dto: dto);
+		}
+
+		/// <summary>
+		/// Create an enumerated type.
+		/// </summary>
+		public static ServiceTypeInfo CreateEnum(ServiceEnumInfo @enum)
+		{
+			return new ServiceTypeInfo(ServiceTypeKind.Enum, @enum: @enum);
+		}
+
+		/// <summary>
+		/// Create a service result type.
+		/// </summary>
+		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, NamedTextPosition position)
+		{
+			if (valueType.Kind != ServiceTypeKind.Dto)
+				throw new ServiceDefinitionException($"Service result value type '{valueType}' is not a DTO.", position);
+
+			return new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
+		}
+
+		/// <summary>
+		/// Create an array type.
+		/// </summary>
+		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, NamedTextPosition position)
+		{
+			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
+				throw new ServiceDefinitionException($"Array value type '{valueType}' must not be an array or map.", position);
+
+			return new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
+		}
+
+		/// <summary>
+		/// Create a map type.
+		/// </summary>
+		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, NamedTextPosition position)
+		{
+			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
+				throw new ServiceDefinitionException($"Map value type '{valueType}' must not be an array or map.", position);
+
+			return new ServiceTypeInfo(ServiceTypeKind.Map, valueType: valueType);
+		}
+
+		/// <summary>
 		/// The kind of type.
 		/// </summary>
 		public ServiceTypeKind Kind { get; }
@@ -99,47 +158,6 @@ namespace Facility.Definition
 		{
 			return text.StartsWith(prefix, StringComparison.Ordinal) && text.EndsWith(suffix, StringComparison.Ordinal) ?
 				text.Substring(prefix.Length, text.Length - prefix.Length - suffix.Length) : null;
-		}
-
-		private static ServiceTypeInfo CreatePrimitive(ServiceTypeKind kind)
-		{
-			if (kind == ServiceTypeKind.Dto || kind == ServiceTypeKind.Enum || kind == ServiceTypeKind.Result || kind == ServiceTypeKind.Array || kind == ServiceTypeKind.Map)
-				throw new ArgumentOutOfRangeException(nameof(kind), "Kind must be primitive.");
-			return new ServiceTypeInfo(kind);
-		}
-
-		private static ServiceTypeInfo CreateDto(ServiceDtoInfo dto)
-		{
-			return new ServiceTypeInfo(ServiceTypeKind.Dto, dto: dto);
-		}
-
-		private static ServiceTypeInfo CreateEnum(ServiceEnumInfo @enum)
-		{
-			return new ServiceTypeInfo(ServiceTypeKind.Enum, @enum: @enum);
-		}
-
-		private static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, NamedTextPosition position)
-		{
-			if (valueType.Kind != ServiceTypeKind.Dto)
-				throw new ServiceDefinitionException($"Service result value type '{valueType}' is not a DTO.", position);
-
-			return new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
-		}
-
-		private static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, NamedTextPosition position)
-		{
-			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
-				throw new ServiceDefinitionException($"Array value type '{valueType}' must not be an array or map.", position);
-
-			return new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
-		}
-
-		private static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, NamedTextPosition position = null)
-		{
-			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
-				throw new ServiceDefinitionException($"Map value type '{valueType}' must not be an array or map.", position);
-
-			return new ServiceTypeInfo(ServiceTypeKind.Map, valueType: valueType);
 		}
 
 		static readonly Tuple<ServiceTypeKind, string>[] s_primitiveTuples =
