@@ -115,6 +115,7 @@ service ExampleApi
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
+		[http(from: body)]
 		ids: string[];
 	}:
 	{

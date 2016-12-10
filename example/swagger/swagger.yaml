@@ -227,10 +227,12 @@ paths:
       parameters:
       - in: body
         name: request
-        description: The request body.
+        description: The IDs of the widgets to return.
         required: true
         schema:
-          $ref: '#/definitions/GetWidgetBatchRequest'
+          type: array
+          items:
+            type: string
       responses:
         '200':
           description: The widget results.
@@ -286,14 +288,6 @@ definitions:
         description: The new weight.
         type: number
         format: double
-  GetWidgetBatchRequest:
-    type: object
-    properties:
-      ids:
-        description: The IDs of the widgets to return.
-        type: array
-        items:
-          type: string
   WidgetResult:
     type: object
     properties:

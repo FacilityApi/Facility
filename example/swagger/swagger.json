@@ -337,10 +337,13 @@
           {
             "in": "body",
             "name": "request",
-            "description": "The request body.",
+            "description": "The IDs of the widgets to return.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GetWidgetBatchRequest"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -422,18 +425,6 @@
           "description": "The new weight.",
           "type": "number",
           "format": "double"
-        }
-      }
-    },
-    "GetWidgetBatchRequest": {
-      "type": "object",
-      "properties": {
-        "ids": {
-          "description": "The IDs of the widgets to return.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },
