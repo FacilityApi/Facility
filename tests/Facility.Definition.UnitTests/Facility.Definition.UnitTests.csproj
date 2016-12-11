@@ -64,13 +64,13 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="CodeGen\CodeGenUtilityTests.cs" />
-    <Compile Include="FsdTests\AttributeTests.cs" />
-    <Compile Include="FsdTests\DtoTests.cs" />
-    <Compile Include="FsdTests\EnumTests.cs" />
-    <Compile Include="FsdTests\ErrorSetTests.cs" />
-    <Compile Include="FsdTests\FieldTests.cs" />
-    <Compile Include="FsdTests\MethodTests.cs" />
-    <Compile Include="FsdTests\ServiceTests.cs" />
+    <Compile Include="Fsd\AttributeTests.cs" />
+    <Compile Include="Fsd\DtoTests.cs" />
+    <Compile Include="Fsd\EnumTests.cs" />
+    <Compile Include="Fsd\ErrorSetTests.cs" />
+    <Compile Include="Fsd\FieldTests.cs" />
+    <Compile Include="Fsd\MethodTests.cs" />
+    <Compile Include="Fsd\ServiceTests.cs" />
     <Compile Include="Http\HttpErrorSetInfoTests.cs" />
     <Compile Include="Http\HttpInfoTestsBase.cs" />
     <Compile Include="Http\HttpMethodInfoTests.cs" />

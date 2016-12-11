@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Shouldly;
 
-namespace Facility.Definition.UnitTests.FsdTests
+namespace Facility.Definition.UnitTests.Fsd
 {
 	public sealed class ServiceTests
 	{
