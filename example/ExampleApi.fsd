@@ -41,7 +41,7 @@ service ExampleApi
 	}
 
 	/// Creates a new widget.
-	[http(method: POST, path: "/widgets/")]
+	[http(method: POST, path: "/widgets")]
 	method createWidget
 	{
 		/// The widget to create.
@@ -165,6 +165,16 @@ service ExampleApi
 		/// The preference value.
 		[http(from: body)]
 		value: Preference;
+	}
+
+	/// Gets service info.
+	[http(method: GET, path: "/")]
+	method getInfo
+	{
+	}:
+	{
+		/// The name of the service.
+		name: string;
 	}
 
 	/// Demonstrates the default HTTP behavior.

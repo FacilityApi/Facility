@@ -9,6 +9,18 @@ basePath: /v1
 schemes:
 - http
 paths:
+  /:
+    get:
+      summary: Gets service info.
+      operationId: getInfo
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: The response body.
+          schema:
+            $ref: '#/definitions/GetInfoResponse'
   /kitchen:
     post:
       operationId: kitchen
@@ -120,7 +132,6 @@ paths:
           description: The pending job.
           schema:
             $ref: '#/definitions/WidgetJob'
-  /widgets/:
     post:
       summary: Creates a new widget.
       operationId: createWidget
@@ -397,6 +408,12 @@ definitions:
         type: object
         additionalProperties:
           $ref: '#/definitions/Widget'
+  GetInfoResponse:
+    type: object
+    properties:
+      name:
+        description: The name of the service.
+        type: string
   KitchenRequest:
     type: object
     properties:
