@@ -305,8 +305,11 @@ service ExampleApi
 
 	data KitchenSink
 	{
+		matrix: int32[][][];
+
+		crazy: map<map<string[]>[]>[];
+
 		[obsolete]
-		[proto(id: 1)]
 		oldField: string;
 	}
 }

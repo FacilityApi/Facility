@@ -225,6 +225,8 @@ namespace Facility.Definition.UnitTests.Fsd
 		[TestCase("Dto", ServiceTypeKind.Dto)]
 		[TestCase("Enum", ServiceTypeKind.Enum)]
 		[TestCase("result<Dto>", ServiceTypeKind.Result)]
+		[TestCase("int32[]", ServiceTypeKind.Array)]
+		[TestCase("map<int32>", ServiceTypeKind.Map)]
 		public void ArrayOfAnything(string name, ServiceTypeKind kind)
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: xyzzy[]; } }".Replace("xyzzy", name));
@@ -239,18 +241,6 @@ namespace Facility.Definition.UnitTests.Fsd
 			type.ValueType.Kind.ShouldBe(kind);
 		}
 
-		[Test]
-		public void ArrayOfArrayInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: int32[][]; } }");
-		}
-
-		[Test]
-		public void ArrayOfMapInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<int32>[]; } }");
-		}
-
 		[TestCase("string", ServiceTypeKind.String)]
 		[TestCase("boolean", ServiceTypeKind.Boolean)]
 		[TestCase("double", ServiceTypeKind.Double)]
@@ -262,6 +252,8 @@ namespace Facility.Definition.UnitTests.Fsd
 		[TestCase("Dto", ServiceTypeKind.Dto)]
 		[TestCase("Enum", ServiceTypeKind.Enum)]
 		[TestCase("result<Dto>", ServiceTypeKind.Result)]
+		[TestCase("int32[]", ServiceTypeKind.Array)]
+		[TestCase("map<int32>", ServiceTypeKind.Map)]
 		public void MapOfAnything(string name, ServiceTypeKind kind)
 		{
 			var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: map<xyzzy>; } }".Replace("xyzzy", name));
@@ -274,18 +266,6 @@ namespace Facility.Definition.UnitTests.Fsd
 			var type = service.GetFieldType(field);
 			type.Kind.ShouldBe(ServiceTypeKind.Map);
 			type.ValueType.Kind.ShouldBe(kind);
-		}
-
-		[Test]
-		public void MapOfMapInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<map<int32>>; } }");
-		}
-
-		[Test]
-		public void MapOfArrayInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: map<int32[]>; } }");
 		}
 	}
 }

@@ -50,9 +50,6 @@ namespace Facility.Definition
 		/// </summary>
 		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, NamedTextPosition position)
 		{
-			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
-				throw new ServiceDefinitionException($"Array value type '{valueType}' must not be an array or map.", position);
-
 			return new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
 		}
 
@@ -61,9 +58,6 @@ namespace Facility.Definition
 		/// </summary>
 		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, NamedTextPosition position)
 		{
-			if (valueType.Kind == ServiceTypeKind.Array || valueType.Kind == ServiceTypeKind.Map)
-				throw new ServiceDefinitionException($"Map value type '{valueType}' must not be an array or map.", position);
-
 			return new ServiceTypeInfo(ServiceTypeKind.Map, valueType: valueType);
 		}
 

@@ -437,5 +437,26 @@ definitions:
   KitchenSink:
     type: object
     properties:
+      matrix:
+        type: array
+        items:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+              format: int32
+      crazy:
+        type: array
+        items:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
       oldField:
         type: string
