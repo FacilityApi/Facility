@@ -125,7 +125,7 @@ namespace Facility.Definition.Http
 				else if (from == "body")
 				{
 					if (!IsValidRequestBodyField(requestField, serviceInfo))
-						throw new ServiceDefinitionException("Request fields with [http(from: body)] must use a DTO type.", requestField.Position);
+						throw new ServiceDefinitionException("Request fields with [http(from: body)] must not use a primitive type.", requestField.Position);
 					if (requestBodyField != null)
 						throw new ServiceDefinitionException("Requests do not support multiple [http(from: body)] fields.", requestField.Position);
 					var bodyInfo = new HttpBodyFieldInfo(requestField);
@@ -195,7 +195,7 @@ namespace Facility.Definition.Http
 				else if (from == "body")
 				{
 					if (!IsValidResponseBodyField(responseField, serviceInfo))
-						throw new ServiceDefinitionException("Response fields with [http(from: body)] must be a DTO or a Boolean.", responseField.Position);
+						throw new ServiceDefinitionException("Response fields with [http(from: body)] must be a non-primitive type or a Boolean.", responseField.Position);
 					responseBodyFields.Add(new HttpBodyFieldInfo(responseField));
 				}
 				else if (from == "header")

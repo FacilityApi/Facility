@@ -295,7 +295,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyRequestFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type))
-				.Message.ShouldBe("TestApi.fsd(1,78): Request fields with [http(from: body)] must use a DTO type.");
+				.Message.ShouldBe("TestApi.fsd(1,78): Request fields with [http(from: body)] must not use a primitive type.");
 		}
 
 		[Test]
@@ -390,7 +390,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyResponseFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))
-				.Message.ShouldBe("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a DTO or a Boolean.");
+				.Message.ShouldBe("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a non-primitive type or a Boolean.");
 		}
 
 		[Test]
