@@ -449,14 +449,21 @@ definitions:
       crazy:
         type: array
         items:
+          $ref: '#/definitions/StringArrayMapArrayResult'
+      oldField:
+        type: string
+  StringArrayMapArrayResult:
+    type: object
+    properties:
+      value:
+        description: The value.
+        type: array
+        items:
           type: object
           additionalProperties:
             type: array
             items:
-              type: object
-              additionalProperties:
-                type: array
-                items:
-                  type: string
-      oldField:
-        type: string
+              type: string
+      error:
+        $ref: '#/definitions/Error'
+        description: The error.

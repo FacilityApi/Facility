@@ -305,7 +305,7 @@ service ExampleApi
 	{
 		matrix: int32[][][];
 
-		crazy: map<map<string[]>[]>[];
+		crazy: result<map<string[]>[]>[];
 
 		[obsolete]
 		oldField: string;

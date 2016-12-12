@@ -36,13 +36,8 @@ namespace Facility.Definition
 			ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member");
 			m_membersByName = new ReadOnlyDictionary<string, IServiceMemberInfo>(Members.ToDictionary(x => x.Name, x => x));
 
-			var fieldTypes = new Dictionary<string, ServiceTypeInfo>();
 			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
-			{
-				if (!fieldTypes.ContainsKey(field.TypeName))
-					fieldTypes.Add(field.TypeName, ServiceTypeInfo.Parse(field.TypeName, FindMember, field.Position));
-			}
-			m_fieldTypes = new ReadOnlyDictionary<string, ServiceTypeInfo>(fieldTypes);
+				GetFieldType(field);
 		}
 
 		/// <summary>
@@ -118,13 +113,9 @@ namespace Facility.Definition
 		/// </summary>
 		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
 		{
-			ServiceTypeInfo type;
-			if (!m_fieldTypes.TryGetValue(field.TypeName, out type))
-				throw new ArgumentException("Unexpected field.", nameof(field));
-			return type;
+			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.Position);
 		}
 
 		readonly ReadOnlyDictionary<string, IServiceMemberInfo> m_membersByName;
-		readonly ReadOnlyDictionary<string, ServiceTypeInfo> m_fieldTypes;
 	}
 }

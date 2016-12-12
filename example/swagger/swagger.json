@@ -658,23 +658,33 @@
         "crazy": {
           "type": "array",
           "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "$ref": "#/definitions/StringArrayMapArrayResult"
           }
         },
         "oldField": {
           "type": "string"
+        }
+      }
+    },
+    "StringArrayMapArrayResult": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The value.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "error": {
+          "$ref": "#/definitions/Error",
+          "description": "The error."
         }
       }
     }

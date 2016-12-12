@@ -39,9 +39,6 @@ namespace Facility.Definition
 		/// </summary>
 		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, NamedTextPosition position)
 		{
-			if (valueType.Kind != ServiceTypeKind.Dto)
-				throw new ServiceDefinitionException($"Service result value type '{valueType}' is not a DTO.", position);
-
 			return new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
 		}
 

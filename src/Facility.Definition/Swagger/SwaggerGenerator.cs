@@ -156,7 +156,7 @@ namespace Facility.Definition.Swagger
 				yield return type.Dto;
 				break;
 			case ServiceTypeKind.Result:
-				yield return GetResultOfDto(type.ValueType);
+				yield return GetResultDto(type);
 				break;
 			}
 
@@ -185,15 +185,30 @@ namespace Facility.Definition.Swagger
 				summary: "An error.");
 		}
 
-		private static ServiceDtoInfo GetResultOfDto(ServiceTypeInfo valueType)
+		private static string GetTypeAsDtoName(ServiceTypeInfo type)
 		{
-			if (valueType.Kind != ServiceTypeKind.Dto)
-				throw new InvalidOperationException("Non-DTO result not supported.");
+			var typeKind = type.Kind;
+			switch (typeKind)
+			{
+			case ServiceTypeKind.Dto:
+				return type.Dto.Name;
+			case ServiceTypeKind.Enum:
+				return type.Enum.Name;
+			case ServiceTypeKind.Result:
+			case ServiceTypeKind.Array:
+			case ServiceTypeKind.Map:
+				return GetTypeAsDtoName(type.ValueType) + typeKind;
+			default:
+				return typeKind.ToString();
+			}
+		}
 
-			return new ServiceDtoInfo(name: $"{valueType.Dto.Name}Result",
+		private static ServiceDtoInfo GetResultDto(ServiceTypeInfo type)
+		{
+			return new ServiceDtoInfo(name: GetTypeAsDtoName(type),
 				fields: new[]
 				{
-					new ServiceFieldInfo(name: "value", typeName: valueType.ToString(), summary: "The value."),
+					new ServiceFieldInfo(name: "value", typeName: type.ValueType.ToString(), summary: "The value."),
 					new ServiceFieldInfo(name: "error", typeName: "error", summary: "The error."),
 				},
 				summary: "A result value or error.");
@@ -339,7 +354,7 @@ namespace Facility.Definition.Swagger
 			case ServiceTypeKind.Enum:
 				return GetEnumType(type.Enum);
 			case ServiceTypeKind.Result:
-				return GetResultOfTypeRef(type.ValueType);
+				return GetResultTypeRef(type);
 			case ServiceTypeKind.Array:
 				return GetArrayOfType(type.ValueType);
 			case ServiceTypeKind.Map:
@@ -374,11 +389,11 @@ namespace Facility.Definition.Swagger
 			};
 		}
 
-		private static SwaggerSchema GetResultOfTypeRef(ServiceTypeInfo type)
+		private static SwaggerSchema GetResultTypeRef(ServiceTypeInfo type)
 		{
 			return new SwaggerSchema
 			{
-				Ref = "#/definitions/" + type.Dto.Name + "Result",
+				Ref = "#/definitions/" + GetTypeAsDtoName(type),
 			};
 		}
 

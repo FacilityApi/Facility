@@ -184,34 +184,9 @@ namespace Facility.Definition.UnitTests.Fsd
 		}
 
 		[Test]
-		public void ResultOfPrimitiveInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<string>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<boolean>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<double>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<int32>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<int64>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<bytes>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<object>; } }");
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<error>; } }");
-		}
-
-		[Test]
 		public void ResultOfEnumInvalid()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { enum Xs { x, xx }; data One { x: result<Xs>; } }");
-		}
-
-		[Test]
-		public void ResultOfArrayInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<One[]>; } }");
-		}
-
-		[Test]
-		public void ResultOfResultInvalid()
-		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: result<result<One>>; } }");
 		}
 
 		[TestCase("string", ServiceTypeKind.String)]
@@ -265,6 +240,33 @@ namespace Facility.Definition.UnitTests.Fsd
 			field.Summary.ShouldBe("");
 			var type = service.GetFieldType(field);
 			type.Kind.ShouldBe(ServiceTypeKind.Map);
+			type.ValueType.Kind.ShouldBe(kind);
+		}
+
+		[TestCase("string", ServiceTypeKind.String)]
+		[TestCase("boolean", ServiceTypeKind.Boolean)]
+		[TestCase("double", ServiceTypeKind.Double)]
+		[TestCase("int32", ServiceTypeKind.Int32)]
+		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("bytes", ServiceTypeKind.Bytes)]
+		[TestCase("object", ServiceTypeKind.Object)]
+		[TestCase("error", ServiceTypeKind.Error)]
+		[TestCase("Dto", ServiceTypeKind.Dto)]
+		[TestCase("Enum", ServiceTypeKind.Enum)]
+		[TestCase("result<Dto>", ServiceTypeKind.Result)]
+		[TestCase("int32[]", ServiceTypeKind.Array)]
+		[TestCase("map<int32>", ServiceTypeKind.Map)]
+		public void ResultOfAnything(string name, ServiceTypeKind kind)
+		{
+			var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: result<xyzzy>; } }".Replace("xyzzy", name));
+
+			var dto = service.Dtos.Single();
+			var field = dto.Fields.Single();
+			field.Name.ShouldBe("x");
+			field.Attributes.Count.ShouldBe(0);
+			field.Summary.ShouldBe("");
+			var type = service.GetFieldType(field);
+			type.Kind.ShouldBe(ServiceTypeKind.Result);
 			type.ValueType.Kind.ShouldBe(kind);
 		}
 	}
