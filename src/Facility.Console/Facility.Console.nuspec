@@ -12,6 +12,8 @@
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
     <dependencies>
       <dependency id="Faithlife.Parsing" version="1.0.0" />
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="YamlDotNet" version="4.0.0" />
       <dependency id="Facility.Definition" version="$version$" />
     </dependencies>
   </metadata>
