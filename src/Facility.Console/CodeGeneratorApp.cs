@@ -7,6 +7,7 @@ using System.Text;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
+using Facility.Definition.Swagger;
 
 namespace Facility.Console
 {
@@ -41,6 +42,7 @@ namespace Facility.Console
 				if (SupportsCustomNewLine)
 					generator.NewLine = argsReader.ReadNewLineOption();
 
+				string serviceName = argsReader.ReadServiceNameOption();
 				bool shouldClean = SupportsClean && argsReader.ReadCleanFlag();
 				bool isQuiet = argsReader.ReadQuietFlag();
 				bool isVerify = argsReader.ReadVerifyFlag();
@@ -68,7 +70,17 @@ namespace Facility.Console
 					input = new NamedText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
 				}
 
-				var service = new FsdParser().ParseDefinition(input);
+				ServiceInfo service;
+				if (ServiceDefinitionUtility.DetectFormat(input) == ServiceDefinitionFormat.Swagger)
+				{
+					service = new SwaggerParser { ServiceName = serviceName }.ParseDefinition(input);
+				}
+				else
+				{
+					if (serviceName != null)
+						throw new ArgsReaderException("--serviceName not supported for FSD input.");
+					service = new FsdParser().ParseDefinition(input);
+				}
 
 				PrepareGenerator(generator, service, outputPath);
 				var output = generator.GenerateOutput(service);
@@ -95,9 +107,6 @@ namespace Facility.Console
 				}
 				else
 				{
-					if (outputPath == null)
-						throw new ArgsReaderException("Missing output path.");
-
 					var namedTextsToWrite = new List<NamedText>();
 					foreach (var namedText in output.NamedTexts)
 					{
@@ -272,16 +281,16 @@ namespace Facility.Console
 			System.Console.WriteLine($"Usage: {s_assemblyName} input output [options]");
 			System.Console.WriteLine();
 			System.Console.WriteLine("   input");
-			System.Console.WriteLine("      The path to the input FSD file (- for stdin).");
+			System.Console.WriteLine("      The path to the input file (- for stdin).");
 			System.Console.WriteLine("   output");
-			if (SupportsSingleOutput)
-				System.Console.WriteLine($"      The path to the output directory or file (- for stdout).");
-			else
-				System.Console.WriteLine($"      The path to the output directory.");
+			System.Console.WriteLine("      The path to the output directory" + (SupportsSingleOutput ? " or file (- for stdout)." : "."));
 			System.Console.WriteLine();
 
 			foreach (var usage in ExtraUsage)
 				System.Console.WriteLine(usage);
+
+			System.Console.WriteLine("   --serviceName <name>");
+			System.Console.WriteLine("      The name of the input service (for non-FSD input).");
 
 			if (SupportsClean)
 			{

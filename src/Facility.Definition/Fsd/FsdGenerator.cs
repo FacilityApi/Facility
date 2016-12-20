@@ -15,7 +15,7 @@ namespace Facility.Definition.Fsd
 		/// </summary>
 		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
 		{
-			var output = CreateNamedText(service.Name + ".fsd", code =>
+			var output = CreateNamedText($"{service.Name}.fsd", code =>
 			{
 				if (!string.IsNullOrWhiteSpace(GeneratorName))
 				{

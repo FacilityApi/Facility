@@ -26,7 +26,7 @@ namespace Facility.Definition.Fsd
 			Parser.String(token).CommentedToken().Named("'" + token + "'");
 
 		static readonly IParser<string> NameParser =
-			Parser.Regex(@"[a-zA-Z][0-9a-zA-Z]*").Select(x => x.ToString()).CommentedToken();
+			Parser.Regex(@"[a-zA-Z_][0-9a-zA-Z_]*").Select(x => x.ToString()).CommentedToken();
 
 		static IParser<string> KeywordParser(params string[] keywords) =>
 			NameParser.Where(keywords.Contains).Named(string.Join(" or ", keywords.Select(x => "'" + x + "'")));
@@ -90,7 +90,7 @@ namespace Facility.Definition.Fsd
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
 
-		static readonly IParser<string> TypeParser = Parser.Regex(@"[0-9a-zA-Z<>[\]]+").Select(x => x.ToString()).CommentedToken();
+		static readonly IParser<string> TypeParser = Parser.Regex(@"[0-9a-zA-Z_<>[\]]+").Select(x => x.ToString()).CommentedToken();
 
 		static IParser<ServiceFieldInfo> FieldParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()

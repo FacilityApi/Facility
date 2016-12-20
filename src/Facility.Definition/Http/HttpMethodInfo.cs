@@ -354,6 +354,6 @@ namespace Facility.Definition.Http
 			static readonly List<HttpMethod> s_httpMethods = new List<HttpMethod> { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, new HttpMethod("PATCH"), HttpMethod.Delete };
 		}
 
-		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([a-zA-Z][a-zA-Z0-9]*)\}", RegexOptions.CultureInvariant);
+		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
 	}
 }

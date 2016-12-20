@@ -1,4 +1,7 @@
-﻿namespace Facility.Definition.CodeGen
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Facility.Definition.CodeGen
 {
 	/// <summary>
 	/// Helper methods for generating code.
@@ -18,7 +21,58 @@
 		/// </summary>
 		public static string Capitalize(string value)
 		{
-			return value.Length == 0 ? "" : value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
+			return string.IsNullOrEmpty(value) ? value : value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
 		}
+
+		/// <summary>
+		/// Uncapitalizes the specified string.
+		/// </summary>
+		public static string Uncapitalize(string value)
+		{
+			return string.IsNullOrEmpty(value) ? value : value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
+		}
+
+		/// <summary>
+		/// Converts the string to camel case.
+		/// </summary>
+		public static string ToCamelCase(string value)
+		{
+			if (value == null)
+				return null;
+
+			var words = GetWords(value);
+			return string.Concat(words.Take(1).Select(x => x.ToLowerInvariant()).Concat(words.Skip(1).Select(x => Capitalize(x.Length == 2 ? x : x.ToLowerInvariant()))));
+		}
+
+		/// <summary>
+		/// Converts the string to Pascal case.
+		/// </summary>
+		public static string ToPascalCase(string value)
+		{
+			if (value == null)
+				return null;
+
+			var words = GetWords(value);
+			return string.Concat(words.Select(x => Capitalize(x.Length == 2 ? x : x.ToLowerInvariant())));
+		}
+
+		/// <summary>
+		/// Converts the string to snake case.
+		/// </summary>
+		public static string ToSnakeCase(string value, char separator = '_')
+		{
+			if (value == null)
+				return null;
+
+			var words = GetWords(value);
+			return string.Join(separator.ToString(), words.Select(x => x.ToLowerInvariant()));
+		}
+
+		private static string[] GetWords(string value)
+		{
+			return s_word.Matches(value).Cast<Match>().Select(x => x.ToString()).ToArray();
+		}
+
+		static readonly Regex s_word = new Regex("[A-Z]([A-Z]*(?![a-z])|[a-z]*)|[a-z]+|[0-9]+", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
 	}
 }

@@ -1,55 +1,43 @@
 ﻿using System.Globalization;
+using Facility.Definition;
 
 namespace Facility.Console
 {
-	/// <summary>
-	/// Helper methods for common command-line arguments.
-	/// </summary>
-	public static class CommonArgs
+	internal static class CommonArgs
 	{
-		/// <summary>
-		/// Reads the clean flag.
-		/// </summary>
+		public static string ReadServiceNameOption(this ArgsReader args)
+		{
+			string serviceName = args.ReadOption("serviceName");
+			if (serviceName != null && ServiceDefinitionUtility.IsValidName(serviceName))
+				throw new ArgsReaderException($"Invalid service name '{serviceName}'.");
+			return serviceName;
+		}
+
 		public static bool ReadCleanFlag(this ArgsReader args)
 		{
 			return args.ReadFlag("clean");
 		}
 
-		/// <summary>
-		/// Reads the dry run flag.
-		/// </summary>
 		public static bool ReadDryRunFlag(this ArgsReader args)
 		{
 			return args.ReadFlag("dryrun");
 		}
 
-		/// <summary>
-		/// Reads the help flag.
-		/// </summary>
 		public static bool ReadHelpFlag(this ArgsReader args)
 		{
 			return args.ReadFlag("help|h|?");
 		}
 
-		/// <summary>
-		/// Reads the quiet flag.
-		/// </summary>
 		public static bool ReadQuietFlag(this ArgsReader args)
 		{
 			return args.ReadFlag("quiet");
 		}
 
-		/// <summary>
-		/// Reads the verify flag.
-		/// </summary>
 		public static bool ReadVerifyFlag(this ArgsReader args)
 		{
 			return args.ReadFlag("verify");
 		}
 
-		/// <summary>
-		/// Reads the indent option.
-		/// </summary>
 		public static string ReadIndentOption(this ArgsReader args)
 		{
 			string value = args.ReadOption("indent");
@@ -66,9 +54,6 @@ namespace Facility.Console
 			throw new ArgsReaderException($"Invalid indent '{value}'. (Should be 'tab' or the number of spaces.)");
 		}
 
-		/// <summary>
-		/// Reads the new line option.
-		/// </summary>
 		public static string ReadNewLineOption(this ArgsReader args)
 		{
 			string value = args.ReadOption("newline");

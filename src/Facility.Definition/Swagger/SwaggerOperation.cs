@@ -19,7 +19,7 @@ namespace Facility.Definition.Swagger
 
 		public IReadOnlyList<string> Produces { get; set; }
 
-		public IReadOnlyList<SwaggerSchema> Parameters { get; set; }
+		public IReadOnlyList<SwaggerParameter> Parameters { get; set; }
 
 		public IReadOnlyDictionary<string, SwaggerResponse> Responses { get; set; }
 

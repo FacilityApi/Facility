@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,6 +11,25 @@ namespace Facility.Definition
 	/// </summary>
 	public static class ServiceDefinitionUtility
 	{
+		/// <summary>
+		/// Attempts to determine the format of the service definition.
+		/// </summary>
+		public static ServiceDefinitionFormat? DetectFormat(NamedText namedText)
+		{
+			if (namedText.Name.EndsWith(".fsd", StringComparison.OrdinalIgnoreCase))
+				return ServiceDefinitionFormat.Fsd;
+
+			if (namedText.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
+				namedText.Name.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) ||
+				namedText.Name.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase) ||
+				namedText.Text.Contains("swagger"))
+			{
+				return ServiceDefinitionFormat.Swagger;
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Returns the attribute with the specified name.
 		/// </summary>
@@ -51,9 +71,17 @@ namespace Facility.Definition
 			return element.TryGetAttribute("obsolete") != null;
 		}
 
+		/// <summary>
+		/// Returns true if the name is a valid service member name.
+		/// </summary>
+		public static bool IsValidName(string name)
+		{
+			return name != null && s_validNameRegex.IsMatch(name);
+		}
+
 		internal static void ValidateName(string name, NamedTextPosition position)
 		{
-			if (!s_validNameRegex.IsMatch(name))
+			if (!IsValidName(name))
 				throw new ServiceDefinitionException($"Invalid name '{name}'.", position);
 		}
 
@@ -78,6 +106,6 @@ namespace Facility.Definition
 			return new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
 		}
 
-		static readonly Regex s_validNameRegex = new Regex(@"^[a-zA-Z][a-zA-Z0-9]*$");
+		static readonly Regex s_validNameRegex = new Regex(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
 	}
 }

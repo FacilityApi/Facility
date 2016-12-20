@@ -17,5 +17,8 @@ namespace Facility.Definition.Swagger
 		public IReadOnlyDictionary<string, SwaggerSchema> Headers { get; set; }
 
 		public JObject Examples { get; set; }
+
+		[JsonProperty("x-identifier")]
+		public string Identifier { get; set; }
 	}
 }

@@ -21,7 +21,7 @@ namespace fsdgenfsd
 		protected override IReadOnlyList<string> ExtraUsage => new[]
 		{
 			"   --swagger",
-			"      Generates Swagger (Open API) 2.0.",
+			"      Generates Swagger (OpenAPI) 2.0.",
 			"   --yaml",
 			"      Generates YAML instead of JSON.",
 		};

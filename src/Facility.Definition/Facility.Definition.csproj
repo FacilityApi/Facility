@@ -64,6 +64,8 @@
     <Compile Include="IServiceElementInfo.cs" />
     <Compile Include="Fsd\FsdParser.cs" />
     <Compile Include="Fsd\FsdParsers.cs" />
+    <Compile Include="ServiceDefinitionFormat.cs" />
+    <Compile Include="Swagger\SwaggerParser.cs" />
     <Compile Include="Swagger\SwaggerGenerator.cs" />
     <Compile Include="Swagger\SwaggerContact.cs" />
     <Compile Include="Swagger\SwaggerExternalDocumentation.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Swagger\SwaggerOperations.cs" />
     <Compile Include="Swagger\SwaggerParameterKind.cs" />
     <Compile Include="Swagger\SwaggerResponse.cs" />
+    <Compile Include="Swagger\SwaggerParameter.cs" />
+    <Compile Include="Swagger\ISwaggerSchema.cs" />
     <Compile Include="Swagger\SwaggerSchema.cs" />
     <Compile Include="Swagger\SwaggerSchemaType.cs" />
     <Compile Include="Swagger\SwaggerSchemaTypeFormat.cs" />

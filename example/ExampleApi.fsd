@@ -8,7 +8,7 @@ service ExampleApi
 	method getWidgets
 	{
 		/// The query.
-		[http(from: query, name: "q")]
+		[http(name: "q")]
 		query: string;
 
 		/// The limit of returned results.
@@ -87,11 +87,15 @@ service ExampleApi
 	}
 
 	/// Edits widget.
-	[http(method: POST, path: "/widgets/{id}")]
+	[http(method: PUT, path: "/widgets/{id}")]
 	method editWidget
 	{
 		/// The widget ID.
 		id: string;
+
+		/// The fields to return.
+		[http(from: query)]
+		fields: string;
 
 		/// The operations.
 		ops: object[];

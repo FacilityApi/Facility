@@ -28,7 +28,7 @@ namespace Facility.Definition.Swagger
 
 		public IReadOnlyDictionary<string, SwaggerSchema> Definitions { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerSchema> Parameters { get; set; }
+		public IReadOnlyDictionary<string, SwaggerParameter> Parameters { get; set; }
 
 		public IReadOnlyDictionary<string, SwaggerResponse> Responses { get; set; }
 

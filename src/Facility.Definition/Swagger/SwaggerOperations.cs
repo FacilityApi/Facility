@@ -23,6 +23,6 @@ namespace Facility.Definition.Swagger
 
 		public SwaggerOperation Patch { get; set; }
 
-		public IReadOnlyList<SwaggerSchema> Parameters { get; set; }
+		public IReadOnlyList<SwaggerParameter> Parameters { get; set; }
 	}
 }

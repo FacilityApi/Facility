@@ -43,12 +43,18 @@ string GetSemVerFromFile(string path)
 
 void CodeGen(bool verify)
 {
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
-		@"example\ExampleApi.fsd example\fsd\" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
-		@"example\ExampleApi.fsd example\swagger\ --swagger" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe",
-		@"example\ExampleApi.fsd example\swagger\ --swagger --yaml" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\fsd\" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\swagger\ --swagger" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\swagger\ --swagger --yaml" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\swagger\ExampleApi.json example\swagger\fsd\" + (verify ? " --verify" : ""));
+	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\swagger\ExampleApi.yaml example\swagger\fsd\ --verify");
+
+	foreach (var yamlPath in GetFiles($"example/*.yaml"))
+		ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", $@"{yamlPath} example\fsd\" + (verify ? " --verify" : ""));
+
+	CreateDirectory("example/fsd/swagger");
+	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))
+		ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", $@"{fsdPath} example\fsd\swagger\{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml" + (verify ? " --verify" : ""));
 }
 
 Task("Clean")

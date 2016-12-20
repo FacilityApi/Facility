@@ -17,6 +17,9 @@ namespace Facility.Definition.Swagger
 
 		public string Version { get; set; }
 
+		[JsonProperty("x-identifier")]
+		public string Identifier { get; set; }
+
 		[JsonProperty("x-codegen")]
 		public string CodeGen { get; set; }
 	}

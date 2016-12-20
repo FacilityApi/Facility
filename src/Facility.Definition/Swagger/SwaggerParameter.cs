@@ -5,26 +5,30 @@ using Newtonsoft.Json.Linq;
 
 namespace Facility.Definition.Swagger
 {
-	public class SwaggerSchema : ISwaggerSchema
+	public class SwaggerParameter : ISwaggerSchema
 	{
 		[JsonProperty("$ref")]
 		public string Ref { get; set; } // parameters, schema
 
+		public string In { get; set; } // parameters
+
+		public string Name { get; set; } // parameters
+
 		public string Description { get; set; } // parameters, headers, schema
 
-		public IReadOnlyList<string> Required { get; set; } // schema
+		public bool? Required { get; set; } // parameters
 
-		public string Title { get; set; } // schema
+		public SwaggerSchema Schema { get; set; } // parameters (body)
 
 		public string Type { get; set; } // parameters (non-body), headers, schema
 
 		public string Format { get; set; } // parameters (non-body), headers, schema
 
+		public bool? AllowEmptyValue { get; set; } // parameters (non-body)
+
 		public SwaggerSchema Items { get; set; } // parameters (non-body), headers, schema
 
-		public int? MaxProperties { get; set; } // schema
-
-		public int? MinProperties { get; set; } // schema
+		public string CollectionFormat { get; set; } // parameters (non-body), headers
 
 		public JToken Default { get; set; } // parameters (non-body), headers, schema
 
@@ -52,29 +56,10 @@ namespace Facility.Definition.Swagger
 
 		public double? MultipleOf { get; set; } // parameters (non-body), headers, schema
 
-		public IReadOnlyDictionary<string, SwaggerSchema> Properties { get; set; } // schema
-
-		public IReadOnlyList<SwaggerSchema> AllOf { get; set; } // schema
-
-		public SwaggerSchema AdditionalProperties { get; set; } // schema
-
-		public string Discriminator { get; set; } // schema
-
-		public bool? ReadOnly { get; set; } // schema
-
-		public JObject Xml { get; set; } // schema
-
-		public SwaggerExternalDocumentation ExternalDocs { get; set; } // schema
-
-		public JToken Example { get; set; } // schema
-
 		[JsonProperty("x-identifier")]
 		public string Identifier { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-obsolete")]
 		public bool? Obsolete { get; set; } // parameters, headers, schema
-
-		[JsonProperty("x-remarks")]
-		public string Remarks { get; set; } // schema
 	}
 }
