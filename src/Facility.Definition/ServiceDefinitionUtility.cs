@@ -21,8 +21,7 @@ namespace Facility.Definition
 
 			if (namedText.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
 				namedText.Name.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) ||
-				namedText.Name.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase) ||
-				namedText.Text.Contains("swagger"))
+				namedText.Name.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase))
 			{
 				return ServiceDefinitionFormat.Swagger;
 			}
