@@ -26,14 +26,14 @@ namespace Facility.Definition.Http
 			Methods = serviceInfo.Methods.Select(x => new HttpMethodInfo(x, serviceInfo)).ToList();
 			ErrorSets = serviceInfo.ErrorSets.Select(x => new HttpErrorSetInfo(x)).ToList();
 
-			var httpAttribute = serviceInfo.Dtos.AsEnumerable<IServiceElementInfo>()
+			var unexpectedHttpAttribute = serviceInfo.Dtos.AsEnumerable<IServiceElementInfo>()
 				.Concat(serviceInfo.Dtos.SelectMany(x => x.Fields))
 				.Concat(serviceInfo.Enums)
 				.Concat(serviceInfo.Enums.SelectMany(x => x.Values))
 				.Select(x => x.TryGetHttpAttribute())
 				.FirstOrDefault(x => x != null);
-			if (httpAttribute != null)
-				throw new ServiceDefinitionException("'http' attribute not supported on this element.", httpAttribute.Position);
+			if (unexpectedHttpAttribute != null)
+				throw new ServiceDefinitionException("'http' attribute not supported on this element.", unexpectedHttpAttribute.Position);
 
 			var methodsByRoute = Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
 			for (int index = 1; index < methodsByRoute.Count; index++)
