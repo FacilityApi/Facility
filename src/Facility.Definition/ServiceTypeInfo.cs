@@ -37,7 +37,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Create a service result type.
 		/// </summary>
-		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType, NamedTextPosition position)
+		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType)
 		{
 			return new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
 		}
@@ -45,7 +45,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Create an array type.
 		/// </summary>
-		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType, NamedTextPosition position)
+		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType)
 		{
 			return new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
 		}
@@ -53,7 +53,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Create a map type.
 		/// </summary>
-		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType, NamedTextPosition position)
+		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType)
 		{
 			return new ServiceTypeInfo(ServiceTypeKind.Map, valueType: valueType);
 		}
@@ -111,15 +111,15 @@ namespace Facility.Definition
 
 			string resultValueType = TryPrefixSuffix(text, "result<", ">");
 			if (resultValueType != null)
-				return CreateResult(Parse(resultValueType, findMember, position), position);
+				return CreateResult(Parse(resultValueType, findMember, position));
 
 			string arrayValueType = TryPrefixSuffix(text, "", "[]");
 			if (arrayValueType != null)
-				return CreateArray(Parse(arrayValueType, findMember, position), position);
+				return CreateArray(Parse(arrayValueType, findMember, position));
 
 			string mapValueType = TryPrefixSuffix(text, "map<", ">");
 			if (mapValueType != null)
-				return CreateMap(Parse(mapValueType, findMember, position), position);
+				return CreateMap(Parse(mapValueType, findMember, position));
 
 			if (findMember != null)
 			{
