@@ -221,7 +221,7 @@ namespace Facility.Definition.Http
 			}
 
 			ResponseHeaderFields = responseHeaderFields;
-			ValidResponses = DoGetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode).ToList();
+			ValidResponses = GetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode).ToList();
 
 			var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
 			if (duplicateStatusCode != null)
@@ -273,7 +273,7 @@ namespace Facility.Definition.Http
 				serviceInfo.GetFieldType(fieldInfo).Kind == ServiceTypeKind.Boolean;
 		}
 
-		private IEnumerable<HttpResponseInfo> DoGetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
+		private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
 		{
 			foreach (var responseBodyField in responseBodyFields)
 			{
