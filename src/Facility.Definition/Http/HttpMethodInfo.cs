@@ -80,13 +80,23 @@ namespace Facility.Definition.Http
 			foreach (var methodParameter in methodInfo.GetHttpParameters())
 			{
 				if (methodParameter.Name == "method")
+				{
 					Method = GetHttpMethodFromParameter(methodParameter);
+				}
 				else if (methodParameter.Name == "path")
+				{
+					if (methodParameter.Value.Length == 0 || methodParameter.Value[0] != '/')
+						throw new ServiceDefinitionException("'path' value must start with a slash.", methodParameter.Position);
 					Path = methodParameter.Value;
+				}
 				else if (methodParameter.Name == "code")
+				{
 					statusCode = HttpAttributeUtility.ParseStatusCodeInteger(methodParameter);
+				}
 				else
+				{
 					throw methodParameter.CreateInvalidHttpParameterException();
+				}
 			}
 
 			var pathParameterNames = new HashSet<string>(GetPathParameterNames(Path));

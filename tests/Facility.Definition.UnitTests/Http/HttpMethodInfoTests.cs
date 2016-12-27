@@ -101,6 +101,20 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
+		public void MethodPathEmpty()
+		{
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"\")] method do {}: {} }")
+				.Message.ShouldBe("TestApi.fsd(1,38): 'path' value must start with a slash.");
+		}
+
+		[Test]
+		public void MethodPathNoSlash()
+		{
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"xyzzy\")] method do {}: {} }")
+				.Message.ShouldBe("TestApi.fsd(1,38): 'path' value must start with a slash.");
+		}
+
+		[Test]
 		public void MethodStatusCode()
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: get, code: 202)] method do {}: {} }").Methods.Single();
