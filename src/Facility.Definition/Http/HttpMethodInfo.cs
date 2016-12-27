@@ -190,13 +190,9 @@ namespace Facility.Definition.Http
 			{
 				string from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
 
-				if (from == "path")
+				if (from == "path" || from == "query")
 				{
-					throw new ServiceDefinitionException("Response fields do not support '[http(from: path)]'.", responseField.Position);
-				}
-				else if (from == "query")
-				{
-					throw new ServiceDefinitionException("Response fields do not support '[http(from: query)]'.", responseField.Position);
+					throw new ServiceDefinitionException($"Response fields do not support '[http(from: {from})]'.", responseField.Position);
 				}
 				else if (from == "normal")
 				{
