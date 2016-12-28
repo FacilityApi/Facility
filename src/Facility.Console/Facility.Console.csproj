@@ -35,6 +35,10 @@
     <DocumentationFile>bin\Release\Facility.Console.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArgsReading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ArgsReading.1.0.0\lib\dotnet\ArgsReading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Faithlife.Parsing.1.0.0\lib\dotnet\Faithlife.Parsing.dll</HintPath>
       <Private>True</Private>
@@ -60,8 +64,6 @@
     <Compile Include="..\..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="ArgsReader.cs" />
-    <Compile Include="ArgsReaderException.cs" />
     <Compile Include="CodeGeneratorApp.cs" />
     <Compile Include="CommonArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

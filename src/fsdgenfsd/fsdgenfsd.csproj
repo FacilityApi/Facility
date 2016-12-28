@@ -38,6 +38,10 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArgsReading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ArgsReading.1.0.0\lib\dotnet\ArgsReading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Faithlife.Parsing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Faithlife.Parsing.1.0.0\lib\dotnet\Faithlife.Parsing.dll</HintPath>
       <Private>True</Private>
