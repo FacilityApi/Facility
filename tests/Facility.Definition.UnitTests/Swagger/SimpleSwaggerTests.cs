@@ -16,22 +16,32 @@ namespace Facility.Definition.UnitTests.Swagger
 		public void GenerateSimpleServiceJson()
 		{
 			var generator = new SwaggerGenerator { GeneratorName = "tests" };
-			var namedText = generator.GenerateOutput(TestUtility.ParseTestApi(s_fsdText)).NamedTexts.Single();
+			var fsdService = TestUtility.ParseTestApi(s_fsdText);
+			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
 			namedText.Name.ShouldBe("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
 			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+
+			var service = new SwaggerParser().ParseDefinition(namedText);
+			service.Summary.ShouldBe("TestApi");
+			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
 		}
 
 		[Test]
 		public void GenerateSimpleServiceYaml()
 		{
 			var generator = new SwaggerGenerator { Yaml = true, GeneratorName = "tests" };
-			var namedText = generator.GenerateOutput(TestUtility.ParseTestApi(s_fsdText)).NamedTexts.Single();
+			var fsdService = TestUtility.ParseTestApi(s_fsdText);
+			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
 			namedText.Name.ShouldBe("TestApi.yaml");
 			var jToken = JToken.FromObject(new YamlDotNet.Serialization.DeserializerBuilder().Build().Deserialize(new StringReader(namedText.Text)));
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
 			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+
+			var service = new SwaggerParser().ParseDefinition(namedText);
+			service.Summary.ShouldBe("TestApi");
+			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
 		}
 
 		readonly string s_fsdText = @"

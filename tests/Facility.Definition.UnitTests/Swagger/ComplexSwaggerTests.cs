@@ -15,12 +15,17 @@ namespace Facility.Definition.UnitTests.Swagger
 		public void GenerateComplexService()
 		{
 			var generator = new SwaggerGenerator { GeneratorName = "tests" };
-			var output = generator.GenerateOutput(TestUtility.ParseTestApi(s_fsdText));
+			var fsdService = TestUtility.ParseTestApi(s_fsdText);
+			var output = generator.GenerateOutput(fsdService);
 			var namedText = output.NamedTexts.Single();
 			namedText.Name.ShouldBe("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
 			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+
+			var service = new SwaggerParser().ParseDefinition(namedText);
+			service.Summary.ShouldBe(fsdService.Summary);
+			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
 		}
 
 		readonly string s_fsdText = @"
