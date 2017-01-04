@@ -10,3 +10,6 @@ trim_trailing_whitespace = true
 [*.{cake,cs,fsd}]
 indent_size = 4
 indent_style = tab
+
+[*.ps1]
+indent_size = 4
