@@ -23,7 +23,8 @@ var githubRawUri = "http://raw.githubusercontent.com";
 var nugetSource = "https://www.nuget.org/api/v2/package";
 var coverageAssemblies = new[] { "Facility.Definition" };
 
-var gitRepository = new LibGit2Sharp.Repository(MakeAbsolute(Directory(".")).FullPath);
+var rootPath = MakeAbsolute(Directory(".")).FullPath;
+var gitRepository = LibGit2Sharp.Repository.IsValid(rootPath) ? new LibGit2Sharp.Repository(rootPath) : null;
 
 var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("build.cake"));
 if (!string.IsNullOrEmpty(githubApiKey))
@@ -89,7 +90,7 @@ Task("Test")
 
 Task("SourceIndex")
 	.IsDependentOn("Test")
-	.WithCriteria(() => configuration == "Release")
+	.WithCriteria(() => configuration == "Release" && gitRepository != null)
 	.Does(() =>
 	{
 		if (sourceIndex)
