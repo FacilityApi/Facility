@@ -7,7 +7,7 @@
     <owners>Ed Ball</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A command-line tool that generates Facility Service Definitions.</description>
-    <copyright>Copyright 2016 Ed Ball</copyright>
+    <copyright>Copyright 2016-2017 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
   </metadata>
