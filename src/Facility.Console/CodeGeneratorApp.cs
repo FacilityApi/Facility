@@ -39,9 +39,17 @@ namespace Facility.Console
 				var generator = CreateGenerator(argsReader);
 				generator.GeneratorName = s_assemblyName;
 				if (SupportsCustomIndent)
-					generator.IndentText = argsReader.ReadIndentOption();
+				{
+					string indentText = argsReader.ReadIndentOption();
+					if (indentText != null)
+						generator.IndentText = indentText;
+				}
 				if (SupportsCustomNewLine)
-					generator.NewLine = argsReader.ReadNewLineOption();
+				{
+					string newLine = argsReader.ReadNewLineOption();
+					if (newLine != null)
+						generator.NewLine = newLine;
+				}
 
 				string serviceName = argsReader.ReadServiceNameOption();
 				bool shouldClean = SupportsClean && argsReader.ReadCleanFlag();
