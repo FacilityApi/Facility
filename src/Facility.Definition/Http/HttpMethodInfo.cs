@@ -116,7 +116,7 @@ namespace Facility.Definition.Http
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
 						throw new ServiceDefinitionException("Request field used in path must use a simple type.", requestField.Position);
 					var pathInfo = new HttpPathFieldInfo(requestField);
-					if (!pathParameterNames.Remove(pathInfo.ServiceField.Name))
+					if (!pathParameterNames.Remove(pathInfo.Name))
 						throw new ServiceDefinitionException("Request field with [http(from: path)] has no placeholder in the method path.", requestField.Position);
 					requestPathFields.Add(pathInfo);
 				}

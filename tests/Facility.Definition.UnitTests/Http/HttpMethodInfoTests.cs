@@ -133,7 +133,7 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: string; }: {} }").Methods.Single();
 			var field = method.PathFields.Single();
-			field.ServiceField.Name.ShouldBe("id");
+			field.Name.ShouldBe("id");
 		}
 
 		[Test]
@@ -141,7 +141,7 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			var method = ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(from: path)] id: string; }: {} }").Methods.Single();
 			var field = method.PathFields.Single();
-			field.ServiceField.Name.ShouldBe("id");
+			field.Name.ShouldBe("id");
 		}
 
 		[Test]

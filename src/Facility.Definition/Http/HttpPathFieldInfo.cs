@@ -10,6 +10,11 @@
 		/// </summary>
 		public ServiceFieldInfo ServiceField { get; }
 
+		/// <summary>
+		/// The name of the path parameter.
+		/// </summary>
+		public string Name => ServiceField.Name;
+
 		internal HttpPathFieldInfo(ServiceFieldInfo fieldInfo)
 		{
 			ServiceField = fieldInfo;

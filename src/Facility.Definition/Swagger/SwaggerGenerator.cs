@@ -249,7 +249,7 @@ namespace Facility.Definition.Swagger
 			var parameters = new List<SwaggerParameter>();
 
 			foreach (var httpPathInfo in httpMethodInfo.PathFields)
-				parameters.Add(CreateSwaggerParameter(service, httpPathInfo.ServiceField, SwaggerParameterKind.Path, httpPathInfo.ServiceField.Name));
+				parameters.Add(CreateSwaggerParameter(service, httpPathInfo.ServiceField, SwaggerParameterKind.Path, httpPathInfo.Name));
 
 			foreach (var httpQueryInfo in httpMethodInfo.QueryFields)
 				parameters.Add(CreateSwaggerParameter(service, httpQueryInfo.ServiceField, SwaggerParameterKind.Query, httpQueryInfo.Name));
