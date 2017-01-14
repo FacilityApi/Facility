@@ -76,9 +76,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Facility.Console\Facility.Console.csproj">
+    <ProjectReference Include="..\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj">
       <Project>{ca33bb9e-8557-4911-809c-d89c7408a182}</Project>
-      <Name>Facility.Console</Name>
+      <Name>Facility.CodeGen.Console</Name>
     </ProjectReference>
     <ProjectReference Include="..\Facility.Definition\Facility.Definition.csproj">
       <Project>{64db00a4-5fa3-4598-ba61-ed1fa891043c}</Project>
@@ -86,7 +86,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

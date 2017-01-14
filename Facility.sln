@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD
 		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Console", "src\Facility.Console\Facility.Console.csproj", "{CA33BB9E-8557-4911-809C-D89C7408A182}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CodeGen.Console", "src\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj", "{CA33BB9E-8557-4911-809C-D89C7408A182}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{569B4B9E-C089-496A-9503-8D502A74B9BF}"
 	ProjectSection(SolutionItems) = preProject

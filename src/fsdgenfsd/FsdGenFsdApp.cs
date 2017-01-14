@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ArgsReading;
-using Facility.Console;
+using Facility.CodeGen.Console;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
 using Facility.Definition.Swagger;

@@ -10,7 +10,7 @@ using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
 using Facility.Definition.Swagger;
 
-namespace Facility.Console
+namespace Facility.CodeGen.Console
 {
 	/// <summary>
 	/// Base class for code generator console applications.

@@ -7,12 +7,12 @@ Tools and libraries for working with the [Facility API Framework](https://facili
 
 ## Facility.Definition
 
-A library for processing Facility Service Definitions. [![NuGet](https://img.shields.io/nuget/v/Facility.Definition.svg)](https://www.nuget.org/packages/Facility.Definition)
+Used by code generators to process Facility Service Definitions. [![NuGet](https://img.shields.io/nuget/v/Facility.Definition.svg)](https://www.nuget.org/packages/Facility.Definition)
 
-## Facility.Console
+## Facility.CodeGen.Console
 
-A library for writing Facility code generators. [![NuGet](https://img.shields.io/nuget/v/Facility.Console.svg)](https://www.nuget.org/packages/Facility.Console)
+Helpers for Facility code generator tools. [![NuGet](https://img.shields.io/nuget/v/Facility.CodeGen.Console.svg)](https://www.nuget.org/packages/Facility.CodeGen.Console)
 
 ## fsdgenfsd
 
-A command-line tool that generates Facility Service Definitions. [![NuGet](https://img.shields.io/nuget/v/fsdgenfsd.svg)](https://www.nuget.org/packages/fsdgenfsd)
+A tool that generates FSD or Swagger (OpenAPI) 2.0 for a Facility Service Definition. [![NuGet](https://img.shields.io/nuget/v/fsdgenfsd.svg)](https://www.nuget.org/packages/fsdgenfsd)

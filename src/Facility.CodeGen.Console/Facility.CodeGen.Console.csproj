@@ -7,8 +7,8 @@
     <ProjectGuid>{CA33BB9E-8557-4911-809C-D89C7408A182}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Facility.Console</RootNamespace>
-    <AssemblyName>Facility.Console</AssemblyName>
+    <RootNamespace>Facility.CodeGen.Console</RootNamespace>
+    <AssemblyName>Facility.CodeGen.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\Facility.Console.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Facility.CodeGen.Console.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\Facility.Console.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Facility.CodeGen.Console.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ArgsReading, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -75,11 +75,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Facility.Console.nuspec" />
+    <None Include="Facility.CodeGen.Console.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

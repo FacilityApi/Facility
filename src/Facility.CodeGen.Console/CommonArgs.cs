@@ -2,7 +2,7 @@
 using ArgsReading;
 using Facility.Definition;
 
-namespace Facility.Console
+namespace Facility.CodeGen.Console
 {
 	internal static class CommonArgs
 	{
