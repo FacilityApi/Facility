@@ -9,3 +9,4 @@ release/
 *.ncrunchproject
 *.ncrunchsolution
 *.user
+nCrunchTemp*

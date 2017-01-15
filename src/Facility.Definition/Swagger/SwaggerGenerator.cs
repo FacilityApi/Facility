@@ -239,6 +239,7 @@ namespace Facility.Definition.Swagger
 				Summary = GetSummaryOrNull(methodInfo),
 				Description = GetRemarksOrNull(methodInfo),
 				OperationId = methodInfo.Name,
+				Deprecated = GetObsoleteOrNull(methodInfo),
 			};
 
 			if (httpMethodInfo.RequestNormalFields.Count != 0 || httpMethodInfo.RequestBodyField != null)

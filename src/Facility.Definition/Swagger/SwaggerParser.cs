@@ -169,11 +169,15 @@ namespace Facility.Definition.Swagger
 					name, httpAttributeValues, swaggerOperation.Responses.Count == 1, swaggerService, position);
 			}
 
+			var attributes = new List<ServiceAttributeInfo> { new ServiceAttributeInfo("http", httpAttributeValues) };
+			if (swaggerOperation.Deprecated.GetValueOrDefault())
+				attributes.Add(new ServiceAttributeInfo("obsolete"));
+
 			members.Add(new ServiceMethodInfo(
 				name: name,
 				requestFields: requestFields,
 				responseFields: responseFields,
-				attributes: new[] { new ServiceAttributeInfo("http", httpAttributeValues) },
+				attributes: attributes,
 				summary: PrepareSummary(swaggerOperation.Summary),
 				remarks: SplitRemarks(swaggerOperation.Description),
 				position: position));
