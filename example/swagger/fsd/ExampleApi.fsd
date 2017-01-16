@@ -129,6 +129,7 @@ service ExampleApi
 
 	/// Gets the widget weight.
 	[http(method: GET, path: "/widgets/{id}/weight", code: 200)]
+	[obsolete]
 	method getWidgetWeight
 	{
 		/// The widget ID.

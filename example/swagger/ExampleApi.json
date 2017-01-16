@@ -274,7 +274,8 @@
               "$ref": "#/definitions/GetWidgetWeightResponse"
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/prefs/{key}": {

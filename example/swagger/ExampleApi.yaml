@@ -193,6 +193,7 @@ paths:
           description: ''
           schema:
             $ref: '#/definitions/GetWidgetWeightResponse'
+      deprecated: true
   /prefs/{key}:
     get:
       summary: Gets a widget preference.
