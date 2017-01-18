@@ -33,31 +33,6 @@ if (!string.IsNullOrEmpty(githubApiKey))
 string version = null;
 string headSha = null;
 
-string GetSemVerFromFile(string path)
-{
-	var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
-	var semver = $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
-	if (prerelease.Length != 0)
-		semver += $"-{prerelease}";
-	return semver;
-}
-
-void CodeGen(bool verify)
-{
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\fsd\" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\swagger\ --swagger" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\ExampleApi.fsd example\swagger\ --swagger --yaml" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\swagger\ExampleApi.json example\swagger\fsd\" + (verify ? " --verify" : ""));
-	ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", @"example\swagger\ExampleApi.yaml example\swagger\fsd\ --verify");
-
-	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", $@"{yamlPath} example\fsd\" + (verify ? " --verify" : ""));
-
-	CreateDirectory("example/fsd/swagger");
-	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))
-		ExecuteProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", $@"{fsdPath} example\fsd\swagger\{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml" + (verify ? " --verify" : ""));
-}
-
 Task("Clean")
 	.Does(() =>
 	{
@@ -199,6 +174,40 @@ Task("CoveragePublish")
 
 Task("Default")
 	.IsDependentOn("Test");
+
+string GetSemVerFromFile(string path)
+{
+	var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
+	var semver = $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
+	if (prerelease.Length != 0)
+		semver += $"-{prerelease}";
+	return semver;
+}
+
+void CodeGen(bool verify)
+{
+	ExecuteCodeGen(@"example\ExampleApi.fsd example\fsd\", verify);
+	ExecuteCodeGen(@"example\ExampleApi.fsd example\swagger\ --swagger", verify);
+	ExecuteCodeGen(@"example\ExampleApi.fsd example\swagger\ --swagger --yaml", verify);
+	ExecuteCodeGen(@"example\swagger\ExampleApi.json example\swagger\fsd\", verify);
+	ExecuteCodeGen(@"example\swagger\ExampleApi.yaml example\swagger\fsd\", verify: true);
+
+	foreach (var yamlPath in GetFiles($"example/*.yaml"))
+		ExecuteCodeGen($@"{yamlPath} example\fsd\", verify);
+
+	CreateDirectory("example/fsd/swagger");
+	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))
+		ExecuteCodeGen($@"{fsdPath} example\fsd\swagger\{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml", verify);
+}
+
+void ExecuteCodeGen(string args, bool verify)
+{
+	int exitCode = StartProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", args + (verify ? " --verify" : ""));
+	if (exitCode == 1 && verify)
+		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
+	else if (exitCode != 0)
+		throw new InvalidOperationException($"Code generation failed with exit code {exitCode}.");
+}
 
 void ExecuteProcess(string exePath, string arguments)
 {
