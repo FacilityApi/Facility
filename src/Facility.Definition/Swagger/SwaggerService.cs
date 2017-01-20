@@ -5,11 +5,6 @@ namespace Facility.Definition.Swagger
 {
 	public class SwaggerService
 	{
-		public SwaggerService()
-		{
-			Swagger = "2.0";
-		}
-
 		public string Swagger { get; set; }
 
 		public SwaggerInfo Info { get; set; }

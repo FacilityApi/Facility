@@ -6,7 +6,10 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Facility.Definition.CodeGen;
 using Newtonsoft.Json;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NodeDeserializers;
+using YamlDotNet.Serialization.ObjectFactories;
 
 namespace Facility.Definition.Swagger
 {
@@ -16,7 +19,7 @@ namespace Facility.Definition.Swagger
 	public sealed class SwaggerParser
 	{
 		/// <summary>
-		/// The service name (defaults to '/info/x-identifier' or '/info/title').
+		/// The service name (defaults to 'info/x-identifier' or 'info/title').
 		/// </summary>
 		public string ServiceName { get; set; }
 
@@ -25,30 +28,96 @@ namespace Facility.Definition.Swagger
 		/// </summary>
 		public ServiceInfo ParseDefinition(NamedText source)
 		{
-			var position = new NamedTextPosition(source.Name);
-
-			string json = source.Text;
-			if (!s_detectJsonRegex.IsMatch(json))
-			{
-				// convert YAML to JSON
-				using (var stringReader = new StringReader(source.Text))
-					json = JsonConvert.SerializeObject(new DeserializerBuilder().Build().Deserialize(stringReader), SwaggerUtility.JsonSerializerSettings);
-			}
+			if (string.IsNullOrWhiteSpace(source.Text))
+				throw new ServiceDefinitionException("Service definition is missing.", new NamedTextPosition(source.Name, 1, 1));
 
 			SwaggerService swaggerService;
-			using (var stringReader = new StringReader(json))
-			using (var jsonTextReader = new JsonTextReader(stringReader))
-				swaggerService = JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings).Deserialize<SwaggerService>(jsonTextReader);
+			SwaggerParserContext context;
 
-			string name = ServiceName ?? swaggerService.Info?.Identifier ?? CodeGenUtility.ToPascalCase(swaggerService.Info?.Title ?? "");
+			if (!s_detectJsonRegex.IsMatch(source.Text))
+			{
+				// parse YAML
+				var yamlObjectFactory = new DefaultObjectFactory();
+				var yamlDeserializer = new DeserializerBuilder()
+					.WithObjectFactory(yamlObjectFactory)
+					.WithNodeDeserializer(new OurNodeDeserializer(yamlObjectFactory))
+					.IgnoreUnmatchedProperties()
+					.WithNamingConvention(new OurNamingConvention())
+					.Build();
+				using (var stringReader = new StringReader(source.Text))
+				{
+					try
+					{
+						swaggerService = yamlDeserializer.Deserialize<SwaggerService>(stringReader);
+					}
+					catch (YamlException exception)
+					{
+						var exceptionError = exception.InnerException?.Message ?? exception.Message;
+						const string errorStart = "): ";
+						int errorStartIndex = exceptionError.IndexOf(errorStart, StringComparison.OrdinalIgnoreCase);
+						if (errorStartIndex != -1)
+							exceptionError = exceptionError.Substring(errorStartIndex + errorStart.Length);
+
+						var exceptionPosition = new NamedTextPosition(source.Name, exception.End.Line, exception.End.Column);
+						throw new ServiceDefinitionException(exceptionError, exceptionPosition);
+					}
+				}
+				if (swaggerService == null)
+					throw new ServiceDefinitionException("Service definition is missing.", new NamedTextPosition(source.Name, 1, 1));
+
+				context = SwaggerParserContext.FromYaml(source);
+			}
+			else
+			{
+				// parse JSON
+				using (var stringReader = new StringReader(source.Text))
+				using (var jsonTextReader = new JsonTextReader(stringReader))
+				{
+					try
+					{
+						swaggerService = JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings).Deserialize<SwaggerService>(jsonTextReader);
+					}
+					catch (JsonException exception)
+					{
+						var exceptionPosition = new NamedTextPosition(source.Name, jsonTextReader.LineNumber, jsonTextReader.LinePosition);
+						throw new ServiceDefinitionException(exception.Message, exceptionPosition);
+					}
+
+					context = SwaggerParserContext.FromJson(source);
+				}
+			}
+
+			if (swaggerService.Swagger == null)
+				throw context.CreateException("swagger field is missing.");
+			if (swaggerService.Swagger != SwaggerUtility.SwaggerVersion)
+				throw context.CreateException($"swagger should be '{SwaggerUtility.SwaggerVersion}'.", "swagger");
+
+			if (swaggerService.Info == null)
+				throw context.CreateException("info is missing.");
+
+			string name = ServiceName;
+			if (name != null && !ServiceDefinitionUtility.IsValidName(name))
+				throw context.CreateException("ServiceName generator option is not a valid service name.");
 			if (name == null)
-				throw new ServiceDefinitionException("Missing service info title.", position);
+				name = swaggerService.Info?.Identifier;
+			if (name != null && !ServiceDefinitionUtility.IsValidName(name))
+				throw context.CreateException("info/x-identifier is not a valid service name.", "info/x-identifier");
+			if (name == null)
+				name = CodeGenUtility.ToPascalCase(swaggerService.Info?.Title);
+			if (name == null)
+				throw context.CreateException("info/title is missing.", "info");
+			if (name != null && !ServiceDefinitionUtility.IsValidName(name))
+				throw context.CreateException("info/title is not a valid service name.", "info/title");
 
 			var attributes = new List<ServiceAttributeInfo>();
 
 			string version = swaggerService.Info?.Version;
 			if (!string.IsNullOrWhiteSpace(version))
-				attributes.Add(new ServiceAttributeInfo("info", new[] { new ServiceAttributeParameterInfo("version", version, position) }, position));
+			{
+				attributes.Add(new ServiceAttributeInfo("info",
+					new[] { new ServiceAttributeParameterInfo("version", version, context.CreatePosition("info/version")) },
+					context.CreatePosition("info")));
+			}
 
 			string scheme = GetBestScheme(swaggerService.Schemes);
 			string host = swaggerService.Host;
@@ -56,21 +125,27 @@ namespace Facility.Definition.Swagger
 			if (!string.IsNullOrWhiteSpace(host) && !string.IsNullOrWhiteSpace(scheme))
 			{
 				string url = new UriBuilder(scheme, host) { Path = basePath }.Uri.AbsoluteUri;
-				attributes.Add(new ServiceAttributeInfo("http", new[] { new ServiceAttributeParameterInfo("url", url) }));
+				attributes.Add(new ServiceAttributeInfo("http",
+					new[] { new ServiceAttributeParameterInfo("url", url, context.CreatePosition()) },
+					context.CreatePosition()));
 			}
+
+			var position = context.CreatePosition();
 
 			var members = new List<IServiceMemberInfo>();
 
 			foreach (var swaggerPath in swaggerService.Paths.EmptyIfNull())
 			{
-				var swaggerOperations = swaggerService.ResolveOperations(swaggerPath.Value, position);
-				AddServiceMethod(members, "GET", swaggerPath.Key, swaggerOperations.Get, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "POST", swaggerPath.Key, swaggerOperations.Post, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "PUT", swaggerPath.Key, swaggerOperations.Put, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "DELETE", swaggerPath.Key, swaggerOperations.Delete, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "OPTIONS", swaggerPath.Key, swaggerOperations.Options, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "HEAD", swaggerPath.Key, swaggerOperations.Head, swaggerOperations.Parameters, swaggerService, position);
-				AddServiceMethod(members, "PATCH", swaggerPath.Key, swaggerOperations.Patch, swaggerOperations.Parameters, swaggerService, position);
+				var swaggerOperations = swaggerPath.Value;
+				var operationsContext = context.CreateContext("paths/swaggerPath");
+				swaggerService.ResolveOperations(ref swaggerOperations, ref operationsContext);
+				AddServiceMethod(members, "GET", swaggerPath.Key, swaggerOperations.Get, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("get"));
+				AddServiceMethod(members, "POST", swaggerPath.Key, swaggerOperations.Post, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("post"));
+				AddServiceMethod(members, "PUT", swaggerPath.Key, swaggerOperations.Put, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("put"));
+				AddServiceMethod(members, "DELETE", swaggerPath.Key, swaggerOperations.Delete, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("delete"));
+				AddServiceMethod(members, "OPTIONS", swaggerPath.Key, swaggerOperations.Options, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("options"));
+				AddServiceMethod(members, "HEAD", swaggerPath.Key, swaggerOperations.Head, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("head"));
+				AddServiceMethod(members, "PATCH", swaggerPath.Key, swaggerOperations.Patch, swaggerOperations.Parameters, swaggerService, operationsContext.CreateContext("patch"));
 			}
 
 			foreach (var swaggerDefinition in swaggerService.Definitions.EmptyIfNull())
@@ -81,14 +156,14 @@ namespace Facility.Definition.Swagger
 					!swaggerService.IsFacilityError(swaggerDefinition) &&
 					swaggerService.TryGetFacilityResultOfType(swaggerDefinition, position) == null)
 				{
-					AddServiceDto(members, swaggerDefinition.Key, swaggerDefinition.Value, swaggerService, position);
+					AddServiceDto(members, swaggerDefinition.Key, swaggerDefinition.Value, swaggerService, context.CreatePosition("definitions/" + swaggerDefinition.Key));
 				}
 			}
 
 			return new ServiceInfo(name, members: members, attributes: attributes,
 				summary: PrepareSummary(swaggerService.Info?.Title),
 				remarks: SplitRemarks(swaggerService.Info?.Description),
-				position: position);
+				position: context.CreatePosition());
 		}
 
 		private static string GetBestScheme(IReadOnlyList<string> schemes)
@@ -133,10 +208,12 @@ namespace Facility.Definition.Swagger
 				position: position));
 		}
 
-		private void AddServiceMethod(IList<IServiceMemberInfo> members, string method, string path, SwaggerOperation swaggerOperation, IReadOnlyList<SwaggerParameter> swaggerOperationsParameters, SwaggerService swaggerService, NamedTextPosition position)
+		private void AddServiceMethod(IList<IServiceMemberInfo> members, string method, string path, SwaggerOperation swaggerOperation, IReadOnlyList<SwaggerParameter> swaggerOperationsParameters, SwaggerService swaggerService, SwaggerParserContext context)
 		{
 			if (swaggerOperation == null)
 				return;
+
+			var position = context.CreatePosition();
 
 			path = s_pathParameter.Replace(path, match =>
 			{
@@ -280,11 +357,11 @@ namespace Facility.Definition.Swagger
 					attributes: new[]
 					{
 						new ServiceAttributeInfo("http",
-						new[]
-						{
-							new ServiceAttributeParameterInfo("from", "body", position),
-							new ServiceAttributeParameterInfo("code", statusCode, position),
-						})
+							new[]
+							{
+								new ServiceAttributeParameterInfo("from", "body", position),
+								new ServiceAttributeParameterInfo("code", statusCode, position),
+							})
 					},
 					summary: PrepareSummary(swaggerResponse.Description),
 					position: position));
@@ -337,6 +414,38 @@ namespace Facility.Definition.Swagger
 		private static IReadOnlyList<string> SplitRemarks(string remarks)
 		{
 			return string.IsNullOrWhiteSpace(remarks) ? null : Regex.Split(remarks, @"\r?\n");
+		}
+
+		private sealed class OurNodeDeserializer : INodeDeserializer
+		{
+			public OurNodeDeserializer(IObjectFactory objectFactory)
+			{
+				m_dictionaryDeserializer = new DictionaryNodeDeserializer(objectFactory);
+			}
+
+			public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
+			{
+				if (expectedType.IsConstructedGenericType && expectedType.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>))
+				{
+					var dictionaryType = typeof(Dictionary<,>).MakeGenericType(expectedType.GenericTypeArguments);
+					return m_dictionaryDeserializer.Deserialize(reader, dictionaryType, nestedObjectDeserializer, out value);
+				}
+				else
+				{
+					value = null;
+					return false;
+				}
+			}
+
+			readonly INodeDeserializer m_dictionaryDeserializer;
+		}
+
+		private sealed class OurNamingConvention : INamingConvention
+		{
+			public string Apply(string value)
+			{
+				return value.StartsWith("x-", StringComparison.Ordinal) ? value : CodeGenUtility.ToCamelCase(value);
+			}
 		}
 
 		static readonly Regex s_detectJsonRegex = new Regex(@"^\s*[{/]", RegexOptions.Singleline);

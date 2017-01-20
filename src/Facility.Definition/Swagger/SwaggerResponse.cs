@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using YamlDotNet.Serialization;
+
 #pragma warning disable 1591
 
 namespace Facility.Definition.Swagger
@@ -19,6 +21,7 @@ namespace Facility.Definition.Swagger
 		public JObject Examples { get; set; }
 
 		[JsonProperty("x-identifier")]
+		[YamlMember(Alias = "x-identifier")]
 		public string Identifier { get; set; }
 	}
 }

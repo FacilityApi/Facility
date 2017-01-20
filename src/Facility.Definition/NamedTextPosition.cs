@@ -16,8 +16,20 @@ namespace Facility.Definition
 				throw new ArgumentNullException(nameof(name));
 
 			Name = name;
-			LineNumber = lineNumber;
-			ColumnNumber = columnNumber;
+			m_lineNumber = lineNumber;
+			m_columnNumber = columnNumber;
+		}
+
+		/// <summary>
+		/// Creates a position.
+		/// </summary>
+		public NamedTextPosition(string name, Func<Tuple<int, int>> getLineColumn)
+		{
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+
+			Name = name;
+			m_getLineColumn = getLineColumn;
 		}
 
 		/// <summary>
@@ -28,12 +40,26 @@ namespace Facility.Definition
 		/// <summary>
 		/// The line number.
 		/// </summary>
-		public int LineNumber { get; }
+		public int LineNumber
+		{
+			get
+			{
+				EnsureLineColumn();
+				return m_lineNumber;
+			}
+		}
 
 		/// <summary>
 		/// The column number.
 		/// </summary>
-		public int ColumnNumber { get; }
+		public int ColumnNumber
+		{
+			get
+			{
+				EnsureLineColumn();
+				return m_columnNumber;
+			}
+		}
 
 		/// <summary>
 		/// The position as a source name, line number, and column number.
@@ -47,5 +73,20 @@ namespace Facility.Definition
 			else
 				return Name;
 		}
+
+		private void EnsureLineColumn()
+		{
+			if (m_getLineColumn != null)
+			{
+				var tuple = m_getLineColumn();
+				m_lineNumber = tuple.Item1;
+				m_columnNumber = tuple.Item2;
+				m_getLineColumn = null;
+			}
+		}
+
+		int m_lineNumber;
+		int m_columnNumber;
+		Func<Tuple<int, int>> m_getLineColumn;
 	}
 }

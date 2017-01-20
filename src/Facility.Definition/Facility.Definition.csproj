@@ -74,6 +74,7 @@
     <Compile Include="Swagger\SwaggerOperation.cs" />
     <Compile Include="Swagger\SwaggerOperations.cs" />
     <Compile Include="Swagger\SwaggerParameterKind.cs" />
+    <Compile Include="Swagger\SwaggerParserContext.cs" />
     <Compile Include="Swagger\SwaggerResponse.cs" />
     <Compile Include="Swagger\SwaggerParameter.cs" />
     <Compile Include="Swagger\ISwaggerSchema.cs" />

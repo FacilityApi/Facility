@@ -12,6 +12,11 @@ namespace Facility.Definition.Swagger
 	public static class SwaggerUtility
 	{
 		/// <summary>
+		/// The Swagger version.
+		/// </summary>
+		public static readonly string SwaggerVersion = "2.0";
+
+		/// <summary>
 		/// JSON serializer settings for Swagger DTOs.
 		/// </summary>
 		public static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
@@ -45,20 +50,20 @@ namespace Facility.Definition.Swagger
 			return new KeyValuePair<string, SwaggerSchema>(name, swaggerDefinition);
 		}
 
-		internal static SwaggerOperations ResolveOperations(this SwaggerService swaggerService, SwaggerOperations swaggerOperations, NamedTextPosition position)
+		internal static void ResolveOperations(this SwaggerService swaggerService, ref SwaggerOperations swaggerOperations, ref SwaggerParserContext context)
 		{
 			if (swaggerOperations.Ref != null)
 			{
 				const string refPrefix = "#/paths/";
 				if (!swaggerOperations.Ref.StartsWith(refPrefix, StringComparison.Ordinal))
-					throw new ServiceDefinitionException("Operations $ref must start with '#/paths/'.", position);
+					throw new ServiceDefinitionException("Operations $ref must start with '#/paths/'.", context.CreatePosition());
 
 				string name = UnescapeRefPart(swaggerOperations.Ref.Substring(refPrefix.Length));
 				if (!swaggerService.Paths.TryGetValue(name, out swaggerOperations))
-					throw new ServiceDefinitionException($"Missing path named '{name}'.", position);
-			}
+					throw new ServiceDefinitionException($"Missing path named '{name}'.", context.CreatePosition());
 
-			return swaggerOperations;
+				context = context.Root.CreateContext("paths/" + name);
+			}
 		}
 
 		internal static SwaggerParameter ResolveParameter(this SwaggerService swaggerService, SwaggerParameter swaggerParameter, NamedTextPosition position)
@@ -176,6 +181,11 @@ namespace Facility.Definition.Swagger
 		}
 
 		internal static IReadOnlyDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> list)
+		{
+			return list ?? new Dictionary<TKey, TValue>();
+		}
+
+		internal static IDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IDictionary<TKey, TValue> list)
 		{
 			return list ?? new Dictionary<TKey, TValue>();
 		}

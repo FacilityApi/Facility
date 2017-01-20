@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using YamlDotNet.Serialization;
+
 #pragma warning disable 1591
 
 namespace Facility.Definition.Swagger
@@ -69,12 +71,15 @@ namespace Facility.Definition.Swagger
 		public JToken Example { get; set; } // schema
 
 		[JsonProperty("x-identifier")]
+		[YamlMember(Alias = "x-identifier")]
 		public string Identifier { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-obsolete")]
+		[YamlMember(Alias = "x-obsolete")]
 		public bool? Obsolete { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-remarks")]
+		[YamlMember(Alias = "x-remarks")]
 		public string Remarks { get; set; } // schema
 	}
 }

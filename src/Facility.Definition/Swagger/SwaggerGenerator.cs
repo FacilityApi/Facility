@@ -54,6 +54,7 @@ namespace Facility.Definition.Swagger
 
 			var swaggerService = new SwaggerService
 			{
+				Swagger = SwaggerUtility.SwaggerVersion,
 				Info = new SwaggerInfo
 				{
 					Identifier = service.Name,
