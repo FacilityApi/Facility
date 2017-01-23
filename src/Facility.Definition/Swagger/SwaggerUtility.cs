@@ -180,6 +180,11 @@ namespace Facility.Definition.Swagger
 			return list ?? new T[0];
 		}
 
+		internal static IList<T> EmptyIfNull<T>(this IList<T> list)
+		{
+			return list ?? new T[0];
+		}
+
 		internal static IReadOnlyDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> list)
 		{
 			return list ?? new Dictionary<TKey, TValue>();

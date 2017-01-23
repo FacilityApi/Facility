@@ -10,6 +10,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerParameter : ISwaggerSchema
 	{
 		[JsonProperty("$ref")]
+		[YamlMember(Alias = "$ref")]
 		public string Ref { get; set; } // parameters, schema
 
 		public string In { get; set; } // parameters
@@ -54,7 +55,7 @@ namespace Facility.Definition.Swagger
 
 		public bool? UniqueItems { get; set; } // parameters (non-body), headers, schema
 
-		public IReadOnlyList<JToken> Enum { get; set; } // parameters (non-body), headers, schema
+		public IList<JToken> Enum { get; set; } // parameters (non-body), headers, schema
 
 		public double? MultipleOf { get; set; } // parameters (non-body), headers, schema
 

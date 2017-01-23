@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using YamlDotNet.Serialization;
+
 #pragma warning disable 1591
 
 namespace Facility.Definition.Swagger
@@ -7,6 +9,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerOperations
 	{
 		[JsonProperty("$ref")]
+		[YamlMember(Alias = "$ref")]
 		public string Ref { get; set; }
 
 		public SwaggerOperation Get { get; set; }
@@ -23,6 +26,6 @@ namespace Facility.Definition.Swagger
 
 		public SwaggerOperation Patch { get; set; }
 
-		public IReadOnlyList<SwaggerParameter> Parameters { get; set; }
+		public IList<SwaggerParameter> Parameters { get; set; }
 	}
 }

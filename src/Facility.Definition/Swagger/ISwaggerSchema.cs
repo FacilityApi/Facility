@@ -39,7 +39,7 @@ namespace Facility.Definition.Swagger
 
 		bool? UniqueItems { get; set; } // parameters (non-body), headers, schema
 
-		IReadOnlyList<JToken> Enum { get; set; } // parameters (non-body), headers, schema
+		IList<JToken> Enum { get; set; } // parameters (non-body), headers, schema
 
 		double? MultipleOf { get; set; } // parameters (non-body), headers, schema
 

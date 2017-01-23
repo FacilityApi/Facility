@@ -10,13 +10,14 @@ namespace Facility.Definition.Swagger
 	public class SwaggerResponse
 	{
 		[JsonProperty("$ref")]
+		[YamlMember(Alias = "$ref")]
 		public string Ref { get; set; }
 
 		public string Description { get; set; }
 
 		public SwaggerSchema Schema { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerSchema> Headers { get; set; }
+		public IDictionary<string, SwaggerSchema> Headers { get; set; }
 
 		public JObject Examples { get; set; }
 

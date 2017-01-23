@@ -8,8 +8,6 @@ using Facility.Definition.CodeGen;
 using Newtonsoft.Json;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NodeDeserializers;
-using YamlDotNet.Serialization.ObjectFactories;
 
 namespace Facility.Definition.Swagger
 {
@@ -37,10 +35,7 @@ namespace Facility.Definition.Swagger
 			if (!s_detectJsonRegex.IsMatch(source.Text))
 			{
 				// parse YAML
-				var yamlObjectFactory = new DefaultObjectFactory();
 				var yamlDeserializer = new DeserializerBuilder()
-					.WithObjectFactory(yamlObjectFactory)
-					.WithNodeDeserializer(new OurNodeDeserializer(yamlObjectFactory))
 					.IgnoreUnmatchedProperties()
 					.WithNamingConvention(new OurNamingConvention())
 					.Build();
@@ -166,7 +161,7 @@ namespace Facility.Definition.Swagger
 				position: context.CreatePosition());
 		}
 
-		private static string GetBestScheme(IReadOnlyList<string> schemes)
+		private static string GetBestScheme(IList<string> schemes)
 		{
 			return schemes?.FirstOrDefault(x => x == "https") ?? schemes?.FirstOrDefault(x => x == "http") ?? schemes?.FirstOrDefault();
 		}
@@ -208,7 +203,7 @@ namespace Facility.Definition.Swagger
 				position: position));
 		}
 
-		private void AddServiceMethod(IList<IServiceMemberInfo> members, string method, string path, SwaggerOperation swaggerOperation, IReadOnlyList<SwaggerParameter> swaggerOperationsParameters, SwaggerService swaggerService, SwaggerParserContext context)
+		private void AddServiceMethod(IList<IServiceMemberInfo> members, string method, string path, SwaggerOperation swaggerOperation, IList<SwaggerParameter> swaggerOperationsParameters, SwaggerService swaggerService, SwaggerParserContext context)
 		{
 			if (swaggerOperation == null)
 				return;
@@ -416,35 +411,13 @@ namespace Facility.Definition.Swagger
 			return string.IsNullOrWhiteSpace(remarks) ? null : Regex.Split(remarks, @"\r?\n");
 		}
 
-		private sealed class OurNodeDeserializer : INodeDeserializer
-		{
-			public OurNodeDeserializer(IObjectFactory objectFactory)
-			{
-				m_dictionaryDeserializer = new DictionaryNodeDeserializer(objectFactory);
-			}
-
-			public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
-			{
-				if (expectedType.IsConstructedGenericType && expectedType.GetGenericTypeDefinition() == typeof(IReadOnlyDictionary<,>))
-				{
-					var dictionaryType = typeof(Dictionary<,>).MakeGenericType(expectedType.GenericTypeArguments);
-					return m_dictionaryDeserializer.Deserialize(reader, dictionaryType, nestedObjectDeserializer, out value);
-				}
-				else
-				{
-					value = null;
-					return false;
-				}
-			}
-
-			readonly INodeDeserializer m_dictionaryDeserializer;
-		}
-
 		private sealed class OurNamingConvention : INamingConvention
 		{
 			public string Apply(string value)
 			{
-				return value.StartsWith("x-", StringComparison.Ordinal) ? value : CodeGenUtility.ToCamelCase(value);
+				if (value[0] >= 'A' && value[0] <= 'Z')
+					value = CodeGenUtility.ToCamelCase(value);
+				return value;
 			}
 		}
 

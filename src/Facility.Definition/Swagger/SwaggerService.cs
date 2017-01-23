@@ -13,25 +13,25 @@ namespace Facility.Definition.Swagger
 
 		public string BasePath { get; set; }
 
-		public IReadOnlyList<string> Schemes { get; set; }
+		public IList<string> Schemes { get; set; }
 
-		public IReadOnlyList<string> Consumes { get; set; }
+		public IList<string> Consumes { get; set; }
 
-		public IReadOnlyList<string> Produces { get; set; }
+		public IList<string> Produces { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerOperations> Paths { get; set; }
+		public IDictionary<string, SwaggerOperations> Paths { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerSchema> Definitions { get; set; }
+		public IDictionary<string, SwaggerSchema> Definitions { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerParameter> Parameters { get; set; }
+		public IDictionary<string, SwaggerParameter> Parameters { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerResponse> Responses { get; set; }
+		public IDictionary<string, SwaggerResponse> Responses { get; set; }
 
-		public IReadOnlyDictionary<string, SwaggerSecurityScheme> SecurityDefinitions { get; set; }
+		public IDictionary<string, SwaggerSecurityScheme> SecurityDefinitions { get; set; }
 
-		public IReadOnlyList<IReadOnlyDictionary<string, IReadOnlyList<string>>> Security { get; set; }
+		public IList<IDictionary<string, IList<string>>> Security { get; set; }
 
-		public IReadOnlyList<SwaggerTag> Tags { get; set; }
+		public IList<SwaggerTag> Tags { get; set; }
 
 		public SwaggerExternalDocumentation ExternalDocs { get; set; }
 	}
