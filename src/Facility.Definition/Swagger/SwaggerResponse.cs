@@ -10,7 +10,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerResponse
 	{
 		[JsonProperty("$ref")]
-		[YamlMember(Alias = "$ref")]
+		[YamlMember(Alias = "$ref", ApplyNamingConventions = false)]
 		public string Ref { get; set; }
 
 		public string Description { get; set; }
@@ -22,7 +22,7 @@ namespace Facility.Definition.Swagger
 		public JObject Examples { get; set; }
 
 		[JsonProperty("x-identifier")]
-		[YamlMember(Alias = "x-identifier")]
+		[YamlMember(Alias = "x-identifier", ApplyNamingConventions = false)]
 		public string Identifier { get; set; }
 	}
 }

@@ -10,7 +10,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerSchema : ISwaggerSchema
 	{
 		[JsonProperty("$ref")]
-		[YamlMember(Alias = "$ref")]
+		[YamlMember(Alias = "$ref", ApplyNamingConventions = false)]
 		public string Ref { get; set; } // parameters, schema
 
 		public string Description { get; set; } // parameters, headers, schema
@@ -72,15 +72,15 @@ namespace Facility.Definition.Swagger
 		public JToken Example { get; set; } // schema
 
 		[JsonProperty("x-identifier")]
-		[YamlMember(Alias = "x-identifier")]
+		[YamlMember(Alias = "x-identifier", ApplyNamingConventions = false)]
 		public string Identifier { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-obsolete")]
-		[YamlMember(Alias = "x-obsolete")]
+		[YamlMember(Alias = "x-obsolete", ApplyNamingConventions = false)]
 		public bool? Obsolete { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-remarks")]
-		[YamlMember(Alias = "x-remarks")]
+		[YamlMember(Alias = "x-remarks", ApplyNamingConventions = false)]
 		public string Remarks { get; set; } // schema
 	}
 }

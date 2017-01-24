@@ -8,6 +8,7 @@ using Facility.Definition.CodeGen;
 using Newtonsoft.Json;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Facility.Definition.Swagger
 {
@@ -37,7 +38,7 @@ namespace Facility.Definition.Swagger
 				// parse YAML
 				var yamlDeserializer = new DeserializerBuilder()
 					.IgnoreUnmatchedProperties()
-					.WithNamingConvention(new OurNamingConvention())
+					.WithNamingConvention(new CamelCaseNamingConvention())
 					.Build();
 				using (var stringReader = new StringReader(source.Text))
 				{
@@ -409,16 +410,6 @@ namespace Facility.Definition.Swagger
 		private static IReadOnlyList<string> SplitRemarks(string remarks)
 		{
 			return string.IsNullOrWhiteSpace(remarks) ? null : Regex.Split(remarks, @"\r?\n");
-		}
-
-		private sealed class OurNamingConvention : INamingConvention
-		{
-			public string Apply(string value)
-			{
-				if (value[0] >= 'A' && value[0] <= 'Z')
-					value = CodeGenUtility.ToCamelCase(value);
-				return value;
-			}
 		}
 
 		static readonly Regex s_detectJsonRegex = new Regex(@"^\s*[{/]", RegexOptions.Singleline);

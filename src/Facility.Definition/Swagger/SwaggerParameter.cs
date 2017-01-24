@@ -10,7 +10,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerParameter : ISwaggerSchema
 	{
 		[JsonProperty("$ref")]
-		[YamlMember(Alias = "$ref")]
+		[YamlMember(Alias = "$ref", ApplyNamingConventions = false)]
 		public string Ref { get; set; } // parameters, schema
 
 		public string In { get; set; } // parameters
@@ -60,11 +60,11 @@ namespace Facility.Definition.Swagger
 		public double? MultipleOf { get; set; } // parameters (non-body), headers, schema
 
 		[JsonProperty("x-identifier")]
-		[YamlMember(Alias = "x-identifier")]
+		[YamlMember(Alias = "x-identifier", ApplyNamingConventions = false)]
 		public string Identifier { get; set; } // parameters, headers, schema
 
 		[JsonProperty("x-obsolete")]
-		[YamlMember(Alias = "x-obsolete")]
+		[YamlMember(Alias = "x-obsolete", ApplyNamingConventions = false)]
 		public bool? Obsolete { get; set; } // parameters, headers, schema
 	}
 }
