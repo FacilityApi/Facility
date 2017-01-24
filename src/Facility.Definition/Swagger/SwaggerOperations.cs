@@ -9,7 +9,7 @@ namespace Facility.Definition.Swagger
 	public class SwaggerOperations
 	{
 		[JsonProperty("$ref")]
-		[YamlMember(Alias = "$ref", ApplyNamingConventions = false)]
+		[YamlMember(Alias = "$ref")]
 		public string Ref { get; set; }
 
 		public SwaggerOperation Get { get; set; }

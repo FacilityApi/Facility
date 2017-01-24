@@ -20,11 +20,11 @@ namespace Facility.Definition.Swagger
 		public string Version { get; set; }
 
 		[JsonProperty("x-identifier")]
-		[YamlMember(Alias = "x-identifier", ApplyNamingConventions = false)]
+		[YamlMember(Alias = "x-identifier")]
 		public string Identifier { get; set; }
 
 		[JsonProperty("x-codegen")]
-		[YamlMember(Alias = "x-codegen", ApplyNamingConventions = false)]
+		[YamlMember(Alias = "x-codegen")]
 		public string CodeGen { get; set; }
 	}
 }
