@@ -181,14 +181,14 @@ service ExampleApi
 	}
 
 	/// Demonstrates the default HTTP behavior.
-	[http(method: POST, path: "/notRestful", code: 204)]
+	[http(method: POST, path: "/notRestful", code: 200)]
 	method notRestful
 	{
 	}:
 	{
 	}
 
-	[http(method: POST, path: "/kitchen", code: 204)]
+	[http(method: POST, path: "/kitchen", code: 200)]
 	method kitchen
 	{
 		sink: KitchenSink;

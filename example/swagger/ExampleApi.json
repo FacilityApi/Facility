@@ -364,7 +364,7 @@
         "summary": "Demonstrates the default HTTP behavior.",
         "operationId": "notRestful",
         "responses": {
-          "204": {
+          "200": {
             "description": ""
           }
         }
@@ -387,7 +387,7 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": ""
           }
         }

@@ -253,7 +253,7 @@ paths:
       summary: Demonstrates the default HTTP behavior.
       operationId: notRestful
       responses:
-        '204':
+        '200':
           description: ''
   /kitchen:
     post:
@@ -267,7 +267,7 @@ paths:
         schema:
           $ref: '#/definitions/KitchenRequest'
       responses:
-        '204':
+        '200':
           description: ''
 definitions:
   GetWidgetsResponse:

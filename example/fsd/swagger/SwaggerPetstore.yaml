@@ -29,7 +29,7 @@ paths:
         schema:
           $ref: '#/definitions/Pet'
       responses:
-        '204':
+        '200':
           description: ''
     put:
       summary: Update an existing pet
@@ -44,7 +44,7 @@ paths:
         schema:
           $ref: '#/definitions/Pet'
       responses:
-        '204':
+        '200':
           description: ''
   /pets/findByStatus:
     get:
@@ -116,7 +116,7 @@ paths:
         required: true
         type: string
       responses:
-        '204':
+        '200':
           description: ''
     delete:
       summary: Deletes a pet
@@ -132,7 +132,7 @@ paths:
         name: api_key
         type: string
       responses:
-        '204':
+        '200':
           description: ''
   /stores/order:
     post:
@@ -185,7 +185,7 @@ paths:
         required: true
         type: string
       responses:
-        '204':
+        '200':
           description: ''
   /users:
     post:
@@ -202,7 +202,7 @@ paths:
         schema:
           $ref: '#/definitions/User'
       responses:
-        '204':
+        '200':
           description: ''
   /users/createWithArray:
     post:
@@ -220,7 +220,7 @@ paths:
           items:
             $ref: '#/definitions/User'
       responses:
-        '204':
+        '200':
           description: ''
   /users/createWithList:
     post:
@@ -238,7 +238,7 @@ paths:
           items:
             $ref: '#/definitions/User'
       responses:
-        '204':
+        '200':
           description: ''
   /users/login:
     get:
@@ -262,7 +262,7 @@ paths:
       summary: Logs out current logged in user session
       operationId: logoutUser
       responses:
-        '204':
+        '200':
           description: ''
   /users/{username}:
     get:
@@ -301,7 +301,7 @@ paths:
         schema:
           $ref: '#/definitions/User'
       responses:
-        '204':
+        '200':
           description: ''
     delete:
       summary: Delete user
@@ -314,7 +314,7 @@ paths:
         required: true
         type: string
       responses:
-        '204':
+        '200':
           description: ''
 definitions:
   Pet:
