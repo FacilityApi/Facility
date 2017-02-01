@@ -256,12 +256,12 @@ namespace Facility.CodeGen.Console
 		{
 			foreach (var patternToClean in patternsToClean)
 			{
-				foreach (string name in FindNamesMatchingPatterns(directoryInfo, patternToClean))
+				foreach (string name in FindNamesMatchingPattern(directoryInfo, patternToClean))
 					yield return name;
 			}
 		}
 
-		private IEnumerable<string> FindNamesMatchingPatterns(DirectoryInfo directoryInfo, CodeGenPattern patternToClean)
+		private IEnumerable<string> FindNamesMatchingPattern(DirectoryInfo directoryInfo, CodeGenPattern patternToClean)
 		{
 			var parts = patternToClean.NamePattern.Split(new[] { '/' }, 2);
 			if (parts[0].Length == 0)
@@ -279,8 +279,8 @@ namespace Facility.CodeGen.Console
 			{
 				foreach (var subdirectoryInfo in directoryInfo.GetDirectories(parts[0]))
 				{
-					foreach (string name in FindNamesMatchingPatterns(subdirectoryInfo, new CodeGenPattern(parts[1], patternToClean.RequiredSubstring)))
-						yield return parts[0] + '/' + name;
+					foreach (string name in FindNamesMatchingPattern(subdirectoryInfo, new CodeGenPattern(parts[1], patternToClean.RequiredSubstring)))
+						yield return subdirectoryInfo.Name + '/' + name;
 				}
 			}
 		}
