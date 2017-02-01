@@ -194,10 +194,6 @@ namespace Facility.Definition.Http
 				{
 					throw new ServiceDefinitionException($"Response fields do not support '[http(from: {from})]'.", responseField.Position);
 				}
-				else if (from == "normal")
-				{
-					responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
-				}
 				else if (from == "body")
 				{
 					if (!IsValidResponseBodyField(responseField, serviceInfo))
@@ -210,13 +206,13 @@ namespace Facility.Definition.Http
 						throw new ServiceDefinitionException("Response fields with [http(from: header)] must use the string type.", responseField.Position);
 					responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
 				}
-				else if (from != null)
+				else if (from == "normal" || from == null)
 				{
-					throw new ServiceDefinitionException($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position);
+					responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
 				}
 				else
 				{
-					responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
+					throw new ServiceDefinitionException($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position);
 				}
 			}
 
@@ -279,12 +275,15 @@ namespace Facility.Definition.Http
 			{
 				// use the status code on the field or the default: OK or NoContent
 				HttpStatusCode bodyStatusCode;
+				bool isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean;
 				if (responseBodyField.StatusCode != null)
 					bodyStatusCode = responseBodyField.StatusCode.Value;
-				else if (serviceInfo.GetFieldType(responseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean)
-					bodyStatusCode = HttpStatusCode.NoContent;
 				else
-					bodyStatusCode = HttpStatusCode.OK;
+					bodyStatusCode = isBoolean ? HttpStatusCode.NoContent : HttpStatusCode.OK;
+
+				// 204 and 304 don't support content
+				if (IsNoContentStatusCode(bodyStatusCode) && !isBoolean)
+					throw new ServiceDefinitionException($"A body field with HTTP status code {(int) bodyStatusCode} must be Boolean.", responseBodyField.ServiceField.Position);
 
 				yield return new HttpResponseInfo(
 					statusCode: bodyStatusCode,
@@ -295,16 +294,23 @@ namespace Facility.Definition.Http
 			HttpStatusCode? responseStatusCode = null;
 			if (statusCode != null)
 				responseStatusCode = statusCode;
-			else if (responseNormalFields.Count != 0)
+			else if (responseNormalFields.Count != 0 || responseBodyFields.Count == 0)
 				responseStatusCode = HttpStatusCode.OK;
-			else if (responseBodyFields.Count == 0)
-				responseStatusCode = HttpStatusCode.NoContent;
 			if (responseStatusCode != null)
 			{
+				// 204 and 304 don't support content
+				if (IsNoContentStatusCode(responseStatusCode) && responseNormalFields.Count != 0)
+					throw new ServiceDefinitionException($"HTTP status code {(int) responseStatusCode} does not support normal fields.", responseNormalFields[0].ServiceField.Position);
+
 				yield return new HttpResponseInfo(
 					statusCode: responseStatusCode.Value,
 					normalFields: responseNormalFields);
 			}
+		}
+
+		private static bool IsNoContentStatusCode(HttpStatusCode? statusCode)
+		{
+			return statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
 		}
 
 		private static IReadOnlyList<string> GetPathParameterNames(string routePath)

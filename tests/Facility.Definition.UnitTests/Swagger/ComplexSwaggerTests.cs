@@ -184,7 +184,7 @@ They are multi-line.
 						},
 						Responses = new Dictionary<string, SwaggerResponse>
 						{
-							["204"] = new SwaggerResponse
+							["200"] = new SwaggerResponse
 							{
 								Description = "",
 							},

@@ -25,7 +25,7 @@ namespace Facility.Definition.UnitTests.Http
 			method.ResponseHeaderFields.Count.ShouldBe(0);
 
 			var response = method.ValidResponses.Single();
-			response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+			response.StatusCode.ShouldBe(HttpStatusCode.OK);
 			response.NormalFields.Count.ShouldBe(0);
 			response.BodyField.ShouldBe(null);
 		}
@@ -349,10 +349,12 @@ namespace Facility.Definition.UnitTests.Http
 			method.RequestHeaderFields.Single().Name.ShouldBe("Our-Xyzzy");
 		}
 
-		[Test]
-		public void ImplicitNormalResponseField()
+		[TestCase(false)]
+		[TestCase(true)]
+		public void NormalResponseField(bool isExplicit)
 		{
-			var method = ParseHttpApi("service TestApi { method do {}: { id: string; } }").Methods.Single();
+			var method = ParseHttpApi("service TestApi { method do {}: { [...] id: string; } }".Replace("[...]",
+				isExplicit ? "[http(from: normal)]" : "")).Methods.Single();
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -360,15 +362,22 @@ namespace Facility.Definition.UnitTests.Http
 			response.BodyField.ShouldBe(null);
 		}
 
-		[Test]
-		public void ExplicitNormalResponseField()
+		[TestCase(false)]
+		[TestCase(true)]
+		public void NormalResponseFieldNoContent(bool isExplicit)
 		{
-			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: normal)] id: string; } }").Methods.Single();
+			ParseInvalidHttpApi("service TestApi { [http(code: 204)] method do {}: { [...] id: string; } }".Replace("[...]",
+				isExplicit ? "[http(from: normal)]" : ""))
+				.Message.ShouldBe($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 204 does not support normal fields.");
+		}
 
-			var response = method.ValidResponses.Single();
-			response.StatusCode.ShouldBe(HttpStatusCode.OK);
-			response.NormalFields.Single().ServiceField.Name.ShouldBe("id");
-			response.BodyField.ShouldBe(null);
+		[TestCase(false)]
+		[TestCase(true)]
+		public void NormalResponseFieldNotModified(bool isExplicit)
+		{
+			ParseInvalidHttpApi("service TestApi { [http(code: 304)] method do {}: { [...] id: string; } }".Replace("[...]",
+				isExplicit ? "[http(from: normal)]" : ""))
+				.Message.ShouldBe($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 304 does not support normal fields.");
 		}
 
 		[Test]
@@ -500,7 +509,7 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void BooleanResponseField()
+		public void BooleanResponseBodyField()
 		{
 			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body)] body: boolean; } }").Methods.Single();
 
@@ -508,6 +517,27 @@ namespace Facility.Definition.UnitTests.Http
 			response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
 			response.BodyField.ServiceField.Name.ShouldBe("body");
 			response.BodyField.StatusCode.ShouldBe(null);
+		}
+
+		[TestCase(HttpStatusCode.NoContent)]
+		[TestCase(HttpStatusCode.NotModified)]
+		public void BooleanNoContentResponseBodyField(HttpStatusCode statusCode)
+		{
+			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: boolean; } }".Replace("CODE", ((int) statusCode).ToString())).Methods.Single();
+
+			var response = method.ValidResponses.Single();
+			response.StatusCode.ShouldBe(statusCode);
+			response.BodyField.ServiceField.Name.ShouldBe("body");
+			response.BodyField.StatusCode.ShouldBe(statusCode);
+		}
+
+		[TestCase(HttpStatusCode.NoContent)]
+		[TestCase(HttpStatusCode.NotModified)]
+		public void NonBooleanNoContentResponseBodyField(HttpStatusCode statusCode)
+		{
+			string statusCodeString = ((int) statusCode).ToString();
+			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: error; } }".Replace("CODE", statusCodeString))
+				.Message.ShouldBe("TestApi.fsd(1,65): A body field with HTTP status code CODE must be Boolean.".Replace("CODE", statusCodeString));
 		}
 
 		[Test]
