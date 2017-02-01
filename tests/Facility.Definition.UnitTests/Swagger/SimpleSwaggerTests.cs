@@ -13,6 +13,14 @@ namespace Facility.Definition.UnitTests.Swagger
 	public class SimpleSwaggerTests
 	{
 		[Test]
+		public void GenerateSimpleService()
+		{
+			var service = new SwaggerParser().ConvertSwaggerService(s_swaggerService);
+			service.Summary.ShouldBe("TestApi");
+			service.Methods.Count.ShouldBe(1);
+		}
+
+		[Test]
 		public void GenerateSimpleServiceJson()
 		{
 			var generator = new SwaggerGenerator { GeneratorName = "tests" };
@@ -24,6 +32,10 @@ namespace Facility.Definition.UnitTests.Swagger
 			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
+			service.Summary.ShouldBe("TestApi");
+			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
+
+			service = new SwaggerParser().ConvertSwaggerService(s_swaggerService);
 			service.Summary.ShouldBe("TestApi");
 			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
 		}

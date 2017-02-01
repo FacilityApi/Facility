@@ -8,6 +8,8 @@ namespace Facility.Definition.Swagger
 {
 	internal sealed class SwaggerParserContext
 	{
+		public static SwaggerParserContext None => new SwaggerParserContext(namedText: null, isYaml: false);
+
 		public static SwaggerParserContext FromYaml(NamedText namedText)
 		{
 			return new SwaggerParserContext(namedText, isYaml: true);
@@ -22,7 +24,7 @@ namespace Facility.Definition.Swagger
 
 		public NamedTextPosition CreatePosition(string path = null)
 		{
-			return new NamedTextPosition(m_namedText.Name, () => FindLineColumn(path));
+			return m_namedText == null ? null : new NamedTextPosition(m_namedText.Name, () => FindLineColumn(path));
 		}
 
 		public ServiceDefinitionException CreateException(string error, string path = null)

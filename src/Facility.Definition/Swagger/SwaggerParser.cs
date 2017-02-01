@@ -82,6 +82,19 @@ namespace Facility.Definition.Swagger
 				}
 			}
 
+			return ConvertSwaggerService(swaggerService, context);
+		}
+
+		/// <summary>
+		/// Converts Swagger (OpenAPI) 2.0 into a service definition.
+		/// </summary>
+		public ServiceInfo ConvertSwaggerService(SwaggerService swaggerService)
+		{
+			return ConvertSwaggerService(swaggerService, SwaggerParserContext.None);
+		}
+
+		private ServiceInfo ConvertSwaggerService(SwaggerService swaggerService, SwaggerParserContext context)
+		{
 			if (swaggerService.Swagger == null)
 				throw context.CreateException("swagger field is missing.");
 			if (swaggerService.Swagger != SwaggerUtility.SwaggerVersion)
