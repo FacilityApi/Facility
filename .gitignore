@@ -10,3 +10,4 @@ release/
 *.ncrunchsolution
 *.user
 nCrunchTemp*
+*.log
