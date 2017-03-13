@@ -67,7 +67,16 @@ namespace Facility.Definition
 		/// </summary>
 		public static bool IsObsolete(this IServiceElementInfo element)
 		{
-			return element.TryGetAttribute("obsolete") != null;
+			return element.TryGetObsoleteAttribute() != null;
+		}
+
+		/// <summary>
+		/// Returns the obsolete message for an element with the 'obsolete' attribute.
+		/// </summary>
+		/// <remarks>Use <see cref="IsObsolete"/> to determine if the element is obsolete.</remarks>
+		public static string TryGetObsoleteMessage(this IServiceElementInfo element)
+		{
+			return element.TryGetObsoleteAttribute()?.TryGetParameterValue("message");
 		}
 
 		/// <summary>
@@ -103,6 +112,11 @@ namespace Facility.Definition
 		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)
 		{
 			return new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
+		}
+
+		private static ServiceAttributeInfo TryGetObsoleteAttribute(this IServiceElementInfo element)
+		{
+			return element.TryGetAttribute("obsolete");
 		}
 
 		static readonly Regex s_validNameRegex = new Regex(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
