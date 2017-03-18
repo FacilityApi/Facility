@@ -106,7 +106,7 @@ namespace Facility.Definition.Swagger
 				return swaggerSchema.Format == SwaggerSchemaTypeFormat.Byte ? "bytes" : "string";
 
 			case SwaggerSchemaType.Number:
-				return "double";
+				return swaggerSchema.Format == SwaggerSchemaTypeFormat.Decimal ? "decimal" : "double";
 
 			case SwaggerSchemaType.Integer:
 				return swaggerSchema.Format == SwaggerSchemaTypeFormat.Int64 ? "int64" : "int32";
@@ -148,7 +148,7 @@ namespace Facility.Definition.Swagger
 
 		internal static string FilterBodyTypeName(string typeName)
 		{
-			return typeName == "string" || typeName == "bytes" || typeName == "int32" || typeName == "int64" || typeName == "double" ? null : typeName;
+			return typeName == "string" || typeName == "bytes" || typeName == "int32" || typeName == "int64" || typeName == "double" || typeName == "decimal" ? null : typeName;
 		}
 
 		internal static bool IsFacilityError(this SwaggerService swaggerService, KeyValuePair<string, SwaggerSchema> swaggerSchema)

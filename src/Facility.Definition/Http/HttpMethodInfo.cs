@@ -244,6 +244,7 @@ namespace Facility.Definition.Http
 				fieldTypeKind == ServiceTypeKind.Double ||
 				fieldTypeKind == ServiceTypeKind.Int32 ||
 				fieldTypeKind == ServiceTypeKind.Int64 ||
+				fieldTypeKind == ServiceTypeKind.Decimal ||
 				fieldTypeKind == ServiceTypeKind.Enum;
 		}
 

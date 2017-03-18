@@ -158,6 +158,7 @@ namespace Facility.Definition
 			Tuple.Create(ServiceTypeKind.Double, "double"),
 			Tuple.Create(ServiceTypeKind.Int32, "int32"),
 			Tuple.Create(ServiceTypeKind.Int64, "int64"),
+			Tuple.Create(ServiceTypeKind.Decimal, "decimal"),
 			Tuple.Create(ServiceTypeKind.Bytes, "bytes"),
 			Tuple.Create(ServiceTypeKind.Object, "object"),
 			Tuple.Create(ServiceTypeKind.Error, "error"),

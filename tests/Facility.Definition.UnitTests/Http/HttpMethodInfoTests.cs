@@ -304,6 +304,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("double")]
 		[TestCase("int32")]
 		[TestCase("int64")]
+		[TestCase("decimal")]
 		[TestCase("bytes")]
 		[TestCase("Enum")]
 		public void BodyRequestFieldInvalidType(string type)
@@ -408,6 +409,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("double")]
 		[TestCase("int32")]
 		[TestCase("int64")]
+		[TestCase("decimal")]
 		[TestCase("bytes")]
 		[TestCase("Enum")]
 		public void BodyResponseFieldInvalidType(string type)
