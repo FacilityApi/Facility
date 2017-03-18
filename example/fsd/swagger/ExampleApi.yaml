@@ -421,6 +421,14 @@ definitions:
         items:
           type: integer
           format: int64
+      decimal:
+        type: number
+        format: decimal
+      decimals:
+        type: array
+        items:
+          type: number
+          format: decimal
       error:
         $ref: '#/definitions/Error'
       errors:

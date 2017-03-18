@@ -259,6 +259,10 @@ service ExampleApi
 
 		bigIntegers: int64[];
 
+		decimal: decimal;
+
+		decimals: decimal[];
+
 		error: error;
 
 		errors: error[];
