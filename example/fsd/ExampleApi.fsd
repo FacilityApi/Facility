@@ -217,6 +217,9 @@ service ExampleApi
 		/// The weight of the widget.
 		[obsolete]
 		weight: double;
+
+		/// The price of the widget.
+		price: decimal;
 	}
 
 	/// A widget job.
@@ -265,6 +268,10 @@ service ExampleApi
 		bigInteger: int64;
 
 		bigIntegers: int64[];
+
+		decimal: decimal;
+
+		decimals: decimal[];
 
 		error: error;
 

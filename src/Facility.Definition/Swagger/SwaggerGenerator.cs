@@ -367,6 +367,8 @@ namespace Facility.Definition.Swagger
 				return new T { Type = SwaggerSchemaType.Integer, Format = SwaggerSchemaTypeFormat.Int32 };
 			case ServiceTypeKind.Int64:
 				return new T { Type = SwaggerSchemaType.Integer, Format = SwaggerSchemaTypeFormat.Int64 };
+			case ServiceTypeKind.Decimal:
+				return new T { Type = SwaggerSchemaType.Number, Format = SwaggerSchemaTypeFormat.Decimal };
 			case ServiceTypeKind.Bytes:
 				return new T { Type = SwaggerSchemaType.String, Format = SwaggerSchemaTypeFormat.Byte };
 			case ServiceTypeKind.Object:

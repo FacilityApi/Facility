@@ -445,6 +445,11 @@
           "type": "number",
           "format": "double",
           "x-obsolete": true
+        },
+        "price": {
+          "description": "The price of the widget.",
+          "type": "number",
+          "format": "decimal"
         }
       },
       "x-remarks": "Additional DTO remarks.\n\n## Heading\n\nOnly top-level headings need to match a member name."
@@ -590,6 +595,17 @@
           "items": {
             "type": "integer",
             "format": "int64"
+          }
+        },
+        "decimal": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "decimals": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "decimal"
           }
         },
         "error": {

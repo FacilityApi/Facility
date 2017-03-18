@@ -8,6 +8,7 @@ namespace Facility.Definition.Swagger
 		public const string Int64 = "int64";
 		public const string Float = "float";
 		public const string Double = "double";
+		public const string Decimal = "decimal";
 		public const string Byte = "byte";
 		public const string Binary = "binary";
 		public const string Date = "date";

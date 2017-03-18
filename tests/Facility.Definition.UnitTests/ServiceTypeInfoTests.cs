@@ -10,6 +10,7 @@ namespace Facility.Definition.UnitTests
 		[TestCase("double", ServiceTypeKind.Double)]
 		[TestCase("int32", ServiceTypeKind.Int32)]
 		[TestCase("int64", ServiceTypeKind.Int64)]
+		[TestCase("decimal", ServiceTypeKind.Decimal)]
 		[TestCase("bytes", ServiceTypeKind.Bytes)]
 		[TestCase("object", ServiceTypeKind.Object)]
 		[TestCase("error", ServiceTypeKind.Error)]

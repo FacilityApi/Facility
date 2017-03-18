@@ -31,6 +31,11 @@
 		Int64,
 
 		/// <summary>
+		/// A 128-bit number appropriate for monetary calculations.
+		/// </summary>
+		Decimal,
+
+		/// <summary>
 		/// An array of bytes.
 		/// </summary>
 		Bytes,
