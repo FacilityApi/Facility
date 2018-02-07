@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Facility.Definition.Fsd;
 using NUnit.Framework;
 
@@ -44,6 +45,15 @@ namespace Facility.Definition.UnitTests
 			{
 				return exception;
 			}
+		}
+
+		public static List<ServiceDefinitionError> TryParseInvalidTestApi(string text)
+		{
+			ServiceInfo service;
+			List<ServiceDefinitionError> errors;
+			if (new FsdParser().TryParseDefinition(new NamedText("TestApi.fsd", text), out service, out errors))
+				throw new InvalidOperationException("Parse did not fail.");
+			return errors;
 		}
 
 		public static string[] GenerateFsd(ServiceInfo service)
