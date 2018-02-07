@@ -88,7 +88,8 @@ namespace Facility.Definition.Fsd
 
 			try
 			{
-				service = FsdParsers.ParseDefinition(source, remarksSections);
+				service = FsdParsers.ParseDefinition(source, remarksSections, shouldValidate: false);
+				errors.AddRange(service.Validate());
 
 				// check for unused remarks sections
 				foreach (var remarksSection in remarksSections.Values)

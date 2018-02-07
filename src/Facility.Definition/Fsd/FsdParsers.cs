@@ -8,9 +8,9 @@ namespace Facility.Definition.Fsd
 {
 	internal static class FsdParsers
 	{
-		public static ServiceInfo ParseDefinition(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+		public static ServiceInfo ParseDefinition(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, bool shouldValidate)
 		{
-			return DefinitionParser(new Context(source, remarksSections)).Parse(source.Text);
+			return DefinitionParser(new Context(source, remarksSections, shouldValidate)).Parse(source.Text);
 		}
 
 		static readonly IParser<string> CommentParser =
@@ -138,7 +138,8 @@ namespace Facility.Definition.Fsd
 			from items in ServiceItemParser(context).Many().Bracketed("{", "}")
 			select new ServiceInfo(name, items,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
-				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
+				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceInfo> DefinitionParser(Context context) =>
 			from service in ServiceParser(context).FollowedBy(CommentOrWhiteSpaceParser.Many())
@@ -180,11 +181,14 @@ namespace Facility.Definition.Fsd
 
 		sealed class Context
 		{
-			public Context(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+			public Context(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, bool shouldValidate)
 			{
 				m_source = source;
 				m_remarksSections = remarksSections;
+				ShouldValidate = shouldValidate;
 			}
+
+			public bool ShouldValidate { get; }
 
 			public NamedTextPosition GetPosition(TextPosition position)
 			{

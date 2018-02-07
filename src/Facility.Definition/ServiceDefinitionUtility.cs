@@ -89,8 +89,15 @@ namespace Facility.Definition
 
 		internal static void ValidateName(string name, NamedTextPosition position)
 		{
+			var error = ValidateName2(name, position).FirstOrDefault();
+			if (error != null)
+				throw error.CreateException();
+		}
+
+		internal static IEnumerable<ServiceDefinitionError> ValidateName2(string name, NamedTextPosition position)
+		{
 			if (!IsValidName(name))
-				throw new ServiceDefinitionException($"Invalid name '{name}'.", position);
+				yield return new ServiceDefinitionError($"Invalid name '{name}'.", position);
 		}
 
 		internal static void ValidateTypeName(string name, NamedTextPosition position)
@@ -100,13 +107,18 @@ namespace Facility.Definition
 
 		internal static void ValidateNoDuplicateNames(IEnumerable<IServiceNamedInfo> infos, string description)
 		{
-			var duplicate = infos
+			var error = ValidateNoDuplicateNames2(infos, description).FirstOrDefault();
+			if (error != null)
+				throw error.CreateException();
+		}
+
+		internal static IEnumerable<ServiceDefinitionError> ValidateNoDuplicateNames2(IEnumerable<IServiceNamedInfo> infos, string description)
+		{
+			return infos
 				.GroupBy(x => x.Name.ToLowerInvariant())
 				.Where(x => x.Count() != 1)
 				.Select(x => x.Skip(1).First())
-				.FirstOrDefault();
-			if (duplicate != null)
-				throw new ServiceDefinitionException($"Duplicate {description}: {duplicate.Name}", duplicate.Position);
+				.Select(duplicate => new ServiceDefinitionError($"Duplicate {description}: {duplicate.Name}", duplicate.Position));
 		}
 
 		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)

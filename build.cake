@@ -44,7 +44,7 @@ Task("Clean")
 	});
 
 Task("Build")
-	.IsDependentOn("Clean")
+//	.IsDependentOn("Clean")
 	.Does(() =>
 	{
 		NuGetRestore(solutionFileName);
@@ -60,7 +60,8 @@ Task("VerifyCodeGen")
 	.Does(() => CodeGen(verify: true));
 
 Task("Test")
-	.IsDependentOn("VerifyCodeGen")
+	.IsDependentOn("Build")
+//	.IsDependentOn("VerifyCodeGen")
 	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")
