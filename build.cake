@@ -1,4 +1,4 @@
-#addin "nuget:?package=Cake.Git&version=0.10.0"
+#addin "nuget:?package=Cake.Git&version=0.16.1"
 #addin "nuget:?package=Octokit&version=0.23.0"
 #tool "nuget:?package=coveralls.io&version=1.3.4"
 #tool "nuget:?package=gitlink&version=2.3.0"
@@ -151,10 +151,11 @@ Task("Coverage")
 
 		string filter = string.Concat(coverageAssemblies.Select(x => $@" ""-filter:+[{x}]*"""));
 
+		var nunitPath = Context.Tools.Resolve("nunit3-console.exe").ToString();
 		foreach (var testDllPath in GetFiles($"tests/**/bin/**/*.UnitTests.dll"))
 		{
-			ExecuteProcess(@"cake\OpenCover\tools\OpenCover.Console.exe",
-				$@"-register:user -mergeoutput ""-target:cake\NUnit.ConsoleRunner\tools\nunit3-console.exe"" ""-targetargs:{testDllPath} --noresult"" ""-output:release\coverage.xml"" -skipautoprops -returntargetcode" + filter);
+			ExecuteTool("OpenCover.Console.exe",
+				$@"-register:user -mergeoutput ""-target:{nunitPath}"" ""-targetargs:{testDllPath} --noresult"" ""-output:{File("release/coverage.xml")}"" -skipautoprops -returntargetcode" + filter);
 		}
 	});
 
@@ -162,14 +163,14 @@ Task("CoverageReport")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\ReportGenerator\tools\ReportGenerator.exe", $@"""-reports:release\coverage.xml"" ""-targetdir:release\coverage""");
+		ExecuteTool("ReportGenerator.exe", $@"""-reports:{File("release/coverage.xml")}"" ""-targetdir:{File("release/coverage")}""");
 	});
 
 Task("CoveragePublish")
 	.IsDependentOn("Coverage")
 	.Does(() =>
 	{
-		ExecuteProcess(@"cake\coveralls.io\tools\coveralls.net.exe", $@"--opencover ""release\coverage.xml"" --full-sources --repo-token {coverallsApiKey}");
+		ExecuteTool("coveralls.net.exe", $@"--opencover ""{File("release/coverage.xml")}"" --full-sources --repo-token {coverallsApiKey}");
 	});
 
 Task("Default")
@@ -186,31 +187,47 @@ string GetSemVerFromFile(string path)
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen(@"example\ExampleApi.fsd example\fsd\", verify);
-	ExecuteCodeGen(@"example\ExampleApi.fsd example\swagger\ --swagger", verify);
-	ExecuteCodeGen(@"example\ExampleApi.fsd example\swagger\ --swagger --yaml", verify);
-	ExecuteCodeGen(@"example\swagger\ExampleApi.json example\swagger\fsd\", verify);
-	ExecuteCodeGen(@"example\swagger\ExampleApi.yaml example\swagger\fsd\", verify: true);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd")}", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")} --swagger", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")} --swagger --yaml", verify);
+	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.json")} {Directory("example/swagger/fsd")}", verify);
+	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.yaml")} {Directory("example/swagger/fsd")}", verify: true);
 
 	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($@"{yamlPath} example\fsd\", verify);
+		ExecuteCodeGen($@"{yamlPath} {Directory("example/fsd")}", verify);
 
 	CreateDirectory("example/fsd/swagger");
 	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))
-		ExecuteCodeGen($@"{fsdPath} example\fsd\swagger\{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml", verify);
+		ExecuteCodeGen($@"{fsdPath} {File($"example/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml")} --swagger --yaml", verify);
 }
 
 void ExecuteCodeGen(string args, bool verify)
 {
-	int exitCode = StartProcess($@"src\fsdgenfsd\bin\{configuration}\fsdgenfsd.exe", args + (verify ? " --verify" : ""));
+	string exePath = File($"src/fsdgenfsd/bin/{configuration}/fsdgenfsd.exe");
+	if (IsRunningOnUnix())
+	{
+		args = exePath + " " + args;
+		exePath = "mono";
+	}
+	int exitCode = StartProcess(exePath, args + (verify ? " --verify" : ""));
 	if (exitCode == 1 && verify)
 		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
 	else if (exitCode != 0)
 		throw new InvalidOperationException($"Code generation failed with exit code {exitCode}.");
 }
 
+void ExecuteTool(string tool, string arguments)
+{
+	ExecuteProcess(Context.Tools.Resolve(tool).ToString(), arguments);
+}
+
 void ExecuteProcess(string exePath, string arguments)
 {
+	if (IsRunningOnUnix())
+	{
+		arguments = exePath + " " + arguments;
+		exePath = "mono";
+	}
 	int exitCode = StartProcess(exePath, arguments);
 	if (exitCode != 0)
 		throw new InvalidOperationException($"{exePath} failed with exit code {exitCode}.");
