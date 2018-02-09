@@ -19,7 +19,7 @@ namespace Facility.Definition.Fsd
 		public ServiceInfo ParseDefinition(NamedText source)
 		{
 			ServiceInfo service;
-			List<ServiceDefinitionError> errors;
+			IReadOnlyList<ServiceDefinitionError> errors;
 			if (TryParseDefinition(source, out service, out errors))
 				return service;
 			else
@@ -30,9 +30,9 @@ namespace Facility.Definition.Fsd
 		/// Parses an FSD file into a service definition.
 		/// </summary>
 		/// <returns>true if the parse succeeds.</returns>
-		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out List<ServiceDefinitionError> errors)
+		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errorList)
 		{
-			errors = new List<ServiceDefinitionError>();
+			var errors = new List<ServiceDefinitionError>();
 			IReadOnlyList<string> definitionLines = null;
 			var remarksSections = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
 
@@ -67,7 +67,7 @@ namespace Facility.Definition.Fsd
 							if (remarksSections.ContainsKey(name))
 								errors.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
 							else
-								remarksSections[name] = new FsdRemarksSection(name, lines, position);
+								remarksSections.Add(name, new FsdRemarksSection(name, lines, position));
 						}
 
 						if (match == null)
@@ -85,6 +85,7 @@ namespace Facility.Definition.Fsd
 			}
 
 			source = new NamedText(source.Name, string.Join("\n", definitionLines));
+			service = null;
 
 			try
 			{
@@ -111,13 +112,17 @@ namespace Facility.Definition.Fsd
 					.ThenByDescending(x => x.LineColumn.ColumnNumber)
 					.First();
 
-				service = null;
 				errors.Add(new ServiceDefinitionError(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
 					exception));
 			}
+			catch (ServiceDefinitionException exception)
+			{
+				errors.Add(new ServiceDefinitionError(exception.Error, exception.Position, exception));
+			}
 
+			errorList = errors;
 			return errors.Count == 0;
 		}
 

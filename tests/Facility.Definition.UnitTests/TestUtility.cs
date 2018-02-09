@@ -47,10 +47,10 @@ namespace Facility.Definition.UnitTests
 			}
 		}
 
-		public static List<ServiceDefinitionError> TryParseInvalidTestApi(string text)
+		public static IReadOnlyList<ServiceDefinitionError> TryParseInvalidTestApi(string text)
 		{
 			ServiceInfo service;
-			List<ServiceDefinitionError> errors;
+			IReadOnlyList<ServiceDefinitionError> errors;
 			if (new FsdParser().TryParseDefinition(new NamedText("TestApi.fsd", text), out service, out errors))
 				throw new InvalidOperationException("Parse did not fail.");
 			return errors;

@@ -10,20 +10,20 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error.
 		/// </summary>
-		public ServiceDefinitionError(string error, NamedTextPosition position = null, Exception innerException = null)
+		public ServiceDefinitionError(string message, NamedTextPosition position, Exception exception = null)
 		{
-			if (error == null)
-				throw new ArgumentNullException(nameof(error));
+			if (message == null)
+				throw new ArgumentNullException(nameof(message));
 
-			Error = error;
+			Message = message;
 			Position = position;
-			InnerException = innerException;
+			Exception = exception;
 		}
 
 		/// <summary>
 		/// The error message.
 		/// </summary>
-		public string Error { get; }
+		public string Message { get; }
 
 		/// <summary>
 		/// The position where the error took place, if any.
@@ -33,11 +33,11 @@ namespace Facility.Definition
 		/// <summary>
 		/// The exception that caused the error, if any.
 		/// </summary>
-		public Exception InnerException { get; }
+		public Exception Exception { get; }
 
 		internal ServiceDefinitionException CreateException()
 		{
-			return new ServiceDefinitionException(Error, Position, InnerException);
+			return new ServiceDefinitionException(Message, Position, Exception);
 		}
 	}
 }
