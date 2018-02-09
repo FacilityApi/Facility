@@ -113,7 +113,7 @@ namespace Facility.Definition
 		/// </summary>
 		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
 		{
-			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.Position);
+			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
 		}
 
 		readonly ReadOnlyDictionary<string, IServiceMemberInfo> m_membersByName;
