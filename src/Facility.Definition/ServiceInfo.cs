@@ -43,7 +43,7 @@ namespace Facility.Definition
 			foreach (var member in Members)
 			{
 				if (!(member is ServiceMethodInfo) && !(member is ServiceDtoInfo) && !(member is ServiceEnumInfo) && !(member is ServiceErrorSetInfo))
-					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.");
+					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.", member.Position);
 			}
 
 			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames2(Members, "service member"))

@@ -10,11 +10,13 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an exception.
 		/// </summary>
-		public ServiceDefinitionException(string error, NamedTextPosition position = null, Exception innerException = null)
+		public ServiceDefinitionException(string error, NamedTextPosition position, Exception innerException = null)
 			: base("", innerException)
 		{
 			if (error == null)
 				throw new ArgumentNullException(nameof(error));
+			if (position == null)
+				throw new ArgumentNullException(nameof(position));
 
 			Error = error;
 			Position = position;
