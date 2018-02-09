@@ -209,7 +209,7 @@ void ExecuteCodeGen(string args, bool verify)
 		args = exePath + " " + args;
 		exePath = "mono";
 	}
-	int exitCode = StartProcess(exePath, args + (verify ? " --verify" : ""));
+	int exitCode = StartProcess(exePath, args + " --newline lf" + (verify ? " --verify" : ""));
 	if (exitCode == 1 && verify)
 		throw new InvalidOperationException("Generated code doesn't match; use -target=CodeGen to regenerate.");
 	else if (exitCode != 0)
