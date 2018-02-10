@@ -104,7 +104,7 @@ namespace Facility.Definition.Fsd
 			from colon in PunctuationParser(":")
 			from typeName in TypeParser.Named("field type name").Positioned()
 			from semicolon in PunctuationParser(";")
-			select new ServiceFieldInfo(name.Value, typeName.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
+			select new ServiceFieldInfo(name.Value, typeName.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position), context.GetPosition(typeName.Position),
 				validationMode: context.ValidationMode);
 
 		static IParser<ServiceDtoInfo> DtoParser(Context context) =>

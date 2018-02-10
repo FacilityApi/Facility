@@ -48,7 +48,8 @@ namespace Facility.Definition.UnitTests.Fsd
 		[Test]
 		public void CaseSensitivePrimitive()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: Boolean; } }");
+			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: Boolean; } }")
+				.Message.ShouldBe("TestApi.fsd(1,33): Unknown field type 'Boolean'.");
 		}
 
 		[Test]
@@ -165,7 +166,7 @@ namespace Facility.Definition.UnitTests.Fsd
 		public void InvalidFieldType()
 		{
 			TestUtility.ParseInvalidTestApi("service TestApi { data One { x: X; } }")
-				.Message.ShouldBe("TestApi.fsd(1,30): Unknown field type 'X'.");
+				.Message.ShouldBe("TestApi.fsd(1,33): Unknown field type 'X'.");
 		}
 
 		[Test]

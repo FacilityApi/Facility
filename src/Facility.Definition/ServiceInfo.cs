@@ -47,7 +47,7 @@ namespace Facility.Definition
 			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
 			{
 				ServiceDefinitionError error;
-				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.Position, out error);
+				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
 				if (error != null)
 					yield return error;
 			}
@@ -130,7 +130,7 @@ namespace Facility.Definition
 		/// </summary>
 		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
 		{
-			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.Position);
+			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
 		}
 
 		readonly ILookup<string, IServiceMemberInfo> m_membersByName;
