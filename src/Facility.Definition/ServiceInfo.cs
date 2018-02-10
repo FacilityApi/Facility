@@ -13,7 +13,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -27,17 +27,12 @@ namespace Facility.Definition
 
 			m_membersByName = Members.ToLookup(x => x.Name);
 
-			if (validate)
-			{
-				var error = this.Validate().FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-			}
+			this.Validate(validationMode);
 		}
 
 		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
-			foreach (var error in ServiceDefinitionUtility.ValidateName2(Name, Position))
+			foreach (var error in ServiceDefinitionUtility.ValidateName(Name, Position))
 				yield return error;
 
 			foreach (var member in Members)
@@ -46,7 +41,7 @@ namespace Facility.Definition
 					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.", member.Position);
 			}
 
-			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames2(Members, "service member"))
+			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member"))
 				yield return error;
 
 			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))

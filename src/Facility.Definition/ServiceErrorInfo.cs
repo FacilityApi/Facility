@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error.
 		/// </summary>
-		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, bool validate = true)
+		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -22,17 +22,12 @@ namespace Facility.Definition
 			Summary = summary ?? "";
 			Position = position;
 
-			if (validate)
-			{
-				var error = this.Validate().FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-			}
+			this.Validate(validationMode);
 		}
 
 		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
-			return ServiceDefinitionUtility.ValidateName2(Name, Position);
+			return ServiceDefinitionUtility.ValidateName(Name, Position);
 		}
 
 		/// <summary>

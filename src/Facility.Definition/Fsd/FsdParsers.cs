@@ -8,9 +8,9 @@ namespace Facility.Definition.Fsd
 {
 	internal static class FsdParsers
 	{
-		public static ServiceInfo ParseDefinition(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, bool shouldValidate)
+		public static ServiceInfo ParseDefinition(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, ValidationMode validationMode)
 		{
-			return DefinitionParser(new Context(source, remarksSections, shouldValidate)).Parse(source.Text);
+			return DefinitionParser(new Context(source, remarksSections, validationMode)).Parse(source.Text);
 		}
 
 		static readonly IParser<string> CommentParser =
@@ -47,12 +47,12 @@ namespace Facility.Definition.Fsd
 			from name in NameParser.Named("parameter name").Positioned()
 			from colon in PunctuationParser(":")
 			from value in AttributeParameterValueParser.Named("parameter value")
-			select new ServiceAttributeParameterInfo(name.Value, TryParseAttributeParameterValue(value), context.GetPosition(name.Position), validate: context.ShouldValidate);
+			select new ServiceAttributeParameterInfo(name.Value, TryParseAttributeParameterValue(value), context.GetPosition(name.Position), validationMode: context.ValidationMode);
 
 		static IParser<ServiceAttributeInfo> AttributeParser(Context context) =>
 			from name in NameParser.Named("attribute name").Positioned()
 			from parameters in AttributeParameterParser(context).Delimited(",").Bracketed("(", ")").OrDefault()
-			select new ServiceAttributeInfo(name.Value, parameters, context.GetPosition(name.Position), validate: context.ShouldValidate);
+			select new ServiceAttributeInfo(name.Value, parameters, context.GetPosition(name.Position), validationMode: context.ValidationMode);
 
 		static IParser<ServiceEnumValueInfo> EnumValueParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -60,7 +60,7 @@ namespace Facility.Definition.Fsd
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from name in NameParser.Named("value name").Positioned()
 			select new ServiceEnumValueInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceEnumInfo> EnumParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -72,7 +72,7 @@ namespace Facility.Definition.Fsd
 			select new ServiceEnumInfo(name, values,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceErrorInfo> ErrorParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -80,7 +80,7 @@ namespace Facility.Definition.Fsd
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from name in NameParser.Named("error name").Positioned()
 			select new ServiceErrorInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceErrorSetInfo> ErrorSetParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -92,7 +92,7 @@ namespace Facility.Definition.Fsd
 			select new ServiceErrorSetInfo(name, errors,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static readonly IParser<string> TypeParser = Parser.Regex(@"[0-9a-zA-Z_<>[\]]+").Select(x => x.ToString()).CommentedToken();
 
@@ -105,7 +105,7 @@ namespace Facility.Definition.Fsd
 			from typeName in TypeParser.Named("field type name").Positioned()
 			from semicolon in PunctuationParser(";")
 			select new ServiceFieldInfo(name.Value, typeName.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceDtoInfo> DtoParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -117,7 +117,7 @@ namespace Facility.Definition.Fsd
 			select new ServiceDtoInfo(name, fields,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceMethodInfo> MethodParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -131,7 +131,7 @@ namespace Facility.Definition.Fsd
 			select new ServiceMethodInfo(name, requestFields, responseFields,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<IServiceMemberInfo> ServiceItemParser(Context context) =>
 			Parser.Or<IServiceMemberInfo>(EnumParser(context), DtoParser(context), MethodParser(context), ErrorSetParser(context));
@@ -146,7 +146,7 @@ namespace Facility.Definition.Fsd
 			select new ServiceInfo(name, items,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
-				validate: context.ShouldValidate);
+				validationMode: context.ValidationMode);
 
 		static IParser<ServiceInfo> DefinitionParser(Context context) =>
 			from service in ServiceParser(context).FollowedBy(CommentOrWhiteSpaceParser.Many())
@@ -188,14 +188,14 @@ namespace Facility.Definition.Fsd
 
 		sealed class Context
 		{
-			public Context(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, bool shouldValidate)
+			public Context(NamedText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections, ValidationMode validationMode)
 			{
 				m_source = source;
 				m_remarksSections = remarksSections;
-				ShouldValidate = shouldValidate;
+				ValidationMode = validationMode;
 			}
 
-			public bool ShouldValidate { get; }
+			public ValidationMode ValidationMode { get; }
 
 			public NamedTextPosition GetPosition(TextPosition position)
 			{

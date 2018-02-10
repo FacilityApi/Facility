@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a DTO.
 		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -24,18 +24,13 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			if (validate)
-			{
-				var error = this.Validate().FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-			}
+			this.Validate(validationMode);
 		}
 
 		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
-			return ServiceDefinitionUtility.ValidateName2(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(Fields, "field"));
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field"));
 		}
 
 		/// <summary>

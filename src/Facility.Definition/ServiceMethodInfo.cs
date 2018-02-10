@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a method.
 		/// </summary>
-		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
+		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -25,19 +25,14 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			if (validate)
-			{
-				var error = this.Validate().FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-			}
+			this.Validate(validationMode);
 		}
 
 		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
-			return ServiceDefinitionUtility.ValidateName2(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(RequestFields, "request field"))
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(ResponseFields, "response field"));
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(RequestFields, "request field"))
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(ResponseFields, "response field"));
 		}
 
 		/// <summary>

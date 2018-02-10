@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null, bool validate = true)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -21,18 +21,13 @@ namespace Facility.Definition
 			Parameters = parameters.ToReadOnlyList();
 			Position = position;
 
-			if (validate)
-			{
-				var error = this.Validate().FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-			}
+			this.Validate(validationMode);
 		}
 
 		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
-			return ServiceDefinitionUtility.ValidateName2(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(Parameters, "attribute parameter"));
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Parameters, "attribute parameter"));
 		}
 
 		/// <summary>

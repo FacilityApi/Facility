@@ -104,7 +104,7 @@
     <Compile Include="ServiceMethodInfo.cs" />
     <Compile Include="NamedTextPosition.cs" />
     <Compile Include="ServiceDefinitionError.cs" />
-    <Compile Include="IValidatable.cs" />
+    <Compile Include="ValidationMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
