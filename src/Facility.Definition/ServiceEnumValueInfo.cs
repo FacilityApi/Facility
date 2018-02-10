@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A value of an enumerated type.
 	/// </summary>
-	public sealed class ServiceEnumValueInfo : IServiceElementInfo
+	public sealed class ServiceEnumValueInfo : IServiceElementInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates an enum value.
 		/// </summary>
-		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null)
+		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, bool validate = true)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -21,7 +22,17 @@ namespace Facility.Definition
 			Summary = summary ?? "";
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
+			if (validate)
+			{
+				var error = this.Validate().FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+			}
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName2(Name, Position);
 		}
 
 		/// <summary>

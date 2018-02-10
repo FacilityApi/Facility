@@ -102,7 +102,15 @@ namespace Facility.Definition
 
 		internal static void ValidateTypeName(string name, NamedTextPosition position)
 		{
-			ServiceTypeInfo.Parse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position);
+			var error = ValidateTypeName2(name, position).FirstOrDefault();
+			if (error != null)
+				throw error.CreateException();
+		}
+
+		internal static IEnumerable<ServiceDefinitionError> ValidateTypeName2(string name, NamedTextPosition position)
+		{
+			if (ServiceTypeInfo.TryParse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position, out ServiceDefinitionError error) == null)
+				yield return error;
 		}
 
 		internal static void ValidateNoDuplicateNames(IEnumerable<IServiceNamedInfo> infos, string description)

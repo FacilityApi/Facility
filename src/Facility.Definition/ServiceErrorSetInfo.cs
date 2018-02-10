@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// An error set.
 	/// </summary>
-	public sealed class ServiceErrorSetInfo : IServiceMemberInfo
+	public sealed class ServiceErrorSetInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -23,8 +24,18 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Errors, "error");
+			if (validate)
+			{
+				var error = this.Validate().FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+			}
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName2(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(Errors, "error"));
 		}
 
 		/// <summary>

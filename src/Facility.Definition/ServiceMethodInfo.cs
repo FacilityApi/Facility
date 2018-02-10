@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A service method.
 	/// </summary>
-	public sealed class ServiceMethodInfo : IServiceMemberInfo
+	public sealed class ServiceMethodInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a method.
 		/// </summary>
-		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -24,9 +25,19 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(RequestFields, "request field");
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(ResponseFields, "response field");
+			if (validate)
+			{
+				var error = this.Validate().FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+			}
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName2(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(RequestFields, "request field"))
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(ResponseFields, "response field"));
 		}
 
 		/// <summary>

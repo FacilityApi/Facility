@@ -8,7 +8,7 @@ namespace Facility.Definition
 	/// <summary>
 	/// Information about a service from a definition.
 	/// </summary>
-	public sealed class ServiceInfo : IServiceMemberInfo
+	public sealed class ServiceInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a service.
@@ -29,13 +29,13 @@ namespace Facility.Definition
 
 			if (validate)
 			{
-				var error = Validate().FirstOrDefault();
+				var error = this.Validate().FirstOrDefault();
 				if (error != null)
 					throw error.CreateException();
 			}
 		}
 
-		internal IEnumerable<ServiceDefinitionError> Validate()
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
 		{
 			foreach (var error in ServiceDefinitionUtility.ValidateName2(Name, Position))
 				yield return error;
@@ -54,6 +54,12 @@ namespace Facility.Definition
 				ServiceDefinitionError error;
 				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.Position, out error);
 				if (error != null)
+					yield return error;
+			}
+
+			foreach (var validatable in Members.OfType<IValidatable>())
+			{
+				foreach (var error in validatable.Validate())
 					yield return error;
 			}
 		}

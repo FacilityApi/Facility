@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A service DTO.
 	/// </summary>
-	public sealed class ServiceDtoInfo : IServiceMemberInfo
+	public sealed class ServiceDtoInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a DTO.
 		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, bool validate = true)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -23,8 +24,18 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field");
+			if (validate)
+			{
+				var error = this.Validate().FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+			}
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName2(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(Fields, "field"));
 		}
 
 		/// <summary>

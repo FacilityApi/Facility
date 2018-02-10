@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// An attribute.
 	/// </summary>
-	public sealed class ServiceAttributeInfo : IServiceNamedInfo
+	public sealed class ServiceAttributeInfo : IServiceNamedInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates an attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null, bool validate = true)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -20,8 +21,18 @@ namespace Facility.Definition
 			Parameters = parameters.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Parameters, "attribute parameter");
+			if (validate)
+			{
+				var error = this.Validate().FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+			}
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName2(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames2(Parameters, "attribute parameter"));
 		}
 
 		/// <summary>

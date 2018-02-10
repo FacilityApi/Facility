@@ -30,9 +30,9 @@ namespace Facility.Definition.Fsd
 		/// Parses an FSD file into a service definition.
 		/// </summary>
 		/// <returns>true if the parse succeeds.</returns>
-		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errorList)
+		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
 		{
-			var errors = new List<ServiceDefinitionError>();
+			var errorList = new List<ServiceDefinitionError>();
 			IReadOnlyList<string> definitionLines = null;
 			var remarksSections = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
 
@@ -65,7 +65,7 @@ namespace Facility.Definition.Fsd
 
 							var position = new NamedTextPosition(source.Name, headingLineNumber, 1);
 							if (remarksSections.ContainsKey(name))
-								errors.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
+								errorList.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
 							else
 								remarksSections.Add(name, new FsdRemarksSection(name, lines, position));
 						}
@@ -90,14 +90,14 @@ namespace Facility.Definition.Fsd
 			try
 			{
 				service = FsdParsers.ParseDefinition(source, remarksSections, shouldValidate: false);
-				errors.AddRange(service.Validate());
+				errorList.AddRange(service.Validate());
 
 				// check for unused remarks sections
 				foreach (var remarksSection in remarksSections.Values)
 				{
 					string sectionName = remarksSection.Name;
 					if (service.Name != sectionName && service.FindMember(sectionName) == null)
-						errors.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSection.Position));
+						errorList.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSection.Position));
 				}
 			}
 			catch (ParseException exception)
@@ -112,18 +112,18 @@ namespace Facility.Definition.Fsd
 					.ThenByDescending(x => x.LineColumn.ColumnNumber)
 					.First();
 
-				errors.Add(new ServiceDefinitionError(
+				errorList.Add(new ServiceDefinitionError(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
 					exception));
 			}
 			catch (ServiceDefinitionException exception)
 			{
-				errors.Add(new ServiceDefinitionError(exception.Error, exception.Position, exception));
+				errorList.Add(new ServiceDefinitionError(exception.Error, exception.Position, exception));
 			}
 
-			errorList = errors;
-			return errors.Count == 0;
+			errors = errorList;
+			return errorList.Count == 0;
 		}
 
 		private static int GetExpectationNameRank(string name)

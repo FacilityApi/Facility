@@ -47,19 +47,20 @@ namespace Facility.Definition.Fsd
 			from name in NameParser.Named("parameter name").Positioned()
 			from colon in PunctuationParser(":")
 			from value in AttributeParameterValueParser.Named("parameter value")
-			select new ServiceAttributeParameterInfo(name.Value, TryParseAttributeParameterValue(value), context.GetPosition(name.Position));
+			select new ServiceAttributeParameterInfo(name.Value, TryParseAttributeParameterValue(value), context.GetPosition(name.Position), validate: context.ShouldValidate);
 
 		static IParser<ServiceAttributeInfo> AttributeParser(Context context) =>
 			from name in NameParser.Named("attribute name").Positioned()
 			from parameters in AttributeParameterParser(context).Delimited(",").Bracketed("(", ")").OrDefault()
-			select new ServiceAttributeInfo(name.Value, parameters, context.GetPosition(name.Position));
+			select new ServiceAttributeInfo(name.Value, parameters, context.GetPosition(name.Position), validate: context.ShouldValidate);
 
 		static IParser<ServiceEnumValueInfo> EnumValueParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
 			from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from name in NameParser.Named("value name").Positioned()
-			select new ServiceEnumValueInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position));
+			select new ServiceEnumValueInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceEnumInfo> EnumParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -70,14 +71,16 @@ namespace Facility.Definition.Fsd
 			from values in EnumValueParser(context).DelimitedAllowTrailing(",").Bracketed("{", "}")
 			select new ServiceEnumInfo(name, values,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
-				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
+				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceErrorInfo> ErrorParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
 			from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from name in NameParser.Named("error name").Positioned()
-			select new ServiceErrorInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position));
+			select new ServiceErrorInfo(name.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceErrorSetInfo> ErrorSetParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -88,7 +91,8 @@ namespace Facility.Definition.Fsd
 			from errors in ErrorParser(context).DelimitedAllowTrailing(",").Bracketed("{", "}")
 			select new ServiceErrorSetInfo(name, errors,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
-				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
+				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
+				validate: context.ShouldValidate);
 
 		static readonly IParser<string> TypeParser = Parser.Regex(@"[0-9a-zA-Z_<>[\]]+").Select(x => x.ToString()).CommentedToken();
 
@@ -100,7 +104,8 @@ namespace Facility.Definition.Fsd
 			from colon in PunctuationParser(":")
 			from typeName in TypeParser.Named("field type name").Positioned()
 			from semicolon in PunctuationParser(";")
-			select new ServiceFieldInfo(name.Value, typeName.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position));
+			select new ServiceFieldInfo(name.Value, typeName.Value, attributes.SelectMany(x => x), BuildSummary(comments1, comments2), context.GetPosition(name.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceDtoInfo> DtoParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -111,7 +116,8 @@ namespace Facility.Definition.Fsd
 			from fields in FieldParser(context).Many().Bracketed("{", "}")
 			select new ServiceDtoInfo(name, fields,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
-				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
+				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<ServiceMethodInfo> MethodParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
@@ -124,7 +130,8 @@ namespace Facility.Definition.Fsd
 			from responseFields in FieldParser(context).Many().Bracketed("{", "}")
 			select new ServiceMethodInfo(name, requestFields, responseFields,
 				attributes.SelectMany(x => x), BuildSummary(comments1, comments2),
-				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position));
+				context.GetRemarksSection(name)?.Lines, context.GetPosition(keyword.Position),
+				validate: context.ShouldValidate);
 
 		static IParser<IServiceMemberInfo> ServiceItemParser(Context context) =>
 			Parser.Or<IServiceMemberInfo>(EnumParser(context), DtoParser(context), MethodParser(context), ErrorSetParser(context));
