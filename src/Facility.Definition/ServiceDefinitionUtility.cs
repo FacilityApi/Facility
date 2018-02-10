@@ -95,7 +95,8 @@ namespace Facility.Definition
 
 		internal static IEnumerable<ServiceDefinitionError> ValidateTypeName(string name, NamedTextPosition position)
 		{
-			if (ServiceTypeInfo.TryParse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position, out ServiceDefinitionError error) == null)
+			ServiceDefinitionError error;
+			if (ServiceTypeInfo.TryParse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position, out error) == null)
 				yield return error;
 		}
 
