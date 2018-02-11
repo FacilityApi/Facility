@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, errors, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an error set.
+		/// </summary>
 		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

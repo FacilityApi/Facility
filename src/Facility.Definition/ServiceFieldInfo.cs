@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position, NamedTextPosition typeNamePosition)
+			: this(name, typeName, attributes, summary, position, typeNamePosition, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a field.
+		/// </summary>
 		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, NamedTextPosition typeNamePosition = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a DTO.
 		/// </summary>
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, fields, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a DTO.
+		/// </summary>
 		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

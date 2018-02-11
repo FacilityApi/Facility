@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position)
+			: this(name, value, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an attribute parameter.
+		/// </summary>
 		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

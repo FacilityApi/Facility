@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a method.
 		/// </summary>
+		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields, IEnumerable<ServiceFieldInfo> responseFields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, requestFields, responseFields, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a method.
+		/// </summary>
 		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

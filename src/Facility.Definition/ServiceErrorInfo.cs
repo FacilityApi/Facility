@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error.
 		/// </summary>
+		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
+			: this(name, attributes, summary, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an error.
+		/// </summary>
 		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

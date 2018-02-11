@@ -13,6 +13,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, members, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a service.
+		/// </summary>
 		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)

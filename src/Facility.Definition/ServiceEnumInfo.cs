@@ -12,6 +12,14 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an enum.
 		/// </summary>
+		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, values, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an enum.
+		/// </summary>
 		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
