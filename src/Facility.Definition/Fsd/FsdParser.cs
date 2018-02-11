@@ -89,7 +89,7 @@ namespace Facility.Definition.Fsd
 
 			try
 			{
-				service = FsdParsers.ParseDefinition(source, remarksSections, validationMode: ValidationMode.Return);
+				service = FsdParsers.ParseDefinition(source, remarksSections, ValidationMode.Return);
 				errorList.AddRange(service.Validate(ValidationMode.Return));
 
 				// check for unused remarks sections
