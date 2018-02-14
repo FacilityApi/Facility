@@ -63,11 +63,11 @@ Task("VerifyCodeGen")
 	.Does(() => CodeGen(verify: true));
 
 Task("Test")
-	.IsDependentOn("Build")
 	.IsDependentOn("VerifyCodeGen")
 	.Does(() => NUnit3($"tests/**/bin/**/*.UnitTests.dll", new NUnit3Settings { NoResults = true }));
 
 Task("SourceIndex")
+	.IsDependentOn("Clean")
 	.IsDependentOn("Test")
 	.WithCriteria(() => configuration == "Release" && gitRepository != null)
 	.Does(() =>
