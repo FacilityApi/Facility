@@ -87,26 +87,39 @@ namespace Facility.Definition
 			return name != null && s_validNameRegex.IsMatch(name);
 		}
 
-		internal static void ValidateName(string name, NamedTextPosition position)
+		internal static IEnumerable<ServiceDefinitionError> ValidateName(string name, NamedTextPosition position)
 		{
 			if (!IsValidName(name))
-				throw new ServiceDefinitionException($"Invalid name '{name}'.", position);
+				yield return new ServiceDefinitionError($"Invalid name '{name}'.", position);
 		}
 
-		internal static void ValidateTypeName(string name, NamedTextPosition position)
+		internal static IEnumerable<ServiceDefinitionError> ValidateTypeName(string name, NamedTextPosition position)
 		{
-			ServiceTypeInfo.Parse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position);
+			ServiceDefinitionError error;
+			if (ServiceTypeInfo.TryParse(name, x => s_validNameRegex.IsMatch(x) ? new ServiceDtoInfo(x) : null, position, out error) == null)
+				yield return error;
 		}
 
-		internal static void ValidateNoDuplicateNames(IEnumerable<IServiceNamedInfo> infos, string description)
+		internal static IEnumerable<ServiceDefinitionError> ValidateNoDuplicateNames(IEnumerable<IServiceNamedInfo> infos, string description)
 		{
-			var duplicate = infos
+			return infos
 				.GroupBy(x => x.Name.ToLowerInvariant())
 				.Where(x => x.Count() != 1)
 				.Select(x => x.Skip(1).First())
-				.FirstOrDefault();
-			if (duplicate != null)
-				throw new ServiceDefinitionException($"Duplicate {description}: {duplicate.Name}", duplicate.Position);
+				.Select(duplicate => new ServiceDefinitionError($"Duplicate {description}: {duplicate.Name}", duplicate.Position));
+		}
+
+		internal static IEnumerable<ServiceDefinitionError> Validate(this IValidatable validatable, ValidationMode mode)
+		{
+			var errors = validatable.Validate();
+			if (mode == ValidationMode.Throw)
+			{
+				var error = errors.FirstOrDefault();
+				if (error != null)
+					throw error.CreateException();
+				return Enumerable.Empty<ServiceDefinitionError>();
+			}
+			return errors;
 		}
 
 		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)

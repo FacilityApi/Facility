@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A field of a DTO.
 	/// </summary>
-	public sealed class ServiceFieldInfo : IServiceElementInfo
+	public sealed class ServiceFieldInfo : IServiceElementInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, NamedTextPosition typeNamePosition = null)
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position, NamedTextPosition typeNamePosition)
+			: this(name, typeName, attributes, summary, position, typeNamePosition, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a field.
+		/// </summary>
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, NamedTextPosition typeNamePosition = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -25,8 +34,13 @@ namespace Facility.Definition
 			Position = position;
 			TypeNamePosition = typeNamePosition ?? position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateTypeName(TypeName, TypeNamePosition);
+			this.Validate(validationMode);
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateTypeName(TypeName, TypeNamePosition));
 		}
 
 		/// <summary>

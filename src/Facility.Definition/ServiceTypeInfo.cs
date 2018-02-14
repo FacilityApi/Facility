@@ -102,8 +102,19 @@ namespace Facility.Definition
 
 		internal static ServiceTypeInfo Parse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position = null)
 		{
+			ServiceDefinitionError error;
+			var typeInfo = TryParse(text, findMember, position, out error);
+			if (error != null)
+				throw error.CreateException();
+			return typeInfo;
+		}
+
+		internal static ServiceTypeInfo TryParse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position, out ServiceDefinitionError error)
+		{
 			if (text == null)
 				throw new ArgumentNullException(nameof(text));
+
+			error = null;
 
 			var primitiveTuple = s_primitiveTuples.FirstOrDefault(x => text == x.Item2);
 			if (primitiveTuple != null)
@@ -134,7 +145,8 @@ namespace Facility.Definition
 					return CreateEnum(@enum);
 			}
 
-			throw new ServiceDefinitionException($"Unknown field type '{text}'.", position);
+			error = new ServiceDefinitionError($"Unknown field type '{text}'.", position);
+			return null;
 		}
 
 		private ServiceTypeInfo(ServiceTypeKind kind, ServiceDtoInfo dto = null, ServiceEnumInfo @enum = null, ServiceTypeInfo valueType = null)

@@ -8,12 +8,20 @@ namespace Facility.Definition
 	/// <summary>
 	/// Information about a service from a definition.
 	/// </summary>
-	public sealed class ServiceInfo : IServiceMemberInfo
+	public sealed class ServiceInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, members, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a service.
+		/// </summary>
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -25,19 +33,38 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
+			m_membersByName = Members.ToLookup(x => x.Name);
+
+			this.Validate(validationMode);
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			foreach (var error in ServiceDefinitionUtility.ValidateName(Name, Position))
+				yield return error;
 
 			foreach (var member in Members)
 			{
 				if (!(member is ServiceMethodInfo) && !(member is ServiceDtoInfo) && !(member is ServiceEnumInfo) && !(member is ServiceErrorSetInfo))
-					throw new ServiceDefinitionException($"Unsupported member type '{member.GetType()}'.");
+					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.", member.Position);
 			}
 
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member");
-			m_membersByName = new ReadOnlyDictionary<string, IServiceMemberInfo>(Members.ToDictionary(x => x.Name, x => x));
+			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member"))
+				yield return error;
 
 			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
-				GetFieldType(field);
+			{
+				ServiceDefinitionError error;
+				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
+				if (error != null)
+					yield return error;
+			}
+
+			foreach (var validatable in Members.OfType<IValidatable>())
+			{
+				foreach (var error in validatable.Validate())
+					yield return error;
+			}
 		}
 
 		/// <summary>
@@ -95,9 +122,7 @@ namespace Facility.Definition
 		/// </summary>
 		public IServiceMemberInfo FindMember(string name)
 		{
-			IServiceMemberInfo member;
-			m_membersByName.TryGetValue(name, out member);
-			return member;
+			return m_membersByName[name].SingleOrDefault();
 		}
 
 		/// <summary>
@@ -116,6 +141,6 @@ namespace Facility.Definition
 			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
 		}
 
-		readonly ReadOnlyDictionary<string, IServiceMemberInfo> m_membersByName;
+		readonly ILookup<string, IServiceMemberInfo> m_membersByName;
 	}
 }

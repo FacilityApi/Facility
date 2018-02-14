@@ -15,8 +15,24 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Parses an FSD file into a service definition.
 		/// </summary>
+		/// <exception cref="ServiceDefinitionException">Thrown if the parse fails.</exception>
 		public ServiceInfo ParseDefinition(NamedText source)
 		{
+			ServiceInfo service;
+			IReadOnlyList<ServiceDefinitionError> errors;
+			if (TryParseDefinition(source, out service, out errors))
+				return service;
+			else
+				throw errors.First().CreateException();
+		}
+
+		/// <summary>
+		/// Parses an FSD file into a service definition.
+		/// </summary>
+		/// <returns>true if the parse succeeds.</returns>
+		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
+		{
+			var errorList = new List<ServiceDefinitionError>();
 			IReadOnlyList<string> definitionLines = null;
 			var remarksSections = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
 
@@ -49,8 +65,9 @@ namespace Facility.Definition.Fsd
 
 							var position = new NamedTextPosition(source.Name, headingLineNumber, 1);
 							if (remarksSections.ContainsKey(name))
-								throw new ServiceDefinitionException("Duplicate remarks heading: " + name, position);
-							remarksSections.Add(name, new FsdRemarksSection(name, lines, position));
+								errorList.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
+							else
+								remarksSections.Add(name, new FsdRemarksSection(name, lines, position));
 						}
 
 						if (match == null)
@@ -68,11 +85,20 @@ namespace Facility.Definition.Fsd
 			}
 
 			source = new NamedText(source.Name, string.Join("\n", definitionLines));
+			service = null;
 
-			ServiceInfo service;
 			try
 			{
-				service = FsdParsers.ParseDefinition(source, remarksSections);
+				service = FsdParsers.ParseDefinition(source, remarksSections, ValidationMode.Return);
+				errorList.AddRange(service.Validate(ValidationMode.Return));
+
+				// check for unused remarks sections
+				foreach (var remarksSection in remarksSections.Values)
+				{
+					string sectionName = remarksSection.Name;
+					if (service.Name != sectionName && service.FindMember(sectionName) == null)
+						errorList.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSection.Position));
+				}
 			}
 			catch (ParseException exception)
 			{
@@ -86,21 +112,18 @@ namespace Facility.Definition.Fsd
 					.ThenByDescending(x => x.LineColumn.ColumnNumber)
 					.First();
 
-				throw new ServiceDefinitionException(
+				errorList.Add(new ServiceDefinitionError(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
-					exception);
+					exception));
 			}
-
-			// check for unused remarks sections
-			foreach (var remarksSection in remarksSections.Values)
+			catch (ServiceDefinitionException exception)
 			{
-				string sectionName = remarksSection.Name;
-				if (service.Name != sectionName && service.FindMember(sectionName) == null)
-					throw new ServiceDefinitionException($"Unused remarks heading: {sectionName}", remarksSection.Position);
+				errorList.Add(new ServiceDefinitionError(exception.Error, exception.Position, exception));
 			}
 
-			return service;
+			errors = errorList;
+			return errorList.Count == 0;
 		}
 
 		private static int GetExpectationNameRank(string name)

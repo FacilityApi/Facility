@@ -167,5 +167,12 @@ namespace Facility.Definition.UnitTests.Fsd
 			TestUtility.ParseInvalidTestApi("service TestApi{}\n# TestApi2\ntest\nremarks")
 				.Message.ShouldBe("TestApi.fsd(2,1): Unused remarks heading: TestApi2");
 		}
+
+		[Test]
+		public void MultipleErrors()
+		{
+			TestUtility.TryParseInvalidTestApi("service TestApi { method do {}: {} data MyDto { x: InvalidData; } data One {} data One {} }\n# do\nremarks\n# do\nremarks\n# TestApi2\ntest\nremarks")
+				.Count.ShouldBe(4);
+		}
 	}
 }

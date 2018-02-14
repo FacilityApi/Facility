@@ -1,16 +1,26 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// An attribute parameter.
 	/// </summary>
-	public sealed class ServiceAttributeParameterInfo : IServiceNamedInfo
+	public sealed class ServiceAttributeParameterInfo : IServiceNamedInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null)
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position)
+			: this(name, value, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an attribute parameter.
+		/// </summary>
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -21,7 +31,12 @@ namespace Facility.Definition
 			Value = value;
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
+			this.Validate(validationMode);
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position);
 		}
 
 		/// <summary>

@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// An error set.
 	/// </summary>
-	public sealed class ServiceErrorSetInfo : IServiceMemberInfo
+	public sealed class ServiceErrorSetInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, errors, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates an error set.
+		/// </summary>
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -23,8 +32,13 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Errors, "error");
+			this.Validate(validationMode);
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Errors, "error"));
 		}
 
 		/// <summary>

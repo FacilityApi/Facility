@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A service DTO.
 	/// </summary>
-	public sealed class ServiceDtoInfo : IServiceMemberInfo
+	public sealed class ServiceDtoInfo : IServiceMemberInfo, IValidatable
 	{
 		/// <summary>
 		/// Creates a DTO.
 		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
+			: this(name, fields, attributes, summary, remarks, position, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Creates a DTO.
+		/// </summary>
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -23,8 +32,13 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			ServiceDefinitionUtility.ValidateName(Name, Position);
-			ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field");
+			this.Validate(validationMode);
+		}
+
+		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field"));
 		}
 
 		/// <summary>
