@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// A service method.
 	/// </summary>
-	public sealed class ServiceMethodInfo : IServiceMemberInfo, IValidatable
+	public sealed class ServiceMethodInfo : IServiceMemberInfo
 	{
 		/// <summary>
 		/// Creates a method.
 		/// </summary>
-		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields, IEnumerable<ServiceFieldInfo> responseFields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
-			: this(name, requestFields, responseFields, attributes, summary, remarks, position, ValidationMode.Throw)
+		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, requestFields, responseFields, attributes, summary, remarks, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates a method.
-		/// </summary>
-		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceMethodInfo(ValidationMode validationMode, string name, IEnumerable<ServiceFieldInfo> requestFields, IEnumerable<ServiceFieldInfo> responseFields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -33,14 +30,8 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(RequestFields, "request field"))
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(ResponseFields, "response field"));
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -77,5 +68,12 @@ namespace Facility.Definition
 		/// The position of the method in the definition.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(RequestFields, "request field"))
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(ResponseFields, "response field"));
+		}
 	}
 }

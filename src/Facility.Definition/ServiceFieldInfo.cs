@@ -7,28 +7,25 @@ namespace Facility.Definition
 	/// <summary>
 	/// A field of a DTO.
 	/// </summary>
-	public sealed class ServiceFieldInfo : IServiceElementInfo, IValidatable
+	public sealed class ServiceFieldInfo : IServiceElementInfo
 	{
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
 		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
-			: this(name, typeName, attributes, summary, position, null, ValidationMode.Throw)
+			: this(name, typeName, attributes, summary, position, null)
 		{
 		}
 
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position, NamedTextPosition typeNamePosition)
-			: this(name, typeName, attributes, summary, position, typeNamePosition, ValidationMode.Throw)
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, NamedTextPosition typeNamePosition = null)
+			: this(ValidationMode.Throw, name, typeName, attributes, summary, position, typeNamePosition)
 		{
 		}
 
-		/// <summary>
-		/// Creates a field.
-		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, NamedTextPosition typeNamePosition = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceFieldInfo(ValidationMode validationMode, string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position, NamedTextPosition typeNamePosition)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -42,13 +39,8 @@ namespace Facility.Definition
 			Position = position;
 			TypeNamePosition = typeNamePosition ?? position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateTypeName(TypeName, TypeNamePosition));
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -80,5 +72,11 @@ namespace Facility.Definition
 		/// The position of the field type name in the definition.
 		/// </summary>
 		public NamedTextPosition TypeNamePosition { get; set; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateTypeName(TypeName, TypeNamePosition));
+		}
 	}
 }

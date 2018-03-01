@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Facility.Definition.Fsd;
 using Facility.Definition.Http;
 
 namespace Facility.Definition.UnitTests.Http
@@ -21,6 +23,15 @@ namespace Facility.Definition.UnitTests.Http
 			{
 				return exception;
 			}
+		}
+
+		protected IReadOnlyList<ServiceDefinitionError> TryParseInvalidHttpApi(string text)
+		{
+			HttpServiceInfo httpServiceInfo;
+			IReadOnlyList<ServiceDefinitionError> errors;
+			if (HttpServiceInfo.TryCreate(TestUtility.ParseTestApi(text), out httpServiceInfo, out errors))
+				throw new InvalidOperationException("Parse did not fail.");
+			return errors;
 		}
 	}
 }

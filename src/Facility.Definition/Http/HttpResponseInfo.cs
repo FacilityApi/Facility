@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Facility.Definition.Http
@@ -33,6 +34,11 @@ namespace Facility.Definition.Http
 		{
 			StatusCode = statusCode;
 			BodyField = bodyField;
+		}
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return NormalFields != null ? NormalFields.SelectMany(x => x.GetValidationErrors()) : BodyField.GetValidationErrors();
 		}
 	}
 }

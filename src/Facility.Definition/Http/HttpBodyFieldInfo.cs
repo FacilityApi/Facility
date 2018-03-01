@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 
 namespace Facility.Definition.Http
 {
@@ -26,8 +27,15 @@ namespace Facility.Definition.Http
 				if (parameter.Name == "code")
 					StatusCode = HttpAttributeUtility.ParseStatusCodeInteger(parameter);
 				else if (parameter.Name != "from")
-					throw parameter.CreateInvalidHttpParameterException();
+					m_errors.Add(parameter.CreateInvalidHttpParameterError());
 			}
 		}
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return m_errors;
+		}
+
+		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

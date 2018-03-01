@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// A service DTO.
 	/// </summary>
-	public sealed class ServiceDtoInfo : IServiceMemberInfo, IValidatable
+	public sealed class ServiceDtoInfo : IServiceMemberInfo
 	{
 		/// <summary>
 		/// Creates a DTO.
 		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
-			: this(name, fields, attributes, summary, remarks, position, ValidationMode.Throw)
+		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, fields, attributes, summary, remarks, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates a DTO.
-		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceDtoInfo(ValidationMode validationMode, string name, IEnumerable<ServiceFieldInfo> fields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -32,13 +29,8 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field"));
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -70,5 +62,11 @@ namespace Facility.Definition
 		/// The position of the DTO in the definition.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Fields, "field"));
+		}
 	}
 }

@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// An error of an error set.
 	/// </summary>
-	public sealed class ServiceErrorInfo : IServiceElementInfo, IValidatable
+	public sealed class ServiceErrorInfo : IServiceElementInfo
 	{
 		/// <summary>
 		/// Creates an error.
 		/// </summary>
-		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
-			: this(name, attributes, summary, position, ValidationMode.Throw)
+		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, attributes, summary, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates an error.
-		/// </summary>
-		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceErrorInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -30,12 +27,8 @@ namespace Facility.Definition
 			Summary = summary ?? "";
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position);
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -57,5 +50,10 @@ namespace Facility.Definition
 		/// The position of the error in the definition.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position);
+		}
 	}
 }

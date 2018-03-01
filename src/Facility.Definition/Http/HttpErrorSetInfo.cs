@@ -22,11 +22,18 @@ namespace Facility.Definition.Http
 		{
 			ServiceErrorSet = errorSetInfo;
 
-			var httpParameter = errorSetInfo.GetHttpParameters().FirstOrDefault();
-			if (httpParameter != null)
-				throw httpParameter.CreateInvalidHttpParameterException();
+			var parameter = errorSetInfo.GetHttpParameters().FirstOrDefault();
+			if (parameter != null)
+				m_errors.Add(parameter.CreateInvalidHttpParameterError());
 
 			Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
 		}
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return m_errors.Concat(Errors.SelectMany(x => x.GetValidationErrors()));
+		}
+
+		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

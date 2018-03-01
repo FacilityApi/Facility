@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// An error set.
 	/// </summary>
-	public sealed class ServiceErrorSetInfo : IServiceMemberInfo, IValidatable
+	public sealed class ServiceErrorSetInfo : IServiceMemberInfo
 	{
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
-			: this(name, errors, attributes, summary, remarks, position, ValidationMode.Throw)
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, errors, attributes, summary, remarks, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates an error set.
-		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceErrorSetInfo(ValidationMode validationMode, string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -32,13 +29,8 @@ namespace Facility.Definition
 			Remarks = remarks.ToReadOnlyList();
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Errors, "error"));
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -70,5 +62,11 @@ namespace Facility.Definition
 		/// The position of the error set in the definition.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Errors, "error"));
+		}
 	}
 }

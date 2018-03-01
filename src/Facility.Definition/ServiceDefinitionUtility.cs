@@ -109,17 +109,11 @@ namespace Facility.Definition
 				.Select(duplicate => new ServiceDefinitionError($"Duplicate {description}: {duplicate.Name}", duplicate.Position));
 		}
 
-		internal static IEnumerable<ServiceDefinitionError> Validate(this IValidatable validatable, ValidationMode mode)
+		internal static void ThrowIfAny(this IEnumerable<ServiceDefinitionError> errors)
 		{
-			var errors = validatable.Validate();
-			if (mode == ValidationMode.Throw)
-			{
-				var error = errors.FirstOrDefault();
-				if (error != null)
-					throw error.CreateException();
-				return Enumerable.Empty<ServiceDefinitionError>();
-			}
-			return errors;
+			var error = errors.FirstOrDefault();
+			if (error != null)
+				throw error.CreateException();
 		}
 
 		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)

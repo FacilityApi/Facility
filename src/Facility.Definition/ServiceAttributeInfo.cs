@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// An attribute.
 	/// </summary>
-	public sealed class ServiceAttributeInfo : IServiceNamedInfo, IValidatable
+	public sealed class ServiceAttributeInfo : IServiceNamedInfo
 	{
 		/// <summary>
 		/// Creates an attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters, NamedTextPosition position)
-			: this(name, parameters, position, ValidationMode.Throw)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, parameters, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates an attribute.
-		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceAttributeInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeParameterInfo> parameters, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -29,13 +26,8 @@ namespace Facility.Definition
 			Parameters = parameters.ToReadOnlyList();
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Parameters, "attribute parameter"));
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -52,5 +44,11 @@ namespace Facility.Definition
 		/// The position of the attribute.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position)
+				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Parameters, "attribute parameter"));
+		}
 	}
 }

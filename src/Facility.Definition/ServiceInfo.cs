@@ -8,20 +8,20 @@ namespace Facility.Definition
 	/// <summary>
 	/// Information about a service from a definition.
 	/// </summary>
-	public sealed class ServiceInfo : IServiceMemberInfo, IValidatable
+	public sealed class ServiceInfo : IServiceMemberInfo
 	{
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
-			: this(name, members, attributes, summary, remarks, position, ValidationMode.Throw)
+		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, members, attributes, summary, remarks, position)
 		{
 		}
 
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceInfo(ValidationMode validationMode, string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -35,36 +35,8 @@ namespace Facility.Definition
 
 			m_membersByName = Members.ToLookup(x => x.Name);
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			foreach (var error in ServiceDefinitionUtility.ValidateName(Name, Position))
-				yield return error;
-
-			foreach (var member in Members)
-			{
-				if (!(member is ServiceMethodInfo) && !(member is ServiceDtoInfo) && !(member is ServiceEnumInfo) && !(member is ServiceErrorSetInfo))
-					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.", member.Position);
-			}
-
-			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member"))
-				yield return error;
-
-			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
-			{
-				ServiceDefinitionError error;
-				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
-				if (error != null)
-					yield return error;
-			}
-
-			foreach (var validatable in Members.OfType<IValidatable>())
-			{
-				foreach (var error in validatable.Validate())
-					yield return error;
-			}
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -116,6 +88,41 @@ namespace Facility.Definition
 		/// The position of the service.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		/// <summary>
+		/// Returns any definition errors.
+		/// </summary>
+		public IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			foreach (var error in ServiceDefinitionUtility.ValidateName(Name, Position))
+				yield return error;
+
+			foreach (var member in Members)
+			{
+				if (!(member is ServiceMethodInfo) && !(member is ServiceDtoInfo) && !(member is ServiceEnumInfo) && !(member is ServiceErrorSetInfo))
+					yield return new ServiceDefinitionError($"Unsupported member type '{member.GetType()}'.", member.Position);
+			}
+
+			foreach (var error in ServiceDefinitionUtility.ValidateNoDuplicateNames(Members, "service member"))
+				yield return error;
+
+			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
+			{
+				ServiceDefinitionError error;
+				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
+				if (error != null)
+					yield return error;
+			}
+
+			foreach (var error in Methods.SelectMany(x => x.GetValidationErrors()))
+				yield return error;
+			foreach (var error in Dtos.SelectMany(x => x.GetValidationErrors()))
+				yield return error;
+			foreach (var error in Enums.SelectMany(x => x.GetValidationErrors()))
+				yield return error;
+			foreach (var error in ErrorSets.SelectMany(x => x.GetValidationErrors()))
+				yield return error;
+		}
 
 		/// <summary>
 		/// Finds the member of the specified name.

@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// An attribute parameter.
 	/// </summary>
-	public sealed class ServiceAttributeParameterInfo : IServiceNamedInfo, IValidatable
+	public sealed class ServiceAttributeParameterInfo : IServiceNamedInfo
 	{
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position)
-			: this(name, value, position, ValidationMode.Throw)
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, value, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates an attribute parameter.
-		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceAttributeParameterInfo(ValidationMode validationMode, string name, string value, NamedTextPosition position)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -31,12 +28,8 @@ namespace Facility.Definition
 			Value = value;
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position);
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -53,5 +46,10 @@ namespace Facility.Definition
 		/// The position of the parameter.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position);
+		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Facility.Definition.Http
+﻿using System.Collections.Generic;
+
+namespace Facility.Definition.Http
 {
 	/// <summary>
 	/// Information about a field that corresponds to a request or response HTTP header.
@@ -25,8 +27,15 @@
 				if (parameter.Name == "name")
 					Name = parameter.Value;
 				else if (parameter.Name != "from")
-					throw parameter.CreateInvalidHttpParameterException();
+					m_errors.Add(parameter.CreateInvalidHttpParameterError());
 			}
 		}
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return m_errors;
+		}
+
+		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

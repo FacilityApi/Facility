@@ -7,20 +7,17 @@ namespace Facility.Definition
 	/// <summary>
 	/// A value of an enumerated type.
 	/// </summary>
-	public sealed class ServiceEnumValueInfo : IServiceElementInfo, IValidatable
+	public sealed class ServiceEnumValueInfo : IServiceElementInfo
 	{
 		/// <summary>
 		/// Creates an enum value.
 		/// </summary>
-		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
-			: this(name, attributes, summary, position, ValidationMode.Throw)
+		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null)
+			: this(ValidationMode.Throw, name, attributes, summary, position)
 		{
 		}
 
-		/// <summary>
-		/// Creates an enum value.
-		/// </summary>
-		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null, ValidationMode validationMode = ValidationMode.Throw)
+		internal ServiceEnumValueInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, NamedTextPosition position = null)
 		{
 			if (name == null)
 				throw new ArgumentNullException(nameof(name));
@@ -30,12 +27,8 @@ namespace Facility.Definition
 			Summary = summary ?? "";
 			Position = position;
 
-			this.Validate(validationMode);
-		}
-
-		IEnumerable<ServiceDefinitionError> IValidatable.Validate()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position);
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -57,5 +50,10 @@ namespace Facility.Definition
 		/// The position of the value in the definition.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return ServiceDefinitionUtility.ValidateName(Name, Position);
+		}
 	}
 }

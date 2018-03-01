@@ -66,5 +66,12 @@ namespace Facility.Definition.UnitTests.Http
 			ParseInvalidHttpApi("service TestApi { method do {}: {} [http(path: \"/do\")] method doNot {}: {} }")
 				.Message.ShouldBe("TestApi.fsd(1,56): Methods 'do' and 'doNot' have the same route: POST /do");
 		}
+
+		[Test]
+		public void MultipleErrors()
+		{
+			TryParseInvalidHttpApi("[http(xyzzy: true)] service TestApi { [http] data Hey {} }")
+				.Count.ShouldBe(2);
+		}
 	}
 }

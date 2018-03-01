@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Facility.Definition.Http
@@ -12,6 +13,22 @@ namespace Facility.Definition.Http
 		/// Creates an HTTP mapping for a service.
 		/// </summary>
 		public HttpServiceInfo(ServiceInfo serviceInfo)
+			: this(serviceInfo, ValidationMode.Throw)
+		{
+		}
+
+		/// <summary>
+		/// Attempts to create an HTTP mapping for a service.
+		/// </summary>
+		/// <remarks>Returns true if there are no errors.</remarks>
+		public static bool TryCreate(ServiceInfo serviceInfo, out HttpServiceInfo httpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
+		{
+			httpServiceInfo = new HttpServiceInfo(serviceInfo, ValidationMode.Return);
+			errors = httpServiceInfo.GetValidationErrors().ToList();
+			return errors.Count == 0;
+		}
+
+		private HttpServiceInfo(ServiceInfo serviceInfo, ValidationMode validationMode)
 		{
 			Service = serviceInfo;
 
@@ -20,7 +37,7 @@ namespace Facility.Definition.Http
 				if (parameter.Name == "url")
 					Url = parameter.Value;
 				else
-					throw parameter.CreateInvalidHttpParameterException();
+					m_errors.Add(parameter.CreateInvalidHttpParameterError());
 			}
 
 			Methods = serviceInfo.Methods.Select(x => new HttpMethodInfo(x, serviceInfo)).ToList();
@@ -33,7 +50,7 @@ namespace Facility.Definition.Http
 				.Select(x => x.TryGetHttpAttribute())
 				.FirstOrDefault(x => x != null);
 			if (unexpectedHttpAttribute != null)
-				throw new ServiceDefinitionException("'http' attribute not supported on this element.", unexpectedHttpAttribute.Position);
+				m_errors.Add(new ServiceDefinitionError("'http' attribute not supported on this element.", unexpectedHttpAttribute.Position));
 
 			var methodsByRoute = Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
 			for (int index = 1; index < methodsByRoute.Count; index++)
@@ -41,8 +58,11 @@ namespace Facility.Definition.Http
 				var left = methodsByRoute[index - 1];
 				var right = methodsByRoute[index];
 				if (HttpMethodInfo.ByRouteComparer.Compare(left, right) == 0)
-					throw new ServiceDefinitionException($"Methods '{left.ServiceMethod.Name}' and '{right.ServiceMethod.Name}' have the same route: {right.Method} {right.Path}", right.ServiceMethod.Position);
+					m_errors.Add(new ServiceDefinitionError($"Methods '{left.ServiceMethod.Name}' and '{right.ServiceMethod.Name}' have the same route: {right.Method} {right.Path}", right.ServiceMethod.Position));
 			}
+
+			if (validationMode == ValidationMode.Throw)
+				GetValidationErrors().ThrowIfAny();
 		}
 
 		/// <summary>
@@ -64,5 +84,14 @@ namespace Facility.Definition.Http
 		/// The HTTP mapping for the error sets.
 		/// </summary>
 		public IReadOnlyList<HttpErrorSetInfo> ErrorSets { get; }
+
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
+		{
+			return m_errors
+				.Concat(Methods.SelectMany(x => x.GetValidationErrors()))
+				.Concat(ErrorSets.SelectMany(x => x.GetValidationErrors()));
+		}
+
+		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }
