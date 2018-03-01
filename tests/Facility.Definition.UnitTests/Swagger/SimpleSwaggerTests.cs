@@ -56,7 +56,7 @@ namespace Facility.Definition.UnitTests.Swagger
 			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
 		}
 
-		readonly string s_fsdText = @"
+		static readonly string s_fsdText = @"
 			service TestApi
 			{
 				method do
@@ -66,7 +66,7 @@ namespace Facility.Definition.UnitTests.Swagger
 				}
 			}";
 
-		readonly SwaggerService s_swaggerService = new SwaggerService
+		static readonly SwaggerService s_swaggerService = new SwaggerService
 		{
 			Swagger = "2.0",
 			Info = new SwaggerInfo
