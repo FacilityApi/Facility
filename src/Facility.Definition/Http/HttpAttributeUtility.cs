@@ -27,7 +27,7 @@ namespace Facility.Definition.Http
 			int.TryParse(parameter.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out valueAsInteger);
 			if (valueAsInteger < 200 || valueAsInteger >= 599)
 				throw new ServiceDefinitionException($"'{parameter.Name}' parameter must be an integer between 200 and 599.", parameter.Position);
-			return (HttpStatusCode)valueAsInteger;
+			return (HttpStatusCode) valueAsInteger;
 		}
 	}
 }
