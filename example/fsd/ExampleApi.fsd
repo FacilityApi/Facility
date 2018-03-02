@@ -25,6 +25,9 @@ service ExampleApi
 		/// The maximum weight.
 		[obsolete]
 		maxWeight: double;
+
+		/// The minimum price.
+		minPrice: decimal;
 	}:
 	{
 		/// The widgets.
@@ -89,7 +92,7 @@ service ExampleApi
 	}
 
 	/// Edits widget.
-	[http(method: PUT, path: "/widgets/{id}")]
+	[http(method: POST, path: "/widgets/{id}/edit")]
 	method editWidget
 	{
 		/// The widget ID.
@@ -320,7 +323,7 @@ service ExampleApi
 
 		crazy: result<map<string[]>[]>[];
 
-		[obsolete]
+		[obsolete(message: "This field was never used.")]
 		oldField: string;
 	}
 }

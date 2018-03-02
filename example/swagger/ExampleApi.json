@@ -60,6 +60,13 @@
             "type": "number",
             "format": "double",
             "x-obsolete": true
+          },
+          {
+            "in": "query",
+            "name": "minPrice",
+            "description": "The minimum price.",
+            "type": "number",
+            "format": "decimal"
           }
         ],
         "responses": {
@@ -145,7 +152,27 @@
           }
         }
       },
-      "put": {
+      "delete": {
+        "summary": "Deletes the specified widget.",
+        "operationId": "deleteWidget",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The widget ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/widgets/{id}/edit": {
+      "post": {
         "summary": "Edits widget.",
         "operationId": "editWidget",
         "consumes": [
@@ -191,24 +218,6 @@
               "$ref": "#/definitions/WidgetJob"
             },
             "x-identifier": "job"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes the specified widget.",
-        "operationId": "deleteWidget",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "description": "The widget ID.",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
           }
         }
       }

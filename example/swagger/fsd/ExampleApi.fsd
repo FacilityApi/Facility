@@ -25,6 +25,9 @@ service ExampleApi
 		/// The maximum weight.
 		[obsolete]
 		maxWeight: double;
+
+		/// The minimum price.
+		minPrice: decimal;
 	}:
 	{
 		/// The widgets.
@@ -75,8 +78,18 @@ service ExampleApi
 		notModified: boolean;
 	}
 
+	/// Deletes the specified widget.
+	[http(method: DELETE, path: "/widgets/{id}", code: 204)]
+	method deleteWidget
+	{
+		/// The widget ID.
+		id: string;
+	}:
+	{
+	}
+
 	/// Edits widget.
-	[http(method: PUT, path: "/widgets/{id}")]
+	[http(method: POST, path: "/widgets/{id}/edit")]
 	method editWidget
 	{
 		/// The widget ID.
@@ -101,16 +114,6 @@ service ExampleApi
 		/// The pending job.
 		[http(from: body, code: 202)]
 		job: WidgetJob;
-	}
-
-	/// Deletes the specified widget.
-	[http(method: DELETE, path: "/widgets/{id}", code: 204)]
-	method deleteWidget
-	{
-		/// The widget ID.
-		id: string;
-	}:
-	{
 	}
 
 	/// Gets the specified widgets.

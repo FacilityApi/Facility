@@ -51,6 +51,11 @@ paths:
         type: number
         format: double
         x-obsolete: true
+      - in: query
+        name: minPrice
+        description: The minimum price.
+        type: number
+        format: decimal
       responses:
         '200':
           description: ''
@@ -106,7 +111,20 @@ paths:
         '304':
           description: ''
           x-identifier: notModified
-    put:
+    delete:
+      summary: Deletes the specified widget.
+      operationId: deleteWidget
+      parameters:
+      - in: path
+        name: id
+        description: The widget ID.
+        required: true
+        type: string
+      responses:
+        '204':
+          description: ''
+  /widgets/{id}/edit:
+    post:
       summary: Edits widget.
       operationId: editWidget
       consumes:
@@ -139,18 +157,6 @@ paths:
           schema:
             $ref: '#/definitions/WidgetJob'
           x-identifier: job
-    delete:
-      summary: Deletes the specified widget.
-      operationId: deleteWidget
-      parameters:
-      - in: path
-        name: id
-        description: The widget ID.
-        required: true
-        type: string
-      responses:
-        '204':
-          description: ''
   /widgets/get:
     post:
       summary: Gets the specified widgets.
