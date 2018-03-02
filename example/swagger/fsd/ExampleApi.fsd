@@ -199,6 +199,13 @@ service ExampleApi
 	{
 	}
 
+	[http(method: POST, path: "/transform", code: 200)]
+	method transform
+	{
+	}:
+	{
+	}
+
 	/// A widget job.
 	data WidgetJob
 	{

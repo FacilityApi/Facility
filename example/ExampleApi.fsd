@@ -198,6 +198,16 @@ service ExampleApi
 	{
 	}
 
+	method transform
+	{
+		[http(from: body)]
+		before: object;
+	}:
+	{
+		[http(from: body)]
+		after: object;
+	}
+
 	/// Custom errors.
 	errors ExampleApiErrors
 	{

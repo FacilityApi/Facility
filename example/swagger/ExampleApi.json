@@ -401,6 +401,37 @@
           }
         }
       }
+    },
+    "/transform": {
+      "post": {
+        "operationId": "transform",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object"
+            },
+            "x-identifier": "after"
+          }
+        }
+      }
     }
   },
   "definitions": {
