@@ -7,6 +7,7 @@ service UberApi
 {
 	/// Product Types
 	[http(method: GET, path: "/products")]
+	[tag(name: Products)]
 	method getProducts
 	{
 		/// Latitude component of location.
@@ -23,6 +24,7 @@ service UberApi
 
 	/// Price Estimates
 	[http(method: GET, path: "/estimates/price")]
+	[tag(name: Estimates)]
 	method getEstimatesPrice
 	{
 		/// Latitude component of start location.
@@ -45,6 +47,7 @@ service UberApi
 
 	/// Time Estimates
 	[http(method: GET, path: "/estimates/time")]
+	[tag(name: Estimates)]
 	method getEstimatesTime
 	{
 		/// Latitude component of start location.
@@ -67,6 +70,7 @@ service UberApi
 
 	/// User Profile
 	[http(method: GET, path: "/me")]
+	[tag(name: User)]
 	method getMe
 	{
 	}:
@@ -78,6 +82,7 @@ service UberApi
 
 	/// User Activity
 	[http(method: GET, path: "/history")]
+	[tag(name: User)]
 	method getHistory
 	{
 		/// Offset the list of returned results by this amount. Default is zero.

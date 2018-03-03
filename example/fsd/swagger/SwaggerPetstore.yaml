@@ -17,6 +17,8 @@ schemes:
 paths:
   /pets:
     post:
+      tags:
+      - pet
       summary: Add a new pet to the store
       operationId: addPet
       consumes:
@@ -32,6 +34,8 @@ paths:
         '200':
           description: ''
     put:
+      tags:
+      - pet
       summary: Update an existing pet
       operationId: updatePet
       consumes:
@@ -48,6 +52,8 @@ paths:
           description: ''
   /pets/findByStatus:
     get:
+      tags:
+      - pet
       summary: Finds Pets by status
       description: Multiple status values can be provided with comma seperated strings
       operationId: findPetsByStatus
@@ -68,6 +74,8 @@ paths:
           x-identifier: ok
   /pets/findByTags:
     get:
+      tags:
+      - pet
       summary: Finds Pets by tags
       description: Muliple tags can be provided with comma seperated strings. Use tag1, tag2, tag3 for testing.
       operationId: findPetsByTags
@@ -88,6 +96,8 @@ paths:
           x-identifier: ok
   /pets/{petId}:
     get:
+      tags:
+      - pet
       summary: Find pet by ID
       description: Returns a pet when ID < 10.  ID > 10 or nonintegers will simulate API error conditions
       operationId: getPetById
@@ -107,6 +117,8 @@ paths:
             $ref: '#/definitions/Pet'
           x-identifier: pet
     post:
+      tags:
+      - pet
       summary: Updates a pet in the store with form data
       operationId: updatePetWithForm
       parameters:
@@ -119,6 +131,8 @@ paths:
         '200':
           description: ''
     delete:
+      tags:
+      - pet
       summary: Deletes a pet
       operationId: deletePet
       parameters:
@@ -136,6 +150,8 @@ paths:
           description: ''
   /stores/order:
     post:
+      tags:
+      - store
       summary: Place an order for a pet
       operationId: placeOrder
       consumes:
@@ -157,6 +173,8 @@ paths:
           x-identifier: order
   /stores/order/{orderId}:
     get:
+      tags:
+      - store
       summary: Find purchase order by ID
       description: For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
       operationId: getOrderById
@@ -175,6 +193,8 @@ paths:
             $ref: '#/definitions/Order'
           x-identifier: order
     delete:
+      tags:
+      - store
       summary: Delete purchase order by ID
       description: For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
       operationId: deleteOrder
@@ -189,6 +209,8 @@ paths:
           description: ''
   /users:
     post:
+      tags:
+      - user
       summary: Create user
       description: This can only be done by the logged in user.
       operationId: createUser
@@ -206,6 +228,8 @@ paths:
           description: ''
   /users/createWithArray:
     post:
+      tags:
+      - user
       summary: Creates list of users with given input array
       operationId: createUsersWithArrayInput
       consumes:
@@ -224,6 +248,8 @@ paths:
           description: ''
   /users/createWithList:
     post:
+      tags:
+      - user
       summary: Creates list of users with given input array
       operationId: createUsersWithListInput
       consumes:
@@ -242,6 +268,8 @@ paths:
           description: ''
   /users/login:
     get:
+      tags:
+      - user
       summary: Logs user into the system
       operationId: loginUser
       parameters:
@@ -259,6 +287,8 @@ paths:
           x-identifier: ok
   /users/logout:
     get:
+      tags:
+      - user
       summary: Logs out current logged in user session
       operationId: logoutUser
       responses:
@@ -266,6 +296,8 @@ paths:
           description: ''
   /users/{username}:
     get:
+      tags:
+      - user
       summary: Get user by user name
       operationId: getUserByName
       produces:
@@ -283,6 +315,8 @@ paths:
             $ref: '#/definitions/User'
           x-identifier: user
     put:
+      tags:
+      - user
       summary: Updated user
       description: This can only be done by the logged in user.
       operationId: updateUser
@@ -304,6 +338,8 @@ paths:
         '200':
           description: ''
     delete:
+      tags:
+      - user
       summary: Delete user
       description: This can only be done by the logged in user.
       operationId: deleteUser

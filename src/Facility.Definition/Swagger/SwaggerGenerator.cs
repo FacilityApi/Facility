@@ -237,12 +237,15 @@ namespace Facility.Definition.Swagger
 			if (!paths.TryGetValue(httpMethodInfo.Path, out var operations))
 				paths[httpMethodInfo.Path] = operations = new SwaggerOperations();
 
+			var tagNames = methodInfo.GetTagNames();
+
 			var operation = new SwaggerOperation
 			{
 				Summary = GetSummaryOrNull(methodInfo),
 				Description = GetRemarksOrNull(methodInfo),
 				OperationId = methodInfo.Name,
 				Deprecated = GetObsoleteOrNull(methodInfo),
+				Tags = tagNames.Count == 0 ? null : tagNames.ToList(),
 			};
 
 			if (httpMethodInfo.RequestNormalFields.Count != 0 || httpMethodInfo.RequestBodyField != null)

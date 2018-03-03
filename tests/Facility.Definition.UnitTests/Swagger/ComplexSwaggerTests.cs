@@ -59,6 +59,7 @@ service TestApi
 		noId: boolean;
 	}
 
+	[tag(name: deadly), tag(name: admin)]
 	method kill
 	{
 		/// job!
@@ -166,6 +167,7 @@ They are multi-line.
 				{
 					Post = new SwaggerOperation
 					{
+						Tags = new[] { "deadly", "admin" },
 						OperationId = "kill",
 						Consumes = new[] { "application/json" },
 						Parameters = new[]

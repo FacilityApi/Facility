@@ -257,6 +257,8 @@ namespace Facility.Definition.Swagger
 			var attributes = new List<ServiceAttributeInfo> { new ServiceAttributeInfo("http", httpAttributeValues) };
 			if (swaggerOperation.Deprecated.GetValueOrDefault())
 				attributes.Add(new ServiceAttributeInfo("obsolete"));
+			if (swaggerOperation.Tags != null)
+				attributes.AddRange(swaggerOperation.Tags.Select(x => new ServiceAttributeInfo("tag", new[] { new ServiceAttributeParameterInfo("name", x) })));
 
 			members.Add(new ServiceMethodInfo(
 				name: name,

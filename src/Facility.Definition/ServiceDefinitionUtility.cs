@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -77,6 +77,14 @@ namespace Facility.Definition
 		public static string TryGetObsoleteMessage(this IServiceElementInfo element)
 		{
 			return element.TryGetObsoleteAttribute()?.TryGetParameterValue("message");
+		}
+
+		/// <summary>
+		/// Returns any tag names for the element.
+		/// </summary>
+		public static IReadOnlyList<string> GetTagNames(this IServiceElementInfo element)
+		{
+			return element?.Attributes?.Where(x => x.Name == "tag").Select(x => x.TryGetParameterValue("name")).ToList();
 		}
 
 		/// <summary>
