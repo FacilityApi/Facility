@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Facility.Definition
 {
@@ -31,6 +31,11 @@ namespace Facility.Definition
 		/// The exception that caused the error, if any.
 		/// </summary>
 		public Exception Exception { get; }
+
+		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		public override string ToString() => Position != null ? $"{Position}: {Message}" : Message;
 
 		internal ServiceDefinitionException CreateException()
 		{

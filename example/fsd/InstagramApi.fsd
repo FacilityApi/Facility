@@ -6,6 +6,7 @@
 service InstagramApi
 {
 	[http(method: GET, path: "/users/{userId}", code: 200)]
+	[tag(name: Users)]
 	method getUsersUserId
 	{
 		/// The user identifier number
@@ -16,6 +17,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/self/feed", code: 200)]
+	[tag(name: Users)]
 	method getUsersSelfFeed
 	{
 		/// Count of media to return.
@@ -32,6 +34,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/{userId}/media/recent", code: 200)]
+	[tag(name: Users)]
 	method getUsersUserIdMediaRecent
 	{
 		/// The user identifier number
@@ -57,6 +60,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/self/media/liked", code: 200)]
+	[tag(name: Users)]
 	method getUsersSelfMediaLiked
 	{
 		/// Count of media to return.
@@ -70,6 +74,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/search", code: 200)]
+	[tag(name: Users)]
 	method getUsersSearch
 	{
 		/// A query string
@@ -83,6 +88,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/{userId}/follows", code: 200)]
+	[tag(name: Relationships)]
 	method getUsersUserIdFollows
 	{
 		/// The user identifier number
@@ -93,6 +99,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/{userId}/followed-by", code: 200)]
+	[tag(name: Relationships)]
 	method getUsersUserIdFollowedBy
 	{
 		/// The user identifier number
@@ -103,6 +110,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/users/self/requested-by", code: 200)]
+	[tag(name: Relationships)]
 	method getUsersSelfRequestedBy
 	{
 	}:
@@ -113,6 +121,7 @@ service InstagramApi
 	}
 
 	[http(method: POST, path: "/users/{userId}/relationship", code: 200)]
+	[tag(name: Relationships)]
 	method postUsersUserIdRelationship
 	{
 		/// The user identifier number
@@ -123,6 +132,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media/{mediaId}")]
+	[tag(name: Media)]
 	method getMediaMediaId
 	{
 		/// The media ID
@@ -135,6 +145,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media1/{shortcode}")]
+	[tag(name: Media)]
 	method getMedia1Shortcode
 	{
 		/// The media shortcode
@@ -147,6 +158,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media/search", code: 200)]
+	[tag(name: Media)]
 	method getMediaSearch
 	{
 		/// Latitude of the center search coordinate. If used, lng is required.
@@ -169,6 +181,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media/popular", code: 200)]
+	[tag(name: Media)]
 	method getMediaPopular
 	{
 	}:
@@ -177,6 +190,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media/{mediaId}/comments", code: 200)]
+	[tag(name: Comments)]
 	method getMediaMediaIdComments
 	{
 		/// Media ID
@@ -189,6 +203,8 @@ service InstagramApi
 	}
 
 	[http(method: POST, path: "/media/{mediaId}/comments", code: 200)]
+	[tag(name: Comments)]
+	[tag(name: Media)]
 	method postMediaMediaIdComments
 	{
 		/// Media ID
@@ -201,6 +217,7 @@ service InstagramApi
 	}
 
 	[http(method: DELETE, path: "/media/{mediaId}/comments", code: 200)]
+	[tag(name: Comments)]
 	method deleteMediaMediaIdComments
 	{
 		/// Media ID
@@ -213,6 +230,8 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/media/{mediaId}/likes", code: 200)]
+	[tag(name: Likes)]
+	[tag(name: Media)]
 	method getMediaMediaIdLikes
 	{
 		/// Media ID
@@ -225,6 +244,7 @@ service InstagramApi
 	}
 
 	[http(method: POST, path: "/media/{mediaId}/likes", code: 200)]
+	[tag(name: Likes)]
 	method postMediaMediaIdLikes
 	{
 		/// Media ID
@@ -237,6 +257,7 @@ service InstagramApi
 	}
 
 	[http(method: DELETE, path: "/media/{mediaId}/likes", code: 200)]
+	[tag(name: Likes)]
 	method deleteMediaMediaIdLikes
 	{
 		/// Media ID
@@ -249,6 +270,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/tags/{tagName}")]
+	[tag(name: Tags)]
 	method getTagsTagName
 	{
 		/// Tag name
@@ -261,6 +283,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/tags/{tagName}/media/recent", code: 200)]
+	[tag(name: Tags)]
 	method getTagsTagNameMediaRecent
 	{
 		/// Tag name
@@ -271,6 +294,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/tags/search", code: 200)]
+	[tag(name: Tags)]
 	method getTagsSearch
 	{
 		/// A valid tag name without a leading #. (eg. snowy, nofilter)
@@ -283,6 +307,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/locations/{locationId}", code: 200)]
+	[tag(name: Location)]
 	method getLocationsLocationId
 	{
 		/// Location ID
@@ -293,6 +318,8 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/locations/{locationId}/media/recent", code: 200)]
+	[tag(name: Location)]
+	[tag(name: Media)]
 	method getLocationsLocationIdMediaRecent
 	{
 		/// Location ID
@@ -315,6 +342,7 @@ service InstagramApi
 	}
 
 	[http(method: GET, path: "/locations/search", code: 200)]
+	[tag(name: Location)]
 	method getLocationsSearch
 	{
 		/// Default is 1000m (distance=1000), max distance is 5000.

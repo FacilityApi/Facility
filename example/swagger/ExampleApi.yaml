@@ -17,6 +17,8 @@ schemes:
 paths:
   /widgets:
     get:
+      tags:
+      - widgets
       summary: Gets widgets.
       description: Additional method remarks.
       operationId: getWidgets
@@ -67,6 +69,8 @@ paths:
             $ref: '#/definitions/WidgetJob'
           x-identifier: job
     post:
+      tags:
+      - widgets
       summary: Creates a new widget.
       operationId: createWidget
       consumes:
@@ -88,6 +92,8 @@ paths:
           x-identifier: widget
   /widgets/{id}:
     get:
+      tags:
+      - widgets
       summary: Gets the specified widget.
       operationId: getWidget
       produces:
@@ -112,6 +118,9 @@ paths:
           description: ''
           x-identifier: notModified
     delete:
+      tags:
+      - widgets
+      - admin
       summary: Deletes the specified widget.
       operationId: deleteWidget
       parameters:
@@ -125,6 +134,8 @@ paths:
           description: ''
   /widgets/{id}/edit:
     post:
+      tags:
+      - widgets
       summary: Edits widget.
       operationId: editWidget
       consumes:
@@ -159,6 +170,8 @@ paths:
           x-identifier: job
   /widgets/get:
     post:
+      tags:
+      - widgets
       summary: Gets the specified widgets.
       operationId: getWidgetBatch
       consumes:
@@ -184,6 +197,8 @@ paths:
           x-identifier: results
   /widgets/{id}/weight:
     get:
+      tags:
+      - widgets
       summary: Gets the widget weight.
       operationId: getWidgetWeight
       produces:

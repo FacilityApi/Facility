@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using ArgsReading;
 using Facility.Definition;
@@ -48,8 +49,7 @@ namespace Facility.CodeGen.Console
 			if (value == "tab")
 				return "\t";
 
-			int spaceCount;
-			if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out spaceCount) && spaceCount >= 1 && spaceCount <= 8)
+			if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out int spaceCount) && spaceCount >= 1 && spaceCount <= 8)
 				return new string(' ', spaceCount);
 
 			throw new ArgsReaderException($"Invalid indent '{value}'. (Should be 'tab' or the number of spaces.)");
@@ -72,6 +72,20 @@ namespace Facility.CodeGen.Console
 			default:
 				throw new ArgsReaderException($"Invalid new line '{value}'. (Should be 'auto', 'lf', or 'crlf'.)");
 			}
+		}
+
+		public static IReadOnlyList<string> ReadExcludeTagOptions(this ArgsReader args)
+		{
+			var values = new List<string>();
+			while (true)
+			{
+				string value = args.ReadOption("excludeTag");
+				if (value == null)
+					break;
+				values.Add(value);
+			}
+
+			return values;
 		}
 	}
 }

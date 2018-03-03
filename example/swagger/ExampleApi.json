@@ -15,6 +15,9 @@
   "paths": {
     "/widgets": {
       "get": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Gets widgets.",
         "description": "Additional method remarks.",
         "operationId": "getWidgets",
@@ -86,6 +89,9 @@
         }
       },
       "post": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Creates a new widget.",
         "operationId": "createWidget",
         "consumes": [
@@ -118,6 +124,9 @@
     },
     "/widgets/{id}": {
       "get": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Gets the specified widget.",
         "operationId": "getWidget",
         "produces": [
@@ -153,6 +162,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "widgets",
+          "admin"
+        ],
         "summary": "Deletes the specified widget.",
         "operationId": "deleteWidget",
         "parameters": [
@@ -173,6 +186,9 @@
     },
     "/widgets/{id}/edit": {
       "post": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Edits widget.",
         "operationId": "editWidget",
         "consumes": [
@@ -224,6 +240,9 @@
     },
     "/widgets/get": {
       "post": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Gets the specified widgets.",
         "operationId": "getWidgetBatch",
         "consumes": [
@@ -262,6 +281,9 @@
     },
     "/widgets/{id}/weight": {
       "get": {
+        "tags": [
+          "widgets"
+        ],
         "summary": "Gets the widget weight.",
         "operationId": "getWidgetWeight",
         "produces": [

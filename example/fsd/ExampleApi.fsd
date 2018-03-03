@@ -7,6 +7,7 @@ service ExampleApi
 {
 	/// Gets widgets.
 	[http(method: GET, path: "/widgets")]
+	[tag(name: widgets)]
 	method getWidgets
 	{
 		/// The query.
@@ -47,6 +48,7 @@ service ExampleApi
 
 	/// Creates a new widget.
 	[http(method: POST, path: "/widgets")]
+	[tag(name: widgets)]
 	method createWidget
 	{
 		/// The widget to create.
@@ -61,6 +63,7 @@ service ExampleApi
 
 	/// Gets the specified widget.
 	[http(method: GET, path: "/widgets/{id}")]
+	[tag(name: widgets)]
 	method getWidget
 	{
 		/// The widget ID.
@@ -83,6 +86,8 @@ service ExampleApi
 
 	/// Deletes the specified widget.
 	[http(method: DELETE, path: "/widgets/{id}", code: 204)]
+	[tag(name: widgets)]
+	[tag(name: admin)]
 	method deleteWidget
 	{
 		/// The widget ID.
@@ -93,6 +98,7 @@ service ExampleApi
 
 	/// Edits widget.
 	[http(method: POST, path: "/widgets/{id}/edit")]
+	[tag(name: widgets)]
 	method editWidget
 	{
 		/// The widget ID.
@@ -121,6 +127,7 @@ service ExampleApi
 
 	/// Gets the specified widgets.
 	[http(method: POST, path: "/widgets/get")]
+	[tag(name: widgets)]
 	method getWidgetBatch
 	{
 		/// The IDs of the widgets to return.
@@ -136,6 +143,7 @@ service ExampleApi
 	/// Gets the widget weight.
 	[obsolete]
 	[http(method: GET, path: "/widgets/{id}/weight")]
+	[tag(name: widgets)]
 	method getWidgetWeight
 	{
 		/// The widget ID.
@@ -219,6 +227,7 @@ service ExampleApi
 	}
 
 	/// A widget.
+	[tag(name: widgets)]
 	data Widget
 	{
 		/// A unique identifier for the widget.
@@ -236,6 +245,7 @@ service ExampleApi
 	}
 
 	/// A widget job.
+	[tag(name: widgets)]
 	data WidgetJob
 	{
 		/// A unique identifier for the widget job.
@@ -266,16 +276,22 @@ service ExampleApi
 
 		byteses: bytes[];
 
+		[tag(name: widgets)]
 		widgetField: WidgetField;
 
+		[tag(name: widgets)]
 		widgetFields: WidgetField[];
 
+		[tag(name: widgets)]
 		widget: Widget;
 
+		[tag(name: widgets)]
 		widgets: Widget[];
 
+		[tag(name: widgets)]
 		result: result<Widget>;
 
+		[tag(name: widgets)]
 		results: result<Widget>[];
 
 		bigInteger: int64;
@@ -296,10 +312,12 @@ service ExampleApi
 
 		namedStrings: map<string>;
 
+		[tag(name: widgets)]
 		namedWidgets: map<Widget>;
 	}
 
 	/// Identifies a widget field.
+	[tag(name: widgets)]
 	enum WidgetField
 	{
 		/// The 'id' field.

@@ -21,7 +21,7 @@ namespace Facility.Definition.UnitTests.Swagger
 			namedText.Name.ShouldBe("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue($"{jToken} should be {jTokenExpected}");
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
 			service.Summary.ShouldBe(fsdService.Summary);
@@ -59,6 +59,7 @@ service TestApi
 		noId: boolean;
 	}
 
+	[tag(name: deadly), tag(name: admin)]
 	method kill
 	{
 		/// job!
@@ -166,6 +167,7 @@ They are multi-line.
 				{
 					Post = new SwaggerOperation
 					{
+						Tags = new[] { "deadly", "admin" },
 						OperationId = "kill",
 						Consumes = new[] { "application/json" },
 						Parameters = new[]
