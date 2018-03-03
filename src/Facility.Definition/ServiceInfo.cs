@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -136,11 +136,27 @@ namespace Facility.Definition
 		}
 
 		/// <summary>
+		/// Attempts to get the type of the specified name.
+		/// </summary>
+		public ServiceTypeInfo TryGetType(string typeName, out ServiceDefinitionError error)
+		{
+			return ServiceTypeInfo.TryParse(typeName, FindMember, null, out error);
+		}
+
+		/// <summary>
 		/// Gets the field type for a field.
 		/// </summary>
 		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
 		{
 			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
+		}
+
+		/// <summary>
+		/// Attempts to get the field type for a field.
+		/// </summary>
+		public ServiceTypeInfo TryGetFieldType(ServiceFieldInfo field, out ServiceDefinitionError error)
+		{
+			return ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
 		}
 
 		readonly ILookup<string, IServiceMemberInfo> m_membersByName;

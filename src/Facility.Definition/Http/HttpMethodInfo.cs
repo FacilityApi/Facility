@@ -251,36 +251,38 @@ namespace Facility.Definition.Http
 
 		private static bool IsValidPathOrQueryField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo).Kind;
-			return fieldTypeKind == ServiceTypeKind.String ||
+			var fieldTypeKind = serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind;
+			return fieldTypeKind != null && (
+				fieldTypeKind == ServiceTypeKind.String ||
 				fieldTypeKind == ServiceTypeKind.Boolean ||
 				fieldTypeKind == ServiceTypeKind.Double ||
 				fieldTypeKind == ServiceTypeKind.Int32 ||
 				fieldTypeKind == ServiceTypeKind.Int64 ||
 				fieldTypeKind == ServiceTypeKind.Decimal ||
-				fieldTypeKind == ServiceTypeKind.Enum;
+				fieldTypeKind == ServiceTypeKind.Enum);
 		}
 
 		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			return serviceInfo.GetFieldType(fieldInfo).Kind == ServiceTypeKind.String;
+			return serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.String;
 		}
 
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo).Kind;
-			return fieldTypeKind == ServiceTypeKind.Object ||
+			var fieldTypeKind = serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind;
+			return fieldInfo != null && (
+				fieldTypeKind == ServiceTypeKind.Object ||
 				fieldTypeKind == ServiceTypeKind.Error ||
 				fieldTypeKind == ServiceTypeKind.Dto ||
 				fieldTypeKind == ServiceTypeKind.Result ||
 				fieldTypeKind == ServiceTypeKind.Array ||
-				fieldTypeKind == ServiceTypeKind.Map;
+				fieldTypeKind == ServiceTypeKind.Map);
 		}
 
 		private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
 			return IsValidRequestBodyField(fieldInfo, serviceInfo) ||
-				serviceInfo.GetFieldType(fieldInfo).Kind == ServiceTypeKind.Boolean;
+				serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.Boolean;
 		}
 
 		private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
@@ -289,7 +291,7 @@ namespace Facility.Definition.Http
 			{
 				// use the status code on the field or the default: OK or NoContent
 				HttpStatusCode bodyStatusCode;
-				bool isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField).Kind == ServiceTypeKind.Boolean;
+				bool isBoolean = serviceInfo.TryGetFieldType(responseBodyField.ServiceField, out _)?.Kind == ServiceTypeKind.Boolean;
 				if (responseBodyField.StatusCode != null)
 					bodyStatusCode = responseBodyField.StatusCode.Value;
 				else
