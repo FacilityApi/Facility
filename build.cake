@@ -32,6 +32,7 @@ if (!string.IsNullOrEmpty(githubApiKey))
 
 string version = null;
 string headSha = null;
+char slash = System.IO.Path.DirectorySeparatorChar;
 
 Task("Clean")
 	.Does(() =>
@@ -191,14 +192,15 @@ string GetSemVerFromFile(string path)
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd")}", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")} --swagger", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")} --swagger --yaml", verify);
-	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.json")} {Directory("example/swagger/fsd")}", verify);
-	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.yaml")} {Directory("example/swagger/fsd")}", verify: true);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd")}{slash}", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd/nowidgets")}{slash} --excludeTag widgets", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")}{slash} --swagger", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")}{slash} --swagger --yaml", verify);
+	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.json")} {Directory("example/swagger/fsd")}{slash}", verify);
+	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.yaml")} {Directory("example/swagger/fsd")}{slash}", verify: true);
 
 	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($@"{yamlPath} {Directory("example/fsd")}", verify);
+		ExecuteCodeGen($@"{yamlPath} {Directory("example/fsd")}{slash}", verify);
 
 	CreateDirectory("example/fsd/swagger");
 	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))

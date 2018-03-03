@@ -227,6 +227,7 @@ service ExampleApi
 	}
 
 	/// A widget.
+	[tag(name: widgets)]
 	data Widget
 	{
 		/// A unique identifier for the widget.
@@ -244,6 +245,7 @@ service ExampleApi
 	}
 
 	/// A widget job.
+	[tag(name: widgets)]
 	data WidgetJob
 	{
 		/// A unique identifier for the widget job.
@@ -274,16 +276,22 @@ service ExampleApi
 
 		byteses: bytes[];
 
+		[tag(name: widgets)]
 		widgetField: WidgetField;
 
+		[tag(name: widgets)]
 		widgetFields: WidgetField[];
 
+		[tag(name: widgets)]
 		widget: Widget;
 
+		[tag(name: widgets)]
 		widgets: Widget[];
 
+		[tag(name: widgets)]
 		result: result<Widget>;
 
+		[tag(name: widgets)]
 		results: result<Widget>[];
 
 		bigInteger: int64;
@@ -304,10 +312,12 @@ service ExampleApi
 
 		namedStrings: map<string>;
 
+		[tag(name: widgets)]
 		namedWidgets: map<Widget>;
 	}
 
 	/// Identifies a widget field.
+	[tag(name: widgets)]
 	enum WidgetField
 	{
 		/// The 'id' field.

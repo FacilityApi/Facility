@@ -56,6 +56,7 @@ namespace Facility.CodeGen.Console
 				bool isQuiet = argsReader.ReadQuietFlag();
 				bool isVerify = argsReader.ReadVerifyFlag();
 				bool isDryRun = argsReader.ReadDryRunFlag();
+				var excludeTags = argsReader.ReadExcludeTagOptions();
 
 				string inputPath = argsReader.ReadArgument();
 				if (inputPath == null)
@@ -90,6 +91,9 @@ namespace Facility.CodeGen.Console
 						throw new ArgsReaderException("--serviceName not supported for FSD input.");
 					service = new FsdParser().ParseDefinition(input);
 				}
+
+				foreach (string excludeTag in excludeTags)
+					service = service.ExcludeTag(excludeTag);
 
 				PrepareGenerator(generator, service, outputPath);
 				var output = generator.GenerateOutput(service);
@@ -319,6 +323,8 @@ namespace Facility.CodeGen.Console
 				System.Console.WriteLine("      The newline used in the output.");
 			}
 
+			System.Console.WriteLine("   --excludeTag <tag>");
+			System.Console.WriteLine("      Excludes service elements with the specified tag.");
 			System.Console.WriteLine("   --dryrun");
 			System.Console.WriteLine("      Executes the tool without making changes to the file system.");
 			System.Console.WriteLine("   --verify");
