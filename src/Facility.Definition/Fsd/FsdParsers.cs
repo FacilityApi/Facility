@@ -194,8 +194,7 @@ namespace Facility.Definition.Fsd
 
 			public FsdRemarksSection GetRemarksSection(string name)
 			{
-				FsdRemarksSection section;
-				m_remarksSections.TryGetValue(name, out section);
+				m_remarksSections.TryGetValue(name, out var section);
 				return section;
 			}
 

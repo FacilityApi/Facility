@@ -38,7 +38,7 @@ namespace Facility.Definition.Http
 
 		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
 		{
-			return NormalFields != null ? NormalFields.SelectMany(x => x.GetValidationErrors()) : BodyField.GetValidationErrors();
+			return NormalFields?.SelectMany(x => x.GetValidationErrors()) ?? BodyField.GetValidationErrors();
 		}
 	}
 }

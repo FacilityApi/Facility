@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Facility.Definition.CodeGen;
@@ -33,8 +33,7 @@ namespace Facility.Definition.Fsd
 				{
 					foreach (var member in service.Members)
 					{
-						var method = member as ServiceMethodInfo;
-						if (method != null)
+						if (member is ServiceMethodInfo method)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, method);
@@ -48,8 +47,7 @@ namespace Facility.Definition.Fsd
 								remarks.AddRange(new[] { "", $"# {method.Name}", "" }.Concat(method.Remarks));
 						}
 
-						var dto = member as ServiceDtoInfo;
-						if (dto != null)
+						if (member is ServiceDtoInfo dto)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, dto);
@@ -61,8 +59,7 @@ namespace Facility.Definition.Fsd
 								remarks.AddRange(new[] { "", $"# {dto.Name}", "" }.Concat(dto.Remarks));
 						}
 
-						var enumInfo = member as ServiceEnumInfo;
-						if (enumInfo != null)
+						if (member is ServiceEnumInfo enumInfo)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, enumInfo);
@@ -74,8 +71,7 @@ namespace Facility.Definition.Fsd
 								remarks.AddRange(new[] { "", $"# {enumInfo.Name}", "" }.Concat(enumInfo.Remarks));
 						}
 
-						var errorSet = member as ServiceErrorSetInfo;
-						if (errorSet != null)
+						if (member is ServiceErrorSetInfo errorSet)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, errorSet);

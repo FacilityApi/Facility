@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -234,8 +234,7 @@ namespace Facility.Definition.Swagger
 		{
 			var methodInfo = httpMethodInfo.ServiceMethod;
 
-			SwaggerOperations operations;
-			if (!paths.TryGetValue(httpMethodInfo.Path, out operations))
+			if (!paths.TryGetValue(httpMethodInfo.Path, out var operations))
 				paths[httpMethodInfo.Path] = operations = new SwaggerOperations();
 
 			var operation = new SwaggerOperation
@@ -468,8 +467,8 @@ namespace Facility.Definition.Swagger
 
 		private static object ConvertJTokenToObject(JToken token)
 		{
-			if (token is JValue)
-				return ((JValue) token).Value;
+			if (token is JValue value)
+				return value.Value;
 
 			if (token is JArray)
 				return token.AsEnumerable().Select(ConvertJTokenToObject).ToList();
@@ -568,10 +567,7 @@ namespace Facility.Definition.Swagger
 
 			public TValue this[TKey key]
 			{
-				get
-				{
-					return m_dictionary[key];
-				}
+				get => m_dictionary[key];
 				set
 				{
 					bool replace = m_dictionary.ContainsKey(key);

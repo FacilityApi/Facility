@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 
@@ -23,8 +23,7 @@ namespace Facility.Definition.Http
 
 		public static HttpStatusCode ParseStatusCodeInteger(ServiceAttributeParameterInfo parameter)
 		{
-			int valueAsInteger;
-			int.TryParse(parameter.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out valueAsInteger);
+			int.TryParse(parameter.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var valueAsInteger);
 			if (valueAsInteger < 200 || valueAsInteger >= 599)
 				throw new ServiceDefinitionException($"'{parameter.Name}' parameter must be an integer between 200 and 599.", parameter.Position);
 			return (HttpStatusCode) valueAsInteger;

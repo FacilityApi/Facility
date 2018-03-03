@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Facility.Definition.CodeGen
 {
@@ -12,13 +12,8 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public CodeGenPattern(string namePattern, string requiredSubstring)
 		{
-			if (namePattern == null)
-				throw new ArgumentNullException(nameof(namePattern));
-			if (requiredSubstring == null)
-				throw new ArgumentNullException(nameof(requiredSubstring));
-
-			NamePattern = namePattern;
-			RequiredSubstring = requiredSubstring;
+			NamePattern = namePattern ?? throw new ArgumentNullException(nameof(namePattern));
+			RequiredSubstring = requiredSubstring ?? throw new ArgumentNullException(nameof(requiredSubstring));
 		}
 
 		/// <summary>
