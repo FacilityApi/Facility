@@ -29,7 +29,7 @@ namespace Facility.Definition.UnitTests.Swagger
 			namedText.Name.ShouldBe("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue(() => $"{jToken} should be {jTokenExpected}");
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
 			service.Summary.ShouldBe("TestApi");
@@ -49,7 +49,7 @@ namespace Facility.Definition.UnitTests.Swagger
 			namedText.Name.ShouldBe("TestApi.yaml");
 			var jToken = JToken.FromObject(new YamlDotNet.Serialization.DeserializerBuilder().Build().Deserialize(new StringReader(namedText.Text)));
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBe(true);
+			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue(() => $"{jToken} should be {jTokenExpected}");
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
 			service.Summary.ShouldBe("TestApi");
