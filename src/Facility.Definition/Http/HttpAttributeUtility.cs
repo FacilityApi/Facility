@@ -21,11 +21,16 @@ namespace Facility.Definition.Http
 			return new ServiceDefinitionError($"Unexpected 'http' parameter '{parameter.Name}'.", parameter.Position);
 		}
 
-		public static HttpStatusCode ParseStatusCodeInteger(ServiceAttributeParameterInfo parameter)
+		public static HttpStatusCode? TryParseStatusCodeInteger(ServiceAttributeParameterInfo parameter, out ServiceDefinitionError error)
 		{
 			int.TryParse(parameter.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var valueAsInteger);
 			if (valueAsInteger < 200 || valueAsInteger >= 599)
-				throw new ServiceDefinitionException($"'{parameter.Name}' parameter must be an integer between 200 and 599.", parameter.Position);
+			{
+				error = new ServiceDefinitionError($"'{parameter.Name}' parameter must be an integer between 200 and 599.", parameter.ValuePosition);
+				return null;
+			}
+
+			error = null;
 			return (HttpStatusCode) valueAsInteger;
 		}
 	}

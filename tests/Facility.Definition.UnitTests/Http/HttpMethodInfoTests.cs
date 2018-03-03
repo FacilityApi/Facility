@@ -76,7 +76,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BadHttpMethodName()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: \" bad \")] method do {}: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,25): Invalid HTTP method ' bad '.");
+				.Message.ShouldBe("TestApi.fsd(1,33): Invalid HTTP method ' bad '.");
 		}
 
 		[Test]
@@ -104,14 +104,14 @@ namespace Facility.Definition.UnitTests.Http
 		public void MethodPathEmpty()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"\")] method do {}: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,38): 'path' value must start with a slash.");
+				.Message.ShouldBe("TestApi.fsd(1,44): 'path' value must start with a slash.");
 		}
 
 		[Test]
 		public void MethodPathNoSlash()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"xyzzy\")] method do {}: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,38): 'path' value must start with a slash.");
+				.Message.ShouldBe("TestApi.fsd(1,44): 'path' value must start with a slash.");
 		}
 
 		[Test]
@@ -125,7 +125,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void MethodStatusCodeOutOfRange()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, code: 999)] method do {}: {} }")
-				.Message.ShouldBe("TestApi.fsd(1,38): 'code' parameter must be an integer between 200 and 599.");
+				.Message.ShouldBe("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
 		}
 
 		[Test]

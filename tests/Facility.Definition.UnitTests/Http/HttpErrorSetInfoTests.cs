@@ -25,7 +25,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void ErrorStatusCodeOutOfRange()
 		{
 			ParseInvalidHttpApi("service TestApi { errors bad { [http(code: 999)] boom } }")
-				.Message.ShouldBe("TestApi.fsd(1,38): 'code' parameter must be an integer between 200 and 599.");
+				.Message.ShouldBe("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
 		}
 
 		[Test]

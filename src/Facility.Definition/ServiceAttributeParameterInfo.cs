@@ -11,16 +11,25 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null)
-			: this(ValidationMode.Throw, name, value, position)
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position)
+			: this(ValidationMode.Throw, name, value, position, null)
 		{
 		}
 
-		internal ServiceAttributeParameterInfo(ValidationMode validationMode, string name, string value, NamedTextPosition position)
+		/// <summary>
+		/// Creates an attribute parameter.
+		/// </summary>
+		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null, NamedTextPosition valuePosition = null)
+			: this(ValidationMode.Throw, name, value, position, valuePosition)
+		{
+		}
+
+		internal ServiceAttributeParameterInfo(ValidationMode validationMode, string name, string value, NamedTextPosition position, NamedTextPosition valuePosition)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Value = value ?? throw new ArgumentNullException(nameof(value));
 			Position = position;
+			ValuePosition = valuePosition;
 
 			if (validationMode == ValidationMode.Throw)
 				GetValidationErrors().ThrowIfAny();
@@ -40,6 +49,11 @@ namespace Facility.Definition
 		/// The position of the parameter.
 		/// </summary>
 		public NamedTextPosition Position { get; }
+
+		/// <summary>
+		/// The position of the parameter value.
+		/// </summary>
+		public NamedTextPosition ValuePosition { get; set; }
 
 		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
 		{

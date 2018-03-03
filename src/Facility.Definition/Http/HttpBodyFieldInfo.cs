@@ -25,9 +25,15 @@ namespace Facility.Definition.Http
 			foreach (var parameter in fieldInfo.GetHttpParameters())
 			{
 				if (parameter.Name == "code")
-					StatusCode = HttpAttributeUtility.ParseStatusCodeInteger(parameter);
+				{
+					StatusCode = HttpAttributeUtility.TryParseStatusCodeInteger(parameter, out var error);
+					if (error != null)
+						m_errors.Add(error);
+				}
 				else if (parameter.Name != "from")
+				{
 					m_errors.Add(parameter.CreateInvalidHttpParameterError());
+				}
 			}
 		}
 

@@ -86,12 +86,14 @@ namespace Facility.Definition.Http
 				else if (methodParameter.Name == "path")
 				{
 					if (methodParameter.Value.Length == 0 || methodParameter.Value[0] != '/')
-						m_errors.Add(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.Position));
+						m_errors.Add(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.ValuePosition));
 					Path = methodParameter.Value;
 				}
 				else if (methodParameter.Name == "code")
 				{
-					statusCode = HttpAttributeUtility.ParseStatusCodeInteger(methodParameter);
+					statusCode = HttpAttributeUtility.TryParseStatusCodeInteger(methodParameter, out var error);
+					if (error != null)
+						m_errors.Add(error);
 				}
 				else
 				{
@@ -244,7 +246,7 @@ namespace Facility.Definition.Http
 			}
 			catch (FormatException)
 			{
-				m_errors.Add(new ServiceDefinitionError($"Invalid HTTP method '{parameter.Value}'.", parameter.Position));
+				m_errors.Add(new ServiceDefinitionError($"Invalid HTTP method '{parameter.Value}'.", parameter.ValuePosition));
 				return null;
 			}
 		}

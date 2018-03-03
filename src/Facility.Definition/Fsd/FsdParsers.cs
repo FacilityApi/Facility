@@ -46,8 +46,8 @@ namespace Facility.Definition.Fsd
 		static IParser<ServiceAttributeParameterInfo> AttributeParameterParser(Context context) =>
 			from name in NameParser.Named("parameter name").Positioned()
 			from colon in PunctuationParser(":")
-			from value in AttributeParameterValueParser.Named("parameter value")
-			select new ServiceAttributeParameterInfo(ValidationMode.Return, name.Value, TryParseAttributeParameterValue(value), context.GetPosition(name.Position));
+			from value in AttributeParameterValueParser.Named("parameter value").Positioned()
+			select new ServiceAttributeParameterInfo(ValidationMode.Return, name.Value, TryParseAttributeParameterValue(value.Value), context.GetPosition(name.Position), context.GetPosition(value.Position));
 
 		static IParser<ServiceAttributeInfo> AttributeParser(Context context) =>
 			from name in NameParser.Named("attribute name").Positioned()
