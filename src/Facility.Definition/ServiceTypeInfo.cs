@@ -85,18 +85,18 @@ namespace Facility.Definition
 		{
 			switch (Kind)
 			{
-				case ServiceTypeKind.Dto:
-					return Dto.Name;
-				case ServiceTypeKind.Enum:
-					return Enum.Name;
-				case ServiceTypeKind.Result:
-					return $"result<{ValueType}>";
-				case ServiceTypeKind.Array:
-					return $"{ValueType}[]";
-				case ServiceTypeKind.Map:
-					return $"map<{ValueType}>";
-				default:
-					return s_primitiveTuples.Where(x => x.Item1 == Kind).Select(x => x.Item2).Single();
+			case ServiceTypeKind.Dto:
+				return Dto.Name;
+			case ServiceTypeKind.Enum:
+				return Enum.Name;
+			case ServiceTypeKind.Result:
+				return $"result<{ValueType}>";
+			case ServiceTypeKind.Array:
+				return $"{ValueType}[]";
+			case ServiceTypeKind.Map:
+				return $"map<{ValueType}>";
+			default:
+				return s_primitiveTuples.Where(x => x.Item1 == Kind).Select(x => x.Item2).Single();
 			}
 		}
 
