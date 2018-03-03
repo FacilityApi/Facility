@@ -192,19 +192,19 @@ string GetSemVerFromFile(string path)
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd")}{slash}", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/fsd/nowidgets")}{slash} --excludeTag widgets", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")}{slash} --swagger", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/swagger")}{slash} --swagger --yaml", verify);
-	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.json")} {Directory("example/swagger/fsd")}{slash}", verify);
-	ExecuteCodeGen($@"{File("example/swagger/ExampleApi.yaml")} {Directory("example/swagger/fsd")}{slash}", verify: true);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/fsd")}{slash}", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/nowidgets")}{slash} --excludeTag widgets", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}{slash} --swagger", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}{slash} --swagger --yaml", verify);
+	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.json")} {Directory("example/output/swagger/fsd")}{slash}", verify);
+	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.yaml")} {Directory("example/output/swagger/fsd")}{slash}", verify: true);
 
 	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($@"{yamlPath} {Directory("example/fsd")}{slash}", verify);
+		ExecuteCodeGen($@"{yamlPath} {Directory("example/output/fsd")}{slash}", verify);
 
-	CreateDirectory("example/fsd/swagger");
-	foreach (var fsdPath in GetFiles($"example/fsd/*.fsd"))
-		ExecuteCodeGen($@"{fsdPath} {File($"example/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml")} --swagger --yaml", verify);
+	CreateDirectory("example/output/fsd/swagger");
+	foreach (var fsdPath in GetFiles($"example/output/fsd/*.fsd"))
+		ExecuteCodeGen($@"{fsdPath} {File($"example/output/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml")} --swagger --yaml", verify);
 }
 
 void ExecuteCodeGen(string args, bool verify)
