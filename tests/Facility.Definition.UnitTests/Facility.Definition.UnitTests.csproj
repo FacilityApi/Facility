@@ -75,6 +75,7 @@
     <Compile Include="Http\HttpInfoTestsBase.cs" />
     <Compile Include="Http\HttpMethodInfoTests.cs" />
     <Compile Include="Http\HttpServiceInfoTests.cs" />
+    <Compile Include="ExcludeTagTests.cs" />
     <Compile Include="Swagger\ComplexSwaggerTests.cs" />
     <Compile Include="Swagger\BrokenSwaggerTests.cs" />
     <Compile Include="Swagger\SimpleSwaggerTests.cs" />

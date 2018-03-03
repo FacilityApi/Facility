@@ -95,6 +95,88 @@ namespace Facility.Definition
 			return name != null && s_validNameRegex.IsMatch(name);
 		}
 
+		/// <summary>
+		/// Excludes a tag from the specified service.
+		/// </summary>
+		public static ServiceInfo ExcludeTag(this ServiceInfo service, string tagName)
+		{
+			if (TryExcludeTag(service, tagName, out var newService, out var errors))
+				return newService;
+			else
+				throw errors.First().CreateException();
+		}
+
+		/// <summary>
+		/// Attempts to exclude a tag from the specified service.
+		/// </summary>
+		public static bool TryExcludeTag(this ServiceInfo service, string tagName, out ServiceInfo newService, out IReadOnlyList<ServiceDefinitionError> errors)
+		{
+			newService = new ServiceInfo(ValidationMode.Return,
+				name: service.Name,
+				members: service.Members.Where(shouldNotExclude).Select(excludeTag),
+				attributes: service.Attributes,
+				summary: service.Summary,
+				remarks: service.Remarks,
+				position: service.Position);
+
+			errors = newService.GetValidationErrors()
+				.Select(x => new ServiceDefinitionError($"{x.Message} ('{tagName}' tags are excluded.)", x.Position, x.Exception))
+				.ToList();
+
+			return errors.Count == 0;
+
+			bool shouldNotExclude(IServiceElementInfo element) => !element.GetTagNames().Contains(tagName);
+
+			IServiceMemberInfo excludeTag(IServiceMemberInfo member)
+			{
+				if (member is ServiceMethodInfo method)
+				{
+					return new ServiceMethodInfo(ValidationMode.Return,
+						name: method.Name,
+						requestFields: method.RequestFields.Where(shouldNotExclude),
+						responseFields: method.ResponseFields.Where(shouldNotExclude),
+						attributes: method.Attributes,
+						summary: method.Summary,
+						remarks: method.Remarks,
+						position: method.Position);
+				}
+				else if (member is ServiceDtoInfo dto)
+				{
+					return new ServiceDtoInfo(ValidationMode.Return,
+						name: dto.Name,
+						fields: dto.Fields.Where(shouldNotExclude),
+						attributes: dto.Attributes,
+						summary: dto.Summary,
+						remarks: dto.Remarks,
+						position: dto.Position);
+				}
+				else if (member is ServiceEnumInfo @enum)
+				{
+					return new ServiceEnumInfo(ValidationMode.Return,
+						name: @enum.Name,
+						values: @enum.Values.Where(shouldNotExclude),
+						attributes: @enum.Attributes,
+						summary: @enum.Summary,
+						remarks: @enum.Remarks,
+						position: @enum.Position);
+				}
+				else if (member is ServiceErrorSetInfo errorSet)
+				{
+					return new ServiceErrorSetInfo(ValidationMode.Return,
+						name: errorSet.Name,
+						errors: errorSet.Errors.Where(shouldNotExclude),
+						attributes: errorSet.Attributes,
+						summary: errorSet.Summary,
+						remarks: errorSet.Remarks,
+						position: errorSet.Position);
+				}
+				else
+				{
+					return member;
+				}
+			}
+		}
+
 		internal static IEnumerable<ServiceDefinitionError> ValidateName(string name, NamedTextPosition position)
 		{
 			if (!IsValidName(name))
