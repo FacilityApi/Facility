@@ -103,7 +103,7 @@ namespace Facility.Definition
 			if (TryExcludeTag(service, tagName, out var newService, out var errors))
 				return newService;
 			else
-				throw errors.First().CreateException();
+				throw new ServiceDefinitionException(errors);
 		}
 
 		/// <summary>
@@ -200,9 +200,9 @@ namespace Facility.Definition
 
 		internal static void ThrowIfAny(this IEnumerable<ServiceDefinitionError> errors)
 		{
-			var error = errors.FirstOrDefault();
-			if (error != null)
-				throw error.CreateException();
+			var errorList = errors.ToList();
+			if (errorList.Count != 0)
+				throw new ServiceDefinitionException(errorList);
 		}
 
 		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)

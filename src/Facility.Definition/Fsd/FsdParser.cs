@@ -21,7 +21,7 @@ namespace Facility.Definition.Fsd
 			if (TryParseDefinition(source, out var service, out var errors))
 				return service;
 			else
-				throw errors.First().CreateException();
+				throw new ServiceDefinitionException(errors);
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Facility.Definition.Fsd
 			}
 			catch (ServiceDefinitionException exception)
 			{
-				errorList.Add(new ServiceDefinitionError(exception.Error, exception.Position, exception));
+				errorList.AddRange(exception.Errors);
 			}
 
 			errors = errorList;

@@ -44,6 +44,7 @@ namespace Facility.CodeGen.Console
 					if (indentText != null)
 						generator.IndentText = indentText;
 				}
+
 				if (SupportsCustomNewLine)
 				{
 					string newLine = argsReader.ReadNewLineOption();
@@ -189,23 +190,29 @@ namespace Facility.CodeGen.Console
 
 				return 0;
 			}
+			catch (ServiceDefinitionException exception)
+			{
+				System.Console.Error.WriteLine(exception);
+				foreach (var error in exception.Errors)
+					System.Console.Error.WriteLine(error.ToString());
+				return 2;
+			}
+			catch (ArgsReaderException exception)
+			{
+				System.Console.Error.WriteLine(exception.Message);
+				System.Console.Error.WriteLine();
+				WriteUsage();
+				return 2;
+			}
+			catch (ApplicationException exception)
+			{
+				System.Console.Error.WriteLine(exception.Message);
+				return 2;
+			}
 			catch (Exception exception)
 			{
-				if (exception is ApplicationException || exception is ArgsReaderException || exception is ServiceDefinitionException)
-				{
-					System.Console.Error.WriteLine(exception.Message);
-					if (exception is ArgsReaderException)
-					{
-						System.Console.Error.WriteLine();
-						WriteUsage();
-					}
-					return 2;
-				}
-				else
-				{
-					System.Console.Error.WriteLine(exception.ToString());
-					return 3;
-				}
+				System.Console.Error.WriteLine(exception.ToString());
+				return 3;
 			}
 		}
 

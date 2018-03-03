@@ -36,10 +36,5 @@ namespace Facility.Definition
 		/// Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString() => Position != null ? $"{Position}: {Message}" : Message;
-
-		internal ServiceDefinitionException CreateException()
-		{
-			return new ServiceDefinitionException(Message, Position, Exception);
-		}
 	}
 }

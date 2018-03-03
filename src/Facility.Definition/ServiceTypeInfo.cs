@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Facility.Definition
@@ -104,7 +104,7 @@ namespace Facility.Definition
 		{
 			var typeInfo = TryParse(text, findMember, position, out var error);
 			if (error != null)
-				throw error.CreateException();
+				throw new ServiceDefinitionException(error);
 			return typeInfo;
 		}
 

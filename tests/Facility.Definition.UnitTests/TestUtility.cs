@@ -16,7 +16,7 @@ namespace Facility.Definition.UnitTests
 			}
 			catch (ServiceDefinitionException exception)
 			{
-				Assert.AreSame(position, exception.Position);
+				Assert.AreSame(position, exception.Errors[0].Position);
 			}
 		}
 
