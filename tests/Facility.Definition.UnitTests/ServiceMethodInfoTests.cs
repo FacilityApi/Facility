@@ -1,29 +1,26 @@
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Definition.UnitTests
 {
-	public class ServiceTextPositionTests
+	public class ServiceMethodInfoTests
 	{
 		[Test]
-		public void SourceNameOnly()
+		public void InvalidNameThrows()
 		{
 			var position = new NamedTextPosition("source");
-			position.ToString().ShouldBe("source");
+			TestUtility.ThrowsServiceDefinitionException(() => new ServiceMethodInfo(name: "4u", position: position), position);
 		}
 
-		[Test]
-		public void LineNumberOnly()
+		[TestCase(true), TestCase(false)]
+		public void DuplicateFieldThrows(bool isRequest)
 		{
-			var position = new NamedTextPosition("source", 3);
-			position.ToString().ShouldBe("source(3)");
-		}
-
-		[Test]
-		public void FullPosition()
-		{
-			var position = new NamedTextPosition("source", 3, 14);
-			position.ToString().ShouldBe("source(3,14)");
+			var fields = new[]
+			{
+				new ServiceFieldInfo("why", "int32", position: new NamedTextPosition("source", 1)),
+				new ServiceFieldInfo("Why", "int32", position: new NamedTextPosition("source", 2)),
+			};
+			TestUtility.ThrowsServiceDefinitionException(
+				() => new ServiceMethodInfo(name: "x", requestFields: isRequest ? fields : null, responseFields: isRequest ? null : fields), fields[1].Position);
 		}
 	}
 }
