@@ -22,10 +22,7 @@ namespace Facility.Definition
 		/// </summary>
 		internal ServiceInfo(ValidationMode validationMode, string name, IEnumerable<IServiceMemberInfo> members = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Members = members.ToReadOnlyList();
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";
@@ -107,8 +104,7 @@ namespace Facility.Definition
 
 			foreach (var field in Methods.SelectMany(x => x.RequestFields.Concat(x.ResponseFields)).Concat(Dtos.SelectMany(x => x.Fields)))
 			{
-				ServiceDefinitionError error;
-				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
+				ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out var error);
 				if (error != null)
 					yield return error;
 			}

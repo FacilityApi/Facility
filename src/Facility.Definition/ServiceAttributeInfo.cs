@@ -19,10 +19,7 @@ namespace Facility.Definition
 
 		internal ServiceAttributeInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeParameterInfo> parameters, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Parameters = parameters.ToReadOnlyList();
 			Position = position;
 

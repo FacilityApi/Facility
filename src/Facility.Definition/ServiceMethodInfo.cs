@@ -19,10 +19,7 @@ namespace Facility.Definition
 
 		internal ServiceMethodInfo(ValidationMode validationMode, string name, IEnumerable<ServiceFieldInfo> requestFields, IEnumerable<ServiceFieldInfo> responseFields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			RequestFields = requestFields.ToReadOnlyList();
 			ResponseFields = responseFields.ToReadOnlyList();
 			Attributes = attributes.ToReadOnlyList();
