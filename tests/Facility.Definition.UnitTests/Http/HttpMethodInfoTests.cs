@@ -66,10 +66,10 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void HttpOptionsMethod()
+		public void UnsupportedHttpOptionsMethod()
 		{
-			var method = ParseHttpApi("service TestApi { [http(method: options)] method do {}: {} }").Methods.Single();
-			method.Method.ToString().ShouldBe("OPTIONS");
+			ParseInvalidHttpApi("service TestApi { [http(method: options)] method do {}: {} }")
+				.Message.ShouldBe("TestApi.fsd(1,33): Unsupported HTTP method 'OPTIONS'.");
 		}
 
 		[Test]
@@ -638,8 +638,6 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("[http(method: get, path: \"/\")]", "[http(method: post, path: \"/\")]", -1)]
 		[TestCase("[http(method: post, path: \"/\")]", "[http(method: put, path: \"/\")]", -1)]
 		[TestCase("[http(method: delete, path: \"/\")]", "[http(method: put, path: \"/\")]", 1)]
-		[TestCase("[http(method: get, path: \"/\")]", "[http(method: apple, path: \"/\")]", -1)]
-		[TestCase("[http(method: xyzzy, path: \"/\")]", "[http(method: post, path: \"/\")]", 1)]
 		public void ByRouteComparer(string leftHttp, string rightHttp, int expected)
 		{
 			string fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);

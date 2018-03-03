@@ -242,7 +242,18 @@ namespace Facility.Definition.Http
 		{
 			try
 			{
-				return new HttpMethod(parameter.Value.ToUpperInvariant());
+				var httpMethod = new HttpMethod(parameter.Value.ToUpperInvariant());
+				if (httpMethod != HttpMethod.Get &&
+					httpMethod != HttpMethod.Post &&
+					httpMethod != HttpMethod.Put &&
+					httpMethod != HttpMethod.Delete &&
+					httpMethod != new HttpMethod("PATCH"))
+				{
+					m_errors.Add(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.ValuePosition));
+					return null;
+				}
+
+				return httpMethod;
 			}
 			catch (FormatException)
 			{
