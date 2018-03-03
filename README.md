@@ -19,3 +19,10 @@ Helpers for Facility code generator tools. [![NuGet](https://img.shields.io/nuge
 ## fsdgenfsd
 
 A tool that generates FSD or Swagger (OpenAPI) 2.0 for a Facility Service Definition. [![NuGet](https://img.shields.io/nuget/v/fsdgenfsd.svg)](https://www.nuget.org/packages/fsdgenfsd)
+
+## Documentation
+
+* https://facilityapi.github.io/
+* License: [MIT](LICENSE)
+* [Version History](VersionHistory.md)
+* [Contributing Guidelines](CONTRIBUTING.md)

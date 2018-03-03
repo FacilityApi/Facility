@@ -9,6 +9,7 @@
     <copyright>Copyright 2016-2017 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
+    <releaseNotes>https://github.com/FacilityApi/Facility/blob/master/VersionHistory.md#released</releaseNotes>
     <tags>Facility FSD Swagger OpenAPI CodeGen</tags>
   </metadata>
   <files>
