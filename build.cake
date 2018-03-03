@@ -1,5 +1,5 @@
-#addin "nuget:?package=Cake.Git&version=0.16.1"
-#addin "nuget:?package=Octokit&version=0.23.0"
+#addin "nuget:?package=Cake.Git&version=0.17.0"
+#addin "nuget:?package=Octokit&version=0.29.0"
 #tool "nuget:?package=coveralls.io&version=1.3.4"
 #tool "nuget:?package=gitlink&version=2.3.0"
 #tool "nuget:?package=NUnit.ConsoleRunner&version=3.5.0"
