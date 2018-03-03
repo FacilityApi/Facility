@@ -121,15 +121,24 @@ namespace Facility.Definition
 
 			string resultValueType = TryPrefixSuffix(text, "result<", ">");
 			if (resultValueType != null)
-				return CreateResult(Parse(resultValueType, findMember, position));
+			{
+				var valueType = TryParse(resultValueType, findMember, position, out error);
+				return valueType == null ? null : CreateResult(valueType);
+			}
 
 			string arrayValueType = TryPrefixSuffix(text, "", "[]");
 			if (arrayValueType != null)
-				return CreateArray(Parse(arrayValueType, findMember, position));
+			{
+				var valueType = TryParse(arrayValueType, findMember, position, out error);
+				return valueType == null ? null : CreateArray(valueType);
+			}
 
 			string mapValueType = TryPrefixSuffix(text, "map<", ">");
 			if (mapValueType != null)
-				return CreateMap(Parse(mapValueType, findMember, position));
+			{
+				var valueType = TryParse(mapValueType, findMember, position, out error);
+				return valueType == null ? null : CreateMap(valueType);
+			}
 
 			if (findMember != null)
 			{
