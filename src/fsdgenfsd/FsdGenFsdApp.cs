@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using ArgsReading;
 using Facility.CodeGen.Console;
 using Facility.Definition.CodeGen;

@@ -1,4 +1,4 @@
-﻿using Facility.Definition.CodeGen;
+using Facility.Definition.CodeGen;
 using NUnit.Framework;
 using Shouldly;
 
