@@ -1,4 +1,5 @@
 version: '{build}'
+image: Visual Studio 2017
 environment:
   COVERALLSAPIKEY:
     secure: w6ojRE0he/6J2qd8sgq1kwSl3YlgLXaGJbiLvWfAdf8KtWAfSobZwSFwu3nCBLWJ
