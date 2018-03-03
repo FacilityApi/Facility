@@ -6,7 +6,7 @@
     <authors>Ed Ball</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Used by code generators to process Facility Service Definitions.</description>
-    <copyright>Copyright 2016-2017 Ed Ball</copyright>
+    <copyright>Copyright 2016-2018 Ed Ball</copyright>
     <projectUrl>https://github.com/FacilityApi/Facility</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/FacilityApi/Facility/master/LICENSE</licenseUrl>
     <releaseNotes>https://github.com/FacilityApi/Facility/blob/master/VersionHistory.md#released</releaseNotes>
