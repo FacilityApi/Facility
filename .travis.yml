@@ -1,0 +1,6 @@
+language: csharp
+mono: latest
+dotnet: 2.1.4
+
+script:
+- ./build.sh --target=NuGetPackage -sourceIndex=false
