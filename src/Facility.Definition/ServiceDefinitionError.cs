@@ -12,10 +12,7 @@ namespace Facility.Definition
 		/// </summary>
 		public ServiceDefinitionError(string message, NamedTextPosition position, Exception exception = null)
 		{
-			if (message == null)
-				throw new ArgumentNullException(nameof(message));
-
-			Message = message;
+			Message = message ?? throw new ArgumentNullException(nameof(message));
 			Position = position;
 			Exception = exception;
 		}

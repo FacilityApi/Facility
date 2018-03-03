@@ -19,10 +19,7 @@ namespace Facility.Definition
 
 		internal ServiceDtoInfo(ValidationMode validationMode, string name, IEnumerable<ServiceFieldInfo> fields, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Fields = fields.ToReadOnlyList();
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";

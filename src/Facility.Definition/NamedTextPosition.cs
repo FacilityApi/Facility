@@ -12,10 +12,7 @@ namespace Facility.Definition
 		/// </summary>
 		public NamedTextPosition(string name, int lineNumber = 0, int columnNumber = 0)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			m_lineNumber = lineNumber;
 			m_columnNumber = columnNumber;
 		}
@@ -25,10 +22,7 @@ namespace Facility.Definition
 		/// </summary>
 		public NamedTextPosition(string name, Func<Tuple<int, int>> getLineColumn)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			m_getLineColumn = getLineColumn;
 		}
 

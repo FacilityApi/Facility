@@ -19,10 +19,7 @@ namespace Facility.Definition
 
 		internal ServiceEnumInfo(ValidationMode validationMode, string name, IEnumerable<ServiceEnumValueInfo> values, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Values = values.ToReadOnlyList();
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -378,8 +378,7 @@ namespace Facility.Definition.Swagger
 
 		private static string GetBodyFieldNameForStatusCode(string statusCode)
 		{
-			int statusCodeNumber;
-			if (int.TryParse(statusCode, out statusCodeNumber))
+			if (int.TryParse(statusCode, out var statusCodeNumber))
 			{
 				string name = ((HttpStatusCode) statusCodeNumber).ToString();
 				if (name != statusCode)

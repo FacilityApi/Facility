@@ -27,13 +27,8 @@ namespace Facility.Definition
 
 		internal ServiceFieldInfo(ValidationMode validationMode, string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position, NamedTextPosition typeNamePosition)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-			if (typeName == null)
-				throw new ArgumentNullException(nameof(typeName));
-
-			Name = name;
-			TypeName = typeName;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
+			TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";
 			Position = position;

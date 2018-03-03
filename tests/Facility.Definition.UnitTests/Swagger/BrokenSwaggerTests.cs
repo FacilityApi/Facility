@@ -1,4 +1,4 @@
-﻿using Facility.Definition.Swagger;
+using Facility.Definition.Swagger;
 using NUnit.Framework;
 using Shouldly;
 

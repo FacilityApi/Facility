@@ -85,25 +85,24 @@ namespace Facility.Definition
 		{
 			switch (Kind)
 			{
-			case ServiceTypeKind.Dto:
-				return Dto.Name;
-			case ServiceTypeKind.Enum:
-				return Enum.Name;
-			case ServiceTypeKind.Result:
-				return $"result<{ValueType}>";
-			case ServiceTypeKind.Array:
-				return $"{ValueType}[]";
-			case ServiceTypeKind.Map:
-				return $"map<{ValueType}>";
-			default:
-				return s_primitiveTuples.Where(x => x.Item1 == Kind).Select(x => x.Item2).Single();
+				case ServiceTypeKind.Dto:
+					return Dto.Name;
+				case ServiceTypeKind.Enum:
+					return Enum.Name;
+				case ServiceTypeKind.Result:
+					return $"result<{ValueType}>";
+				case ServiceTypeKind.Array:
+					return $"{ValueType}[]";
+				case ServiceTypeKind.Map:
+					return $"map<{ValueType}>";
+				default:
+					return s_primitiveTuples.Where(x => x.Item1 == Kind).Select(x => x.Item2).Single();
 			}
 		}
 
 		internal static ServiceTypeInfo Parse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position = null)
 		{
-			ServiceDefinitionError error;
-			var typeInfo = TryParse(text, findMember, position, out error);
+			var typeInfo = TryParse(text, findMember, position, out var error);
 			if (error != null)
 				throw error.CreateException();
 			return typeInfo;
@@ -136,12 +135,10 @@ namespace Facility.Definition
 			{
 				var member = findMember(text);
 
-				var dto = member as ServiceDtoInfo;
-				if (dto != null)
+				if (member is ServiceDtoInfo dto)
 					return CreateDto(dto);
 
-				var @enum = member as ServiceEnumInfo;
-				if (@enum != null)
+				if (member is ServiceEnumInfo @enum)
 					return CreateEnum(@enum);
 			}
 

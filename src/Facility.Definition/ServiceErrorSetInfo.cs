@@ -19,10 +19,7 @@ namespace Facility.Definition
 
 		internal ServiceErrorSetInfo(ValidationMode validationMode, string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Errors = errors.ToReadOnlyList();
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Facility.Definition.Fsd;
 using Facility.Definition.Http;

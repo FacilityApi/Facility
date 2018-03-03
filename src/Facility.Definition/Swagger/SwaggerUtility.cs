@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -119,8 +119,7 @@ namespace Facility.Definition.Swagger
 					$"{swaggerService.TryGetFacilityTypeName(swaggerSchema.Items, position)}[]";
 
 			case SwaggerSchemaType.Object:
-				var fullSchema = swaggerSchema as SwaggerSchema;
-				if (fullSchema != null)
+				if (swaggerSchema is SwaggerSchema fullSchema)
 				{
 					if (fullSchema.Ref != null)
 					{

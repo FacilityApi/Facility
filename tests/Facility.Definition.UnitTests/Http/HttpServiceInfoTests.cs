@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Shouldly;
 
 namespace Facility.Definition.UnitTests.Http

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,9 +18,7 @@ namespace Facility.Definition.Fsd
 		/// <exception cref="ServiceDefinitionException">Thrown if the parse fails.</exception>
 		public ServiceInfo ParseDefinition(NamedText source)
 		{
-			ServiceInfo service;
-			IReadOnlyList<ServiceDefinitionError> errors;
-			if (TryParseDefinition(source, out service, out errors))
+			if (TryParseDefinition(source, out var service, out var errors))
 				return service;
 			else
 				throw errors.First().CreateException();

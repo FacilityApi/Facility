@@ -57,12 +57,10 @@ namespace Facility.Definition.Swagger
 				{
 					foreach (var part in path.Split('/'))
 					{
-						var mappingNode = node as YamlMappingNode;
-						if (mappingNode == null)
+						if (!(node is YamlMappingNode mappingNode))
 							break;
 
-						YamlNode childNode;
-						mappingNode.Children.TryGetValue(new YamlScalarNode(part), out childNode);
+						mappingNode.Children.TryGetValue(new YamlScalarNode(part), out var childNode);
 						if (childNode == null)
 							break;
 
@@ -80,8 +78,7 @@ namespace Facility.Definition.Swagger
 				{
 					foreach (var part in path.Split('/'))
 					{
-						var jObject = token as JObject;
-						if (jObject == null)
+						if (!(token is JObject jObject))
 							break;
 
 						var childToken = jObject[part];

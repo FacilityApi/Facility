@@ -18,10 +18,7 @@ namespace Facility.Definition
 
 		internal ServiceErrorInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
 		{
-			if (name == null)
-				throw new ArgumentNullException(nameof(name));
-
-			Name = name;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Attributes = attributes.ToReadOnlyList();
 			Summary = summary ?? "";
 			Position = position;

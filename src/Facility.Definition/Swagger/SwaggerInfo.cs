@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
 #pragma warning disable 1591
