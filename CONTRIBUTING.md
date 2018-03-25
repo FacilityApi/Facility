@@ -1,4 +1,4 @@
-# Contributing to ArgsReading
+# Contributing to Facility
 
 ## Prerequisites
 

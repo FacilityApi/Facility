@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 		build.cake = build.cake
 		build.ps1 = build.ps1
 		build.sh = build.sh
+		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE = LICENSE
 		README.md = README.md
 		SolutionInfo.cs = SolutionInfo.cs
