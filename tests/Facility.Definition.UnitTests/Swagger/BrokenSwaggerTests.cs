@@ -1,6 +1,6 @@
 using Facility.Definition.Swagger;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Definition.UnitTests.Swagger
 {
@@ -8,13 +8,13 @@ namespace Facility.Definition.UnitTests.Swagger
 	public class BrokenSwaggerTests
 	{
 		[TestCase("", "(1,1): Service definition is missing.")]
-		[TestCase("{", "(1,1): Unexpected end when deserializing object.")]
-		[TestCase(" {", "(1,2): Unexpected end when deserializing object.")]
+		[TestCase("{", "(1,1): Unexpected end when reading JSON.")]
+		[TestCase(" {", "(1,2): Unexpected end when reading JSON.")]
 		[TestCase("# empty", "(1,1): Service definition is missing.")]
 		[TestCase("invalid", "(1,8): Invalid cast from")]
-		[TestCase(" \n {}", "(2,3): swagger field is missing.")]
+		[TestCase(" \n {}", "(2,2): swagger field is missing.")]
 		[TestCase("info: {}", "(1,1): swagger field is missing.")]
-		[TestCase("{swagger:{}}", "(1,10): Error reading string.")]
+		[TestCase("{swagger:{}}", "(1,10): Unexpected character")]
 		[TestCase("swagger: {}", "(1,10): Failed to create an instance of type")]
 		[TestCase("{swagger:'1.0'}", "(1,14): swagger should be '2.0'.")]
 		[TestCase("swagger: '1.0'", "(1,15): swagger should be '2.0'.")]
@@ -35,7 +35,7 @@ namespace Facility.Definition.UnitTests.Swagger
 			}
 			catch (ServiceDefinitionException exception)
 			{
-				exception.Message.ShouldStartWith(messagePrefix, Case.Sensitive);
+				exception.Message.Should().StartWith(messagePrefix);
 			}
 		}
 	}

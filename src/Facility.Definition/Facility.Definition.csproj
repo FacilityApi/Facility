@@ -1,135 +1,32 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64DB00A4-5FA3-4598-BA61-ED1FA891043C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Facility.Definition</RootNamespace>
-    <AssemblyName>Facility.Definition</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net461' and '$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.6.1-api/</FrameworkPathOverride>
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <Description>Used by code generators to process Facility Service Definitions.</Description>
+    <PackageTags>Facility FSD Definition</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Facility.Definition.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Facility.Definition.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
+
+  <Import Project="..\..\SolutionInfo.props" />
+
   <ItemGroup>
-    <Compile Include="..\..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
-    <Compile Include="CodeGen\CodeGenerator.cs" />
-    <Compile Include="CodeGen\CodeGenOutput.cs" />
-    <Compile Include="CodeGen\CodeGenUtility.cs" />
-    <Compile Include="CodeGen\CodeWriter.cs" />
-    <Compile Include="CodeGen\CodeGenPattern.cs" />
-    <Compile Include="Fsd\FsdGenerator.cs" />
-    <Compile Include="Fsd\FsdRemarksSection.cs" />
-    <Compile Include="Http\HttpAttributeUtility.cs" />
-    <Compile Include="Http\HttpBodyFieldInfo.cs" />
-    <Compile Include="Http\HttpErrorInfo.cs" />
-    <Compile Include="Http\HttpErrorSetInfo.cs" />
-    <Compile Include="Http\HttpNormalFieldInfo.cs" />
-    <Compile Include="Http\HttpHeaderFieldInfo.cs" />
-    <Compile Include="Http\HttpMethodInfo.cs" />
-    <Compile Include="Http\HttpPathFieldInfo.cs" />
-    <Compile Include="Http\HttpQueryFieldInfo.cs" />
-    <Compile Include="Http\HttpResponseInfo.cs" />
-    <Compile Include="Http\HttpServiceInfo.cs" />
-    <Compile Include="IServiceNamedInfo.cs" />
-    <Compile Include="IServiceMemberInfo.cs" />
-    <Compile Include="IServiceElementInfo.cs" />
-    <Compile Include="Fsd\FsdParser.cs" />
-    <Compile Include="Fsd\FsdParsers.cs" />
-    <Compile Include="ServiceDefinitionFormat.cs" />
-    <Compile Include="Swagger\SwaggerParser.cs" />
-    <Compile Include="Swagger\SwaggerGenerator.cs" />
-    <Compile Include="Swagger\SwaggerContact.cs" />
-    <Compile Include="Swagger\SwaggerExternalDocumentation.cs" />
-    <Compile Include="Swagger\SwaggerInfo.cs" />
-    <Compile Include="Swagger\SwaggerLicense.cs" />
-    <Compile Include="Swagger\SwaggerOperation.cs" />
-    <Compile Include="Swagger\SwaggerOperations.cs" />
-    <Compile Include="Swagger\SwaggerParameterKind.cs" />
-    <Compile Include="Swagger\SwaggerParserContext.cs" />
-    <Compile Include="Swagger\SwaggerResponse.cs" />
-    <Compile Include="Swagger\SwaggerParameter.cs" />
-    <Compile Include="Swagger\ISwaggerSchema.cs" />
-    <Compile Include="Swagger\SwaggerSchema.cs" />
-    <Compile Include="Swagger\SwaggerSchemaType.cs" />
-    <Compile Include="Swagger\SwaggerSchemaTypeFormat.cs" />
-    <Compile Include="Swagger\SwaggerScheme.cs" />
-    <Compile Include="Swagger\SwaggerSecurityScheme.cs" />
-    <Compile Include="Swagger\SwaggerService.cs" />
-    <Compile Include="Swagger\SwaggerTag.cs" />
-    <Compile Include="Swagger\SwaggerUtility.cs" />
-    <Compile Include="ServiceDefinitionUtility.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceAttributeInfo.cs" />
-    <Compile Include="ServiceAttributeParameterInfo.cs" />
-    <Compile Include="ServiceDefinitionException.cs" />
-    <Compile Include="ServiceDtoInfo.cs" />
-    <Compile Include="ServiceEnumInfo.cs" />
-    <Compile Include="ServiceEnumValueInfo.cs" />
-    <Compile Include="ServiceErrorInfo.cs" />
-    <Compile Include="ServiceErrorSetInfo.cs" />
-    <Compile Include="ServiceFieldInfo.cs" />
-    <Compile Include="NamedText.cs" />
-    <Compile Include="ServiceTypeInfo.cs" />
-    <Compile Include="ServiceTypeKind.cs" />
-    <Compile Include="ServiceInfo.cs" />
-    <Compile Include="ServiceMethodInfo.cs" />
-    <Compile Include="NamedTextPosition.cs" />
-    <Compile Include="ServiceDefinitionError.cs" />
-    <Compile Include="ValidationMode.cs" />
+    <PackageReference Include="Faithlife.Parsing" Version="1.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="YamlDotNet" Version="4.3.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="Faithlife.Parsing, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Faithlife.Parsing.1.0.1\lib\portable-net45+netcore45+wpa81\Faithlife.Parsing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="YamlDotNet, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\YamlDotNet.4.0.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\YamlDotNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.0" PrivateAssets="all" />
+    <PackageReference Include="SourceLink.Test" Version="2.8.0" PrivateAssets="all" />
+    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.0" PrivateAssets="all" />
+    <DotNetCliToolReference Include="dotnet-sourcelink" Version="2.8.0" />
+    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Facility.Definition.nuspec" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

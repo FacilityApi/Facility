@@ -1,6 +1,6 @@
 using Facility.Definition.CodeGen;
+using FluentAssertions;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Definition.UnitTests.CodeGen
 {
@@ -9,19 +9,19 @@ namespace Facility.Definition.UnitTests.CodeGen
 		[Test]
 		public void CapitalizeLowerCase()
 		{
-			CodeGenUtility.Capitalize("xyzzy").ShouldBe("Xyzzy");
+			CodeGenUtility.Capitalize("xyzzy").Should().Be("Xyzzy");
 		}
 
 		[Test]
 		public void CapitalizeUpperCase()
 		{
-			CodeGenUtility.Capitalize("Xyzzy").ShouldBe("Xyzzy");
+			CodeGenUtility.Capitalize("Xyzzy").Should().Be("Xyzzy");
 		}
 
 		[Test]
 		public void CapitalizeNumber()
 		{
-			CodeGenUtility.Capitalize("1234").ShouldBe("1234");
+			CodeGenUtility.Capitalize("1234").Should().Be("1234");
 		}
 	}
 }

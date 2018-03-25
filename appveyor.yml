@@ -1,8 +1,14 @@
 version: '{build}'
-image: Visual Studio 2017
+image:
+- Visual Studio 2017
+- Ubuntu
 environment:
-  COVERALLSAPIKEY:
-    secure: w6ojRE0he/6J2qd8sgq1kwSl3YlgLXaGJbiLvWfAdf8KtWAfSobZwSFwu3nCBLWJ
+  NUGETAPIKEY:
+    secure: eBKIUm4YxcrbL3oVC/ZCBUA/inEu+7OMbKpgftpOc18ievKNwH8UAUB2t4w+89Xv
+  BUILD_BOT_PASSWORD:
+    secure: U2EQbBdxNIC2FL8YeOP3bVixlZ4xLBdN71Szraw+ATqAhYZwEd6JCjCJZLJPu9kN
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
 build_script:
-- ps: .\build.ps1 -target=CoveragePublish -configuration=Debug "-coverallsApiKey=$env:COVERALLSAPIKEY"
+- ps: .\build.ps1 --target=NuGetPublish """--trigger=$env:APPVEYOR_REPO_TAG_NAME""" "--nugetApiKey=$env:NUGETAPIKEY"
+- sh: ./build.sh --target=NuGetPackage
 test: off

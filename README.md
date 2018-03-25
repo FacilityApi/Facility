@@ -2,11 +2,7 @@
 
 Tools and libraries for working with the [Facility API Framework](https://facilityapi.github.io/).
 
-## Build Status
-
-Ubuntu | Windows | Coverage
---- | --- | ---
-[![Travis CI](https://travis-ci.org/FacilityApi/Facility.svg?branch=master)](https://travis-ci.org/FacilityApi/Facility) | [![AppVeyor](https://ci.appveyor.com/api/projects/status/62s43a071xsqqxtl?svg=true)](https://ci.appveyor.com/project/ejball/facility) | [![Coveralls](https://coveralls.io/repos/github/FacilityApi/Facility/badge.svg?branch=master)](https://coveralls.io/github/FacilityApi/Facility?branch=master)
+[![AppVeyor](https://img.shields.io/appveyor/ci/ejball/facility.svg)](https://ci.appveyor.com/project/ejball/facility)
 
 ## Facility.Definition
 

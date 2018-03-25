@@ -201,12 +201,7 @@ namespace Facility.Definition.Swagger
 
 		private sealed class CamelCaseExceptDictionaryKeysContractResolver : CamelCasePropertyNamesContractResolver
 		{
-			protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
-			{
-				JsonDictionaryContract contract = base.CreateDictionaryContract(objectType);
-				contract.PropertyNameResolver = propertyName => propertyName;
-				return contract;
-			}
+			protected override string ResolveDictionaryKey(string dictionaryKey) => dictionaryKey;
 		}
 	}
 }

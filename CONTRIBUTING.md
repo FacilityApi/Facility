@@ -3,6 +3,7 @@
 ## Prerequisites
 
 * Install [Visual Studio 2017](https://www.visualstudio.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/) with the [editorconfig extension](https://github.com/editorconfig/editorconfig-vscode).
+* Install [.NET Core 2.0](https://www.microsoft.com/net/core).
 
 ## Guidelines
 
@@ -13,5 +14,5 @@
 ## How to Build
 
 * Clone the repository: `git clone https://github.com/FacilityApi/Facility.git`
-* `cd ArgsReading`
-* `powershell .\build.ps1 --target=Test`
+* `cd Facility`
+* `.\build.ps1 --target=Test` or `./build.sh --target=Test`

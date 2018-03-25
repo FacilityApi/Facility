@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Facility.Definition.Swagger;
+using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Definition.UnitTests.Swagger
 {
@@ -16,8 +16,8 @@ namespace Facility.Definition.UnitTests.Swagger
 		public void GenerateSimpleService()
 		{
 			var service = new SwaggerParser().ConvertSwaggerService(s_swaggerService);
-			service.Summary.ShouldBe("TestApi");
-			service.Methods.Count.ShouldBe(1);
+			service.Summary.Should().Be("TestApi");
+			service.Methods.Count.Should().Be(1);
 		}
 
 		[Test]
@@ -26,18 +26,18 @@ namespace Facility.Definition.UnitTests.Swagger
 			var generator = new SwaggerGenerator { GeneratorName = "tests" };
 			var fsdService = TestUtility.ParseTestApi(s_fsdText);
 			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
-			namedText.Name.ShouldBe("TestApi.json");
+			namedText.Name.Should().Be("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue(() => $"{jToken} should be {jTokenExpected}");
+			JToken.DeepEquals(jToken, jTokenExpected).Should().BeTrue("{0} should be {1}", jToken, jTokenExpected);
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
-			service.Summary.ShouldBe("TestApi");
-			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
+			service.Summary.Should().Be("TestApi");
+			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 
 			service = new SwaggerParser().ConvertSwaggerService(s_swaggerService);
-			service.Summary.ShouldBe("TestApi");
-			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
+			service.Summary.Should().Be("TestApi");
+			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 		}
 
 		[Test]
@@ -46,14 +46,14 @@ namespace Facility.Definition.UnitTests.Swagger
 			var generator = new SwaggerGenerator { Yaml = true, GeneratorName = "tests" };
 			var fsdService = TestUtility.ParseTestApi(s_fsdText);
 			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
-			namedText.Name.ShouldBe("TestApi.yaml");
+			namedText.Name.Should().Be("TestApi.yaml");
 			var jToken = JToken.FromObject(new YamlDotNet.Serialization.DeserializerBuilder().Build().Deserialize(new StringReader(namedText.Text)));
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue(() => $"{jToken} should be {jTokenExpected}");
+			JToken.DeepEquals(jToken, jTokenExpected).Should().BeTrue("{0} should be {1}", jToken, jTokenExpected);
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
-			service.Summary.ShouldBe("TestApi");
-			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
+			service.Summary.Should().Be("TestApi");
+			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 		}
 
 		static readonly string s_fsdText = @"

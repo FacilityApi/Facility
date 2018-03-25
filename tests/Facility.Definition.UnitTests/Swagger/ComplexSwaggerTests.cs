@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Facility.Definition.Swagger;
+using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Facility.Definition.UnitTests.Swagger
 {
@@ -18,14 +18,14 @@ namespace Facility.Definition.UnitTests.Swagger
 			var fsdService = TestUtility.ParseTestApi(s_fsdText);
 			var output = generator.GenerateOutput(fsdService);
 			var namedText = output.NamedTexts.Single();
-			namedText.Name.ShouldBe("TestApi.json");
+			namedText.Name.Should().Be("TestApi.json");
 			var jToken = JToken.Parse(namedText.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
-			JToken.DeepEquals(jToken, jTokenExpected).ShouldBeTrue($"{jToken} should be {jTokenExpected}");
+			JToken.DeepEquals(jToken, jTokenExpected).Should().BeTrue("{0} should be {1}", jToken, jTokenExpected);
 
 			var service = new SwaggerParser().ParseDefinition(namedText);
-			service.Summary.ShouldBe(fsdService.Summary);
-			service.Methods.Count.ShouldBe(fsdService.Methods.Count);
+			service.Summary.Should().Be(fsdService.Summary);
+			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 		}
 
 		static readonly string s_fsdText = @"

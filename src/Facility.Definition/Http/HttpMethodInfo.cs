@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 
 namespace Facility.Definition.Http
@@ -20,7 +19,7 @@ namespace Facility.Definition.Http
 		/// <summary>
 		/// The HTTP method (e.g. GET or POST).
 		/// </summary>
-		public HttpMethod Method { get; }
+		public string Method { get; }
 
 		/// <summary>
 		/// The path of the method, always starting with a slash.
@@ -73,7 +72,7 @@ namespace Facility.Definition.Http
 		{
 			ServiceMethod = methodInfo;
 
-			Method = HttpMethod.Post;
+			Method = "POST";
 			Path = $"/{methodInfo.Name}";
 			HttpStatusCode? statusCode = null;
 
@@ -130,7 +129,7 @@ namespace Facility.Definition.Http
 				}
 				else if (from == "normal")
 				{
-					if (Method == HttpMethod.Get || Method == HttpMethod.Delete)
+					if (Method == "GET" || Method == "DELETE")
 						m_errors.Add(new ServiceDefinitionError($"HTTP {Method} does not support normal fields.", requestField.Position));
 					requestNormalFields.Add(new HttpNormalFieldInfo(requestField));
 				}
@@ -161,7 +160,7 @@ namespace Facility.Definition.Http
 						m_errors.Add(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
 					requestPathFields.Add(new HttpPathFieldInfo(requestField));
 				}
-				else if (Method == HttpMethod.Get || Method == HttpMethod.Delete)
+				else if (Method == "GET" || Method == "DELETE")
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
 						m_errors.Add(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
@@ -238,28 +237,16 @@ namespace Facility.Definition.Http
 				.Concat(ValidResponses.SelectMany(x => x.GetValidationErrors()));
 		}
 
-		private HttpMethod GetHttpMethodFromParameter(ServiceAttributeParameterInfo parameter)
+		private string GetHttpMethodFromParameter(ServiceAttributeParameterInfo parameter)
 		{
-			try
+			var httpMethod = parameter.Value.ToUpperInvariant();
+			if (!s_httpMethods.Contains(httpMethod))
 			{
-				var httpMethod = new HttpMethod(parameter.Value.ToUpperInvariant());
-				if (httpMethod != HttpMethod.Get &&
-					httpMethod != HttpMethod.Post &&
-					httpMethod != HttpMethod.Put &&
-					httpMethod != HttpMethod.Delete &&
-					httpMethod != new HttpMethod("PATCH"))
-				{
-					m_errors.Add(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.ValuePosition));
-					return null;
-				}
-
-				return httpMethod;
-			}
-			catch (FormatException)
-			{
-				m_errors.Add(new ServiceDefinitionError($"Invalid HTTP method '{parameter.Value}'.", parameter.ValuePosition));
+				m_errors.Add(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.ValuePosition));
 				return null;
 			}
+
+			return httpMethod;
 		}
 
 		private static bool IsValidPathOrQueryField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
@@ -396,10 +383,9 @@ namespace Facility.Definition.Http
 
 				return string.CompareOrdinal(left.Method?.ToString(), right.Method?.ToString());
 			}
-
-			static readonly List<HttpMethod> s_httpMethods = new List<HttpMethod> { HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, new HttpMethod("PATCH"), HttpMethod.Delete };
 		}
 
+		static readonly List<string> s_httpMethods = new List<string> { "GET", "POST", "PUT", "PATCH", "DELETE" };
 		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
 
 		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();

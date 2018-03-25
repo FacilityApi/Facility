@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition", "src\Facility.Definition\Facility.Definition.csproj", "{64DB00A4-5FA3-4598-BA61-ED1FA891043C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -17,23 +15,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 		LICENSE = LICENSE
 		README.md = README.md
 		SolutionInfo.cs = SolutionInfo.cs
+		SolutionInfo.props = SolutionInfo.props
+		VersionHistory.md = VersionHistory.md
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fsdgenfsd", "src\fsdgenfsd\fsdgenfsd.csproj", "{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{999A87D4-79C9-4412-92A2-573174CC7114}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD5-46BE-9606-4121422F686B}"
 	ProjectSection(SolutionItems) = preProject
 		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Facility.CodeGen.Console", "src\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj", "{CA33BB9E-8557-4911-809C-D89C7408A182}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{569B4B9E-C089-496A-9503-8D502A74B9BF}"
 	ProjectSection(SolutionItems) = preProject
 		example\ExampleApi.fsd = example\ExampleApi.fsd
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Definition", "src\Facility.Definition\Facility.Definition.csproj", "{803FAFD4-5B25-4486-9BB4-6151D250944C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.CodeGen.Console", "src\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj", "{17975972-C390-45D5-AF4D-7490B04C66BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fsdgenfsd", "src\fsdgenfsd\fsdgenfsd.csproj", "{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,22 +43,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64DB00A4-5FA3-4598-BA61-ED1FA891043C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64DB00A4-5FA3-4598-BA61-ED1FA891043C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64DB00A4-5FA3-4598-BA61-ED1FA891043C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64DB00A4-5FA3-4598-BA61-ED1FA891043C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C41E5525-BB3F-46B7-A6CB-92BC63FAE69A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{999A87D4-79C9-4412-92A2-573174CC7114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{999A87D4-79C9-4412-92A2-573174CC7114}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{999A87D4-79C9-4412-92A2-573174CC7114}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{999A87D4-79C9-4412-92A2-573174CC7114}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA33BB9E-8557-4911-809C-D89C7408A182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA33BB9E-8557-4911-809C-D89C7408A182}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA33BB9E-8557-4911-809C-D89C7408A182}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA33BB9E-8557-4911-809C-D89C7408A182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{803FAFD4-5B25-4486-9BB4-6151D250944C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{803FAFD4-5B25-4486-9BB4-6151D250944C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{803FAFD4-5B25-4486-9BB4-6151D250944C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{803FAFD4-5B25-4486-9BB4-6151D250944C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17975972-C390-45D5-AF4D-7490B04C66BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17975972-C390-45D5-AF4D-7490B04C66BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17975972-C390-45D5-AF4D-7490B04C66BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17975972-C390-45D5-AF4D-7490B04C66BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
