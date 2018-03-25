@@ -11,7 +11,8 @@ var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "Facility.sln";
 var docsAssemblies = new[] { "Facility.Definition", "Facility.CodeGen.Console" };
-var docsRepoUri = "https://github.com/FacilityApi/Facility.git";
+var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
+var docsRepoBranch = "master";
 var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src";
 
 var nugetSource = "https://api.nuget.org/v3/index.json";
@@ -73,14 +74,13 @@ Task("UpdateDocs")
 	.IsDependentOn("Build")
 	.Does(() =>
 	{
-		var ghpagesBranch = "gh-pages";
-		var docsDirectory = new DirectoryPath(ghpagesBranch);
-		GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = ghpagesBranch });
+		var docsDirectory = new DirectoryPath(docsRepoBranch);
+		GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
-		var outputPath = ghpagesBranch;
+		var outputPath = $"{docsRepoBranch}{slash}reference";
 		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 		var slash = System.IO.Path.DirectorySeparatorChar;
-		if (buildBranch != "master" || !Regex.IsMatch(trigger, "^v[0-9]|^update-docs$"))
+		if (buildBranch != "master" || !Regex.IsMatch(trigger, "^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$"))
 			outputPath += $"{slash}preview{slash}{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
@@ -96,7 +96,7 @@ Task("UpdateDocs")
 			GitAddAll(docsDirectory);
 			GitCommit(docsDirectory, "ejball", "ejball@gmail.com", "Automatic documentation update.");
 			Information("Pushing updated documentation to GitHub.");
-			GitPush(docsDirectory, buildBotUserName, buildBotPassword, ghpagesBranch);
+			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
 		}
 		else
 		{
