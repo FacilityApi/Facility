@@ -10,9 +10,9 @@ var trigger = Argument("trigger", "");
 var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "Facility.sln";
-var docsAssembly = File($"src/Facility.Definition/bin/{configuration}/net461/Facility.Definition.dll").ToString();
+var docsAssemblies = new[] { "Facility.Definition", "Facility.CodeGen.Console" };
 var docsRepoUri = "https://github.com/FacilityApi/Facility.git";
-var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition";
+var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src";
 
 var nugetSource = "https://api.nuget.org/v3/index.json";
 var buildBotUserName = "ejball";
@@ -84,8 +84,11 @@ Task("UpdateDocs")
 			outputPath += $"{slash}preview{slash}{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
-		XmlDocMarkdownGenerate(docsAssembly, $"{outputPath}{slash}",
-			new XmlDocMarkdownSettings { SourceCodePath = docsSourceUri, NewLine = "\n", ShouldClean = true });
+		foreach (var docsAssembly in docsAssemblies)
+		{
+			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net461/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
+		}
 
 		if (GitHasUncommitedChanges(docsDirectory))
 		{
