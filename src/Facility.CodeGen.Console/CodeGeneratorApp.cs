@@ -26,7 +26,7 @@ namespace Facility.CodeGen.Console
 		{
 			try
 			{
-				var argsReader = new ArgsReader(args);
+				var argsReader = new ArgsReader(args) { LongOptionIgnoreCase = true };
 				if (argsReader.ReadHelpFlag())
 				{
 					foreach (string line in Description)
