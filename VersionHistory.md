@@ -2,10 +2,9 @@
 
 ## Pending
 
-Add changes here when they're committed to the `master` branch. Move them to "Released" once the version number
-is updated in preparation for publishing an updated NuGet package.
+Add changes here when they're committed to the `master` branch. To publish, update the [version number](SolutionInfo.props), move the pending changes below to a new [Released](#released) section, and [create a new release](/FacilityApi/Facility/releases) using the version number, e.g. `v2.3.4`.
 
-Prefix the description of the change with `[major]`, `[minor]` or `[patch]` in accordance with [SemVer](http://semver.org).
+Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in accordance with [SemVer](http://semver.org).
 
 * [minor] Support tags via attribute: `[tags(name: shiny)]`
 * [minor] Support tag exclusion via command-line: `--excludeTags shiny`
