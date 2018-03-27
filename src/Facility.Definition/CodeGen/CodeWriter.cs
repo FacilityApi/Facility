@@ -60,18 +60,12 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Writes a line of text before and after the indented scope.
 		/// </summary>
-		public IDisposable Block()
-		{
-			return Block(BlockBeforeText, BlockAfterText);
-		}
+		public IDisposable Block() => Block(BlockBeforeText, BlockAfterText);
 
 		/// <summary>
 		/// Writes a line of text before and after the indented scope.
 		/// </summary>
-		public IDisposable Block(string before)
-		{
-			return Block(before, BlockAfterText);
-		}
+		public IDisposable Block(string before) => Block(before, BlockAfterText);
 
 		/// <summary>
 		/// Writes a line of text before and after the indented scope.

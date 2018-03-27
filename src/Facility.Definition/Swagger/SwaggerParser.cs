@@ -415,15 +415,9 @@ namespace Facility.Definition.Swagger
 			}
 		}
 
-		private static string PrepareSummary(string summary)
-		{
-			return string.IsNullOrWhiteSpace(summary) ? null : Regex.Replace(summary.Trim(), @"\s+", " ");
-		}
+		private static string PrepareSummary(string summary) => string.IsNullOrWhiteSpace(summary) ? null : Regex.Replace(summary.Trim(), @"\s+", " ");
 
-		private static IReadOnlyList<string> SplitRemarks(string remarks)
-		{
-			return string.IsNullOrWhiteSpace(remarks) ? null : Regex.Split(remarks, @"\r?\n");
-		}
+		private static IReadOnlyList<string> SplitRemarks(string remarks) => string.IsNullOrWhiteSpace(remarks) ? null : Regex.Split(remarks, @"\r?\n");
 
 		private sealed class OurNamingConvention : INamingConvention
 		{

@@ -9,10 +9,7 @@ namespace fsdgenfsd
 {
 	public sealed class FsdGenFsdApp : CodeGeneratorApp
 	{
-		public static int Main(string[] args)
-		{
-			return new FsdGenFsdApp().Run(args);
-		}
+		public static int Main(string[] args) => new FsdGenFsdApp().Run(args);
 
 		protected override IReadOnlyList<string> Description => new[]
 		{

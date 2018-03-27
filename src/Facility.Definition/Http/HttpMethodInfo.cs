@@ -262,10 +262,7 @@ namespace Facility.Definition.Http
 				fieldTypeKind == ServiceTypeKind.Enum);
 		}
 
-		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
-		{
-			return serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.String;
-		}
+		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) => serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.String;
 
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
@@ -324,15 +321,10 @@ namespace Facility.Definition.Http
 			}
 		}
 
-		private static bool IsNoContentStatusCode(HttpStatusCode? statusCode)
-		{
-			return statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
-		}
+		private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
 
 		private static IReadOnlyList<string> GetPathParameterNames(string routePath)
-		{
-			return s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
-		}
+			=> s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 
 		private class NestedByRouteComparer : IComparer<HttpMethodInfo>
 		{

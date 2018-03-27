@@ -29,10 +29,7 @@ namespace Facility.Definition.Http
 			Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
 		}
 
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return m_errors.Concat(Errors.SelectMany(x => x.GetValidationErrors()));
-		}
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors.Concat(Errors.SelectMany(x => x.GetValidationErrors()));
 
 		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}

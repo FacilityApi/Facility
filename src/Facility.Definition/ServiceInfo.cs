@@ -122,42 +122,27 @@ namespace Facility.Definition
 		/// <summary>
 		/// Finds the member of the specified name.
 		/// </summary>
-		public IServiceMemberInfo FindMember(string name)
-		{
-			return m_membersByName[name].SingleOrDefault();
-		}
+		public IServiceMemberInfo FindMember(string name) => m_membersByName[name].SingleOrDefault();
 
 		/// <summary>
 		/// Gets the type of the specified name.
 		/// </summary>
-		public ServiceTypeInfo GetType(string typeName)
-		{
-			return ServiceTypeInfo.Parse(typeName, FindMember);
-		}
+		public ServiceTypeInfo GetType(string typeName) => ServiceTypeInfo.Parse(typeName, FindMember);
 
 		/// <summary>
 		/// Attempts to get the type of the specified name.
 		/// </summary>
-		public ServiceTypeInfo TryGetType(string typeName, out ServiceDefinitionError error)
-		{
-			return ServiceTypeInfo.TryParse(typeName, FindMember, null, out error);
-		}
+		public ServiceTypeInfo TryGetType(string typeName, out ServiceDefinitionError error) => ServiceTypeInfo.TryParse(typeName, FindMember, null, out error);
 
 		/// <summary>
 		/// Gets the field type for a field.
 		/// </summary>
-		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
-		{
-			return ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
-		}
+		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) => ServiceTypeInfo.Parse(field.TypeName, FindMember, field.TypeNamePosition);
 
 		/// <summary>
 		/// Attempts to get the field type for a field.
 		/// </summary>
-		public ServiceTypeInfo TryGetFieldType(ServiceFieldInfo field, out ServiceDefinitionError error)
-		{
-			return ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
-		}
+		public ServiceTypeInfo TryGetFieldType(ServiceFieldInfo field, out ServiceDefinitionError error) => ServiceTypeInfo.TryParse(field.TypeName, FindMember, field.TypeNamePosition, out error);
 
 		readonly ILookup<string, IServiceMemberInfo> m_membersByName;
 	}

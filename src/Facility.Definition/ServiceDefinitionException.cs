@@ -35,7 +35,7 @@ namespace Facility.Definition
 			if (errors == null)
 				throw new ArgumentNullException(nameof(errors));
 
-			Errors = new ReadOnlyCollection<ServiceDefinitionError>(errors.ToList());
+			Errors = errors.ToReadOnlyList();
 
 			if (Errors.Count == 0)
 				throw new ArgumentException("There must be at least one error.", nameof(errors));

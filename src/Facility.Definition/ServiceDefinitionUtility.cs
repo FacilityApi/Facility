@@ -49,51 +49,33 @@ namespace Facility.Definition
 		/// <summary>
 		/// Returns the attribute parameter with the specified name.
 		/// </summary>
-		public static ServiceAttributeParameterInfo TryGetParameter(this ServiceAttributeInfo attribute, string name)
-		{
-			return attribute?.Parameters?.FirstOrDefault(x => x.Name == name);
-		}
+		public static ServiceAttributeParameterInfo TryGetParameter(this ServiceAttributeInfo attribute, string name) => attribute?.Parameters?.FirstOrDefault(x => x.Name == name);
 
 		/// <summary>
 		/// Returns the value of the attribute parameter with the specified name.
 		/// </summary>
-		public static string TryGetParameterValue(this ServiceAttributeInfo attribute, string name)
-		{
-			return attribute.TryGetParameter(name)?.Value;
-		}
+		public static string TryGetParameterValue(this ServiceAttributeInfo attribute, string name) => attribute.TryGetParameter(name)?.Value;
 
 		/// <summary>
 		/// Returns true if the element has the 'obsolete' attribute.
 		/// </summary>
-		public static bool IsObsolete(this IServiceElementInfo element)
-		{
-			return element.TryGetObsoleteAttribute() != null;
-		}
+		public static bool IsObsolete(this IServiceElementInfo element) => element.TryGetObsoleteAttribute() != null;
 
 		/// <summary>
 		/// Returns the obsolete message for an element with the 'obsolete' attribute.
 		/// </summary>
 		/// <remarks>Use <see cref="IsObsolete"/> to determine if the element is obsolete.</remarks>
-		public static string TryGetObsoleteMessage(this IServiceElementInfo element)
-		{
-			return element.TryGetObsoleteAttribute()?.TryGetParameterValue("message");
-		}
+		public static string TryGetObsoleteMessage(this IServiceElementInfo element) => element.TryGetObsoleteAttribute()?.TryGetParameterValue("message");
 
 		/// <summary>
 		/// Returns any tag names for the element.
 		/// </summary>
-		public static IReadOnlyList<string> GetTagNames(this IServiceElementInfo element)
-		{
-			return element?.Attributes?.Where(x => x.Name == "tag").Select(x => x.TryGetParameterValue("name")).ToList();
-		}
+		public static IReadOnlyList<string> GetTagNames(this IServiceElementInfo element) => element?.Attributes?.Where(x => x.Name == "tag").Select(x => x.TryGetParameterValue("name")).ToList();
 
 		/// <summary>
 		/// Returns true if the name is a valid service member name.
 		/// </summary>
-		public static bool IsValidName(string name)
-		{
-			return name != null && s_validNameRegex.IsMatch(name);
-		}
+		public static bool IsValidName(string name) => name != null && s_validNameRegex.IsMatch(name);
 
 		/// <summary>
 		/// Excludes a tag from the specified service.
@@ -205,15 +187,9 @@ namespace Facility.Definition
 				throw new ServiceDefinitionException(errorList);
 		}
 
-		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items)
-		{
-			return new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
-		}
+		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
 
-		private static ServiceAttributeInfo TryGetObsoleteAttribute(this IServiceElementInfo element)
-		{
-			return element.TryGetAttribute("obsolete");
-		}
+		private static ServiceAttributeInfo TryGetObsoleteAttribute(this IServiceElementInfo element) => element.TryGetAttribute("obsolete");
 
 		static readonly Regex s_validNameRegex = new Regex(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
 	}

@@ -6,20 +6,13 @@ namespace Facility.Definition.Http
 {
 	internal static class HttpAttributeUtility
 	{
-		public static ServiceAttributeInfo TryGetHttpAttribute(this IServiceElementInfo element)
-		{
-			return element.TryGetAttribute("http");
-		}
+		public static ServiceAttributeInfo TryGetHttpAttribute(this IServiceElementInfo element) => element.TryGetAttribute("http");
 
 		public static IReadOnlyList<ServiceAttributeParameterInfo> GetHttpParameters(this IServiceElementInfo element)
-		{
-			return element.TryGetAttribute("http")?.Parameters ?? new ServiceAttributeParameterInfo[0];
-		}
+			=> element.TryGetAttribute("http")?.Parameters ?? new ServiceAttributeParameterInfo[0];
 
 		public static ServiceDefinitionError CreateInvalidHttpParameterError(this ServiceAttributeParameterInfo parameter)
-		{
-			return new ServiceDefinitionError($"Unexpected 'http' parameter '{parameter.Name}'.", parameter.Position);
-		}
+			=> new ServiceDefinitionError($"Unexpected 'http' parameter '{parameter.Name}'.", parameter.Position);
 
 		public static HttpStatusCode? TryParseStatusCodeInteger(ServiceAttributeParameterInfo parameter, out ServiceDefinitionError error)
 		{

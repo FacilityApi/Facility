@@ -110,8 +110,9 @@ namespace Facility.Definition.Fsd
 					.ThenByDescending(x => x.LineColumn.ColumnNumber)
 					.First();
 
+				int getExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
 				errorList.Add(new ServiceDefinitionError(
-					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
+					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(getExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
 					exception));
 			}
@@ -122,11 +123,6 @@ namespace Facility.Definition.Fsd
 
 			errors = errorList;
 			return errorList.Count == 0;
-		}
-
-		private static int GetExpectationNameRank(string name)
-		{
-			return name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
 		}
 
 		static readonly Regex s_markdownHeading = new Regex(@"^#\s+");

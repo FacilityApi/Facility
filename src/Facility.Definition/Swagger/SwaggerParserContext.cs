@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,32 +10,17 @@ namespace Facility.Definition.Swagger
 	{
 		public static SwaggerParserContext None => new SwaggerParserContext(namedText: null, isYaml: false);
 
-		public static SwaggerParserContext FromYaml(NamedText namedText)
-		{
-			return new SwaggerParserContext(namedText, isYaml: true);
-		}
+		public static SwaggerParserContext FromYaml(NamedText namedText) => new SwaggerParserContext(namedText, isYaml: true);
 
-		public static SwaggerParserContext FromJson(NamedText namedText)
-		{
-			return new SwaggerParserContext(namedText, isYaml: false);
-		}
+		public static SwaggerParserContext FromJson(NamedText namedText) => new SwaggerParserContext(namedText, isYaml: false);
 
 		public SwaggerParserContext Root => new SwaggerParserContext(m_namedText, m_isYaml);
 
-		public NamedTextPosition CreatePosition(string path = null)
-		{
-			return m_namedText == null ? null : new NamedTextPosition(m_namedText.Name, () => FindLineColumn(path));
-		}
+		public NamedTextPosition CreatePosition(string path = null) => m_namedText == null ? null : new NamedTextPosition(m_namedText.Name, () => FindLineColumn(path));
 
-		public ServiceDefinitionException CreateException(string error, string path = null)
-		{
-			return new ServiceDefinitionException(error, CreatePosition(path));
-		}
+		public ServiceDefinitionException CreateException(string error, string path = null) => new ServiceDefinitionException(error, CreatePosition(path));
 
-		public SwaggerParserContext CreateContext(string path)
-		{
-			return new SwaggerParserContext(m_namedText, m_isYaml, ResolvePath(path));
-		}
+		public SwaggerParserContext CreateContext(string path) => new SwaggerParserContext(m_namedText, m_isYaml, ResolvePath(path));
 
 		private SwaggerParserContext(NamedText namedText, bool isYaml, string path = null)
 		{
@@ -95,10 +80,7 @@ namespace Facility.Definition.Swagger
 			}
 		}
 
-		private string ResolvePath(string path)
-		{
-			return string.IsNullOrEmpty(path) ? m_path : string.IsNullOrEmpty(m_path) ? path : m_path + "." + path;
-		}
+		private string ResolvePath(string path) => string.IsNullOrEmpty(path) ? m_path : string.IsNullOrEmpty(m_path) ? path : m_path + "." + path;
 
 		readonly NamedText m_namedText;
 		readonly bool m_isYaml;

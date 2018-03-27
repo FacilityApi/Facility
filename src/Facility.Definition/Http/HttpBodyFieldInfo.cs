@@ -37,10 +37,7 @@ namespace Facility.Definition.Http
 			}
 		}
 
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return m_errors;
-		}
+		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors;
 
 		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}

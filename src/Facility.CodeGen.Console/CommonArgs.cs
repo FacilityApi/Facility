@@ -15,30 +15,15 @@ namespace Facility.CodeGen.Console
 			return serviceName;
 		}
 
-		public static bool ReadCleanFlag(this ArgsReader args)
-		{
-			return args.ReadFlag("clean");
-		}
+		public static bool ReadCleanFlag(this ArgsReader args) => args.ReadFlag("clean");
 
-		public static bool ReadDryRunFlag(this ArgsReader args)
-		{
-			return args.ReadFlag("dryrun");
-		}
+		public static bool ReadDryRunFlag(this ArgsReader args) => args.ReadFlag("dryrun");
 
-		public static bool ReadHelpFlag(this ArgsReader args)
-		{
-			return args.ReadFlag("help|h|?");
-		}
+		public static bool ReadHelpFlag(this ArgsReader args) => args.ReadFlag("help|h|?");
 
-		public static bool ReadQuietFlag(this ArgsReader args)
-		{
-			return args.ReadFlag("quiet");
-		}
+		public static bool ReadQuietFlag(this ArgsReader args) => args.ReadFlag("quiet");
 
-		public static bool ReadVerifyFlag(this ArgsReader args)
-		{
-			return args.ReadFlag("verify");
-		}
+		public static bool ReadVerifyFlag(this ArgsReader args) => args.ReadFlag("verify");
 
 		public static string ReadIndentOption(this ArgsReader args)
 		{

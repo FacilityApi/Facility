@@ -174,30 +174,15 @@ namespace Facility.Definition.Swagger
 			return swaggerService.TryGetFacilityTypeName(valueSchema, position);
 		}
 
-		internal static IReadOnlyList<T> EmptyIfNull<T>(this IReadOnlyList<T> list)
-		{
-			return list ?? new T[0];
-		}
+		internal static IReadOnlyList<T> EmptyIfNull<T>(this IReadOnlyList<T> list) => list ?? new T[0];
 
-		internal static IList<T> EmptyIfNull<T>(this IList<T> list)
-		{
-			return list ?? new T[0];
-		}
+		internal static IList<T> EmptyIfNull<T>(this IList<T> list) => list ?? new T[0];
 
-		internal static IReadOnlyDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> list)
-		{
-			return list ?? new Dictionary<TKey, TValue>();
-		}
+		internal static IReadOnlyDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> list) => list ?? new Dictionary<TKey, TValue>();
 
-		internal static IDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IDictionary<TKey, TValue> list)
-		{
-			return list ?? new Dictionary<TKey, TValue>();
-		}
+		internal static IDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(this IDictionary<TKey, TValue> list) => list ?? new Dictionary<TKey, TValue>();
 
-		private static string UnescapeRefPart(string value)
-		{
-			return value.Replace("~1", "/").Replace("~0", "~");
-		}
+		private static string UnescapeRefPart(string value) => value.Replace("~1", "/").Replace("~0", "~");
 
 		private sealed class CamelCaseExceptDictionaryKeysContractResolver : CamelCasePropertyNamesContractResolver
 		{
