@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,14 +9,6 @@ namespace Facility.Definition
 	/// </summary>
 	public sealed class ServiceFieldInfo : IServiceElementInfo
 	{
-		/// <summary>
-		/// Creates a field.
-		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes, string summary, NamedTextPosition position)
-			: this(name, typeName, attributes, summary, position, null)
-		{
-		}
-
 		/// <summary>
 		/// Creates a field.
 		/// </summary>

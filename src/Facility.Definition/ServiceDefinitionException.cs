@@ -47,18 +47,6 @@ namespace Facility.Definition
 		public IReadOnlyList<ServiceDefinitionError> Errors { get; }
 
 		/// <summary>
-		/// The error message of the first error.
-		/// </summary>
-		[Obsolete("Prefer Errors[0].Message.")]
-		public string Error => Errors[0].Message;
-
-		/// <summary>
-		/// The position where the first error took place, if any.
-		/// </summary>
-		[Obsolete("Prefer Errors[0].Position.")]
-		public NamedTextPosition Position => Errors[0].Position;
-
-		/// <summary>
 		/// The exception message, which displays the file name, line number, column number, and error message of the first error.
 		/// </summary>
 		public override string Message
