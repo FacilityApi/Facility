@@ -291,7 +291,7 @@ namespace Facility.Definition.Swagger
 
 			operation.Responses = responses;
 
-			string httpMethod = httpMethodInfo.Method.ToString().ToLowerInvariant();
+			string httpMethod = httpMethodInfo.Method.ToLowerInvariant();
 			switch (httpMethod)
 			{
 			case "get":
