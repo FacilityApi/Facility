@@ -10,5 +10,5 @@ environment:
   APPVEYOR_YML_DISABLE_PS_LINUX: true
 build_script:
 - ps: .\build.ps1 --target=NuGetPublish """--trigger=$env:APPVEYOR_REPO_TAG_NAME""" "--nugetApiKey=$env:NUGETAPIKEY"
-- sh: ./build.sh --target=NuGetPackage
+- sh: ./build.sh --target=NuGetPackage "--trigger=$APPVEYOR_REPO_TAG_NAME"
 test: off
