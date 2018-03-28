@@ -93,7 +93,7 @@ Task("UpdateDocs")
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
-			GitCommit(docsDirectory, "ejball", "ejball@gmail.com", "Automatic documentation update.");
+			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com", "Automatic documentation update.");
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
 		}
