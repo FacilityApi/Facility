@@ -86,7 +86,7 @@ Task("UpdateDocs")
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net461/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net47/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
