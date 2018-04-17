@@ -79,7 +79,8 @@ Task("UpdateDocs")
 
 		var outputPath = $"{docsRepoBranch}{slash}reference";
 		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
-		if (buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$"))
+		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
+		if (isPreview)
 			outputPath += $"{slash}preview{slash}{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
@@ -93,7 +94,8 @@ Task("UpdateDocs")
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
-			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com", "Automatic documentation update.");
+			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com",
+				"Automatic documentation update." + (isPreview ? $" (preview {buildBranch})" : ""));
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
 		}
