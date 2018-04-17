@@ -15,8 +15,8 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Parses an FSD file into a service definition.
 		/// </summary>
-		/// <exception cref="ServiceDefinitionException">Thrown if the parse fails.</exception>
-		public ServiceInfo ParseDefinition(NamedText source)
+		/// <exception cref="ServiceDefinitionException">Thrown if parsing fails or the service would be invalid.</exception>
+		public ServiceInfo ParseDefinition(ServiceDefinitionText source)
 		{
 			if (TryParseDefinition(source, out var service, out var errors))
 				return service;
@@ -27,8 +27,9 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Parses an FSD file into a service definition.
 		/// </summary>
-		/// <returns>true if the parse succeeds.</returns>
-		public bool TryParseDefinition(NamedText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
+		/// <returns>True if parsing succeeds and the service is valid, i.e. there are no errors.</returns>
+		/// <remarks>Even if parsing fails, an invalid service may be returned.</remarks>
+		public bool TryParseDefinition(ServiceDefinitionText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
 		{
 			var errorList = new List<ServiceDefinitionError>();
 			IReadOnlyList<string> definitionLines = null;
@@ -61,7 +62,7 @@ namespace Facility.Definition.Fsd
 							while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[lines.Count - 1]))
 								lines.RemoveAt(lines.Count - 1);
 
-							var position = new NamedTextPosition(source.Name, headingLineNumber, 1);
+							var position = new ServiceDefinitionPosition(source.Name, headingLineNumber, 1);
 							if (remarksSections.ContainsKey(name))
 								errorList.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
 							else
@@ -82,7 +83,7 @@ namespace Facility.Definition.Fsd
 				}
 			}
 
-			source = new NamedText(source.Name, string.Join("\n", definitionLines));
+			source = new ServiceDefinitionText(source.Name, string.Join("\n", definitionLines));
 			service = null;
 
 			try
@@ -113,18 +114,13 @@ namespace Facility.Definition.Fsd
 				int getExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
 				errorList.Add(new ServiceDefinitionError(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(getExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
-					new NamedTextPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber),
-					exception));
-			}
-			catch (ServiceDefinitionException exception)
-			{
-				errorList.AddRange(exception.Errors);
+					new ServiceDefinitionPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
 			}
 
 			errors = errorList;
 			return errorList.Count == 0;
 		}
 
-		static readonly Regex s_markdownHeading = new Regex(@"^#\s+");
+		private static readonly Regex s_markdownHeading = new Regex(@"^#\s+");
 	}
 }

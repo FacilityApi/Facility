@@ -7,7 +7,7 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// Information about a valid method response.
 	/// </summary>
-	public sealed class HttpResponseInfo
+	public sealed class HttpResponseInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The status code used by the response.
@@ -24,6 +24,11 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public HttpBodyFieldInfo BodyField { get; }
 
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => NormalFields?.AsEnumerable<HttpElementInfo>() ?? new[] { BodyField };
+
 		internal HttpResponseInfo(HttpStatusCode statusCode, IReadOnlyList<HttpNormalFieldInfo> normalFields)
 		{
 			StatusCode = statusCode;
@@ -35,7 +40,5 @@ namespace Facility.Definition.Http
 			StatusCode = statusCode;
 			BodyField = bodyField;
 		}
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => NormalFields?.SelectMany(x => x.GetValidationErrors()) ?? BodyField.GetValidationErrors();
 	}
 }

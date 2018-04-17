@@ -157,6 +157,7 @@ void CodeGen(bool verify)
 
 void ExecuteCodeGen(string args, bool verify)
 {
+	Information(args);
 	string exePath = File($"src/fsdgenfsd/bin/{configuration}/fsdgenfsd.exe");
 	if (IsRunningOnUnix())
 	{

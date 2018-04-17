@@ -43,28 +43,28 @@ namespace Facility.Definition.UnitTests.Http
 		public void TwoServiceAttributes()
 		{
 			ParseInvalidHttpApi("[http] [http] service TestApi { method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,9): 'http' attribute is duplicated.");
+				.ToString().Should().Be("TestApi.fsd(1,9): 'http' attribute is duplicated.");
 		}
 
 		[Test]
 		public void UnexpectedHttpParameter()
 		{
 			ParseInvalidHttpApi("[http(xyzzy: true)] service TestApi { method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,7): Unexpected 'http' parameter 'xyzzy'.");
+				.ToString().Should().Be("TestApi.fsd(1,7): Unexpected 'http' parameter 'xyzzy'.");
 		}
 
 		[Test]
 		public void UnexpectedHttpAttribute()
 		{
 			ParseInvalidHttpApi("service TestApi { [http] data Hey {} }")
-				.Message.Should().Be("TestApi.fsd(1,20): 'http' attribute not supported on this element.");
+				.ToString().Should().Be("TestApi.fsd(1,20): Unexpected 'http' attribute.");
 		}
 
 		[Test]
 		public void TwoMethodsSameRoute()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: {} [http(path: \"/do\")] method doNot {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,56): Methods 'do' and 'doNot' have the same route: POST /do");
+				.ToString().Should().Be("TestApi.fsd(1,56): Methods 'do' and 'doNot' have the same route: POST /do");
 		}
 
 		[Test]

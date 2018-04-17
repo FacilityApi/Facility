@@ -3,14 +3,14 @@ using System;
 namespace Facility.Definition
 {
 	/// <summary>
-	/// A source of text.
+	/// Named text containing a service definition.
 	/// </summary>
-	public sealed class NamedText
+	public sealed class ServiceDefinitionText
 	{
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public NamedText(string name, string text)
+		public ServiceDefinitionText(string name, string text)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Text = text ?? throw new ArgumentNullException(nameof(text));

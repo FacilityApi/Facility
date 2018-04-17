@@ -1,30 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// An attribute parameter.
 	/// </summary>
-	public sealed class ServiceAttributeParameterInfo : IServiceNamedInfo
+	public sealed class ServiceAttributeParameterInfo : ServiceElementInfo, IServiceHasName
 	{
 		/// <summary>
 		/// Creates an attribute parameter.
 		/// </summary>
-		public ServiceAttributeParameterInfo(string name, string value, NamedTextPosition position = null, NamedTextPosition valuePosition = null)
-			: this(ValidationMode.Throw, name, value, position, valuePosition)
-		{
-		}
-
-		internal ServiceAttributeParameterInfo(ValidationMode validationMode, string name, string value, NamedTextPosition position, NamedTextPosition valuePosition)
+		public ServiceAttributeParameterInfo(string name, string value, params ServicePart[] parts)
+			: base(parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Value = value ?? throw new ArgumentNullException(nameof(value));
-			Position = position;
-			ValuePosition = valuePosition;
 
-			if (validationMode == ValidationMode.Throw)
-				GetValidationErrors().ThrowIfAny();
+			ValidateName();
 		}
 
 		/// <summary>
@@ -38,18 +32,8 @@ namespace Facility.Definition
 		public string Value { get; }
 
 		/// <summary>
-		/// The position of the parameter.
+		/// The children of the service element, if any.
 		/// </summary>
-		public NamedTextPosition Position { get; }
-
-		/// <summary>
-		/// The position of the parameter value.
-		/// </summary>
-		public NamedTextPosition ValuePosition { get; set; }
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position);
-		}
+		public override IEnumerable<ServiceElementInfo> GetChildren() => Enumerable.Empty<ServiceElementInfo>();
 	}
 }

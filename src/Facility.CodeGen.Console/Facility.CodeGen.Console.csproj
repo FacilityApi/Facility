@@ -6,14 +6,11 @@
     <LangVersion>latest</LangVersion>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);1591</NoWarn>
     <DebugType>portable</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <Description>Helpers for Facility code generator tools.</Description>
     <PackageTags>Facility FSD CodeGen Console</PackageTags>
   </PropertyGroup>
-
-  <Import Project="..\..\SolutionInfo.props" />
 
   <ItemGroup>
     <PackageReference Include="ArgsReading" Version="1.2.0" />

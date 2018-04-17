@@ -68,28 +68,28 @@ namespace Facility.Definition.UnitTests.Http
 		public void UnsupportedHttpOptionsMethod()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: options)] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,33): Unsupported HTTP method 'OPTIONS'.");
+				.ToString().Should().Be("TestApi.fsd(1,33): Unsupported HTTP method 'OPTIONS'.");
 		}
 
 		[Test]
 		public void BadHttpMethodName()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: \" bad \")] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,33): Unsupported HTTP method ' BAD '.");
+				.ToString().Should().Be("TestApi.fsd(1,33): Unsupported HTTP method ' BAD '.");
 		}
 
 		[Test]
 		public void BadHttpMethodParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(metho: get)] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,25): Unexpected 'http' parameter 'metho'.");
+				.ToString().Should().Be("TestApi.fsd(1,25): Unexpected 'http' parameter 'metho'.");
 		}
 
 		[Test]
 		public void MultipleHttpMethods()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] [http(method: post)] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,40): 'http' attribute is duplicated.");
+				.ToString().Should().Be("TestApi.fsd(1,40): 'http' attribute is duplicated.");
 		}
 
 		[Test]
@@ -103,14 +103,14 @@ namespace Facility.Definition.UnitTests.Http
 		public void MethodPathEmpty()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"\")] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,44): 'path' value must start with a slash.");
+				.ToString().Should().Be("TestApi.fsd(1,44): 'path' value must start with a slash.");
 		}
 
 		[Test]
 		public void MethodPathNoSlash()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"xyzzy\")] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,44): 'path' value must start with a slash.");
+				.ToString().Should().Be("TestApi.fsd(1,44): 'path' value must start with a slash.");
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void MethodStatusCodeOutOfRange()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, code: 999)] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
+				.ToString().Should().Be("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
 		}
 
 		[Test]
@@ -147,49 +147,49 @@ namespace Facility.Definition.UnitTests.Http
 		public void WrongCasePathField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{Id}\")] method do { iD: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,60): Unused path parameter 'Id'.");
+				.ToString().Should().Be("TestApi.fsd(1,60): Unused path parameter 'Id'.");
 		}
 
 		[Test]
 		public void MissingPathPlaceholder()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: path)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
+				.ToString().Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
 		}
 
 		[Test]
 		public void ExtraPathPlaceholder()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do {}: {} }")
-				.Message.Should().Be("TestApi.fsd(1,60): Unused path parameter 'id'.");
+				.ToString().Should().Be("TestApi.fsd(1,60): Unused path parameter 'id'.");
 		}
 
 		[Test]
 		public void UnusedPathField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: path)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
+				.ToString().Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
 		}
 
 		[Test]
 		public void ImplicitPathFieldTypeNotSupported()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,72): Request field used in path must use a simple type.");
+				.ToString().Should().Be("TestApi.fsd(1,72): Request field used in path must use a simple type.");
 		}
 
 		[Test]
 		public void ExplicitPathFieldTypeNotSupported()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(from: path)] id: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,91): Request field used in path must use a simple type.");
+				.ToString().Should().Be("TestApi.fsd(1,91): Request field used in path must use a simple type.");
 		}
 
 		[Test]
 		public void PathFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(name: identifier)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,78): Unexpected 'http' parameter 'name'.");
+				.ToString().Should().Be("TestApi.fsd(1,78): Unexpected 'http' parameter 'name'.");
 		}
 
 		[Test]
@@ -241,21 +241,21 @@ namespace Facility.Definition.UnitTests.Http
 		public void ImplicitQueryFieldTypeNotSupported()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { id: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,67): Request field used in query must use a simple type.");
+				.ToString().Should().Be("TestApi.fsd(1,67): Request field used in query must use a simple type.");
 		}
 
 		[Test]
 		public void ExplicitQueryFieldTypeNotSupported()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { [http(from: query)] id: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,87): Request field used in query must use a simple type.");
+				.ToString().Should().Be("TestApi.fsd(1,87): Request field used in query must use a simple type.");
 		}
 
 		[Test]
 		public void QueryFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(nam: identifier)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,57): Unexpected 'http' parameter 'nam'.");
+				.ToString().Should().Be("TestApi.fsd(1,57): Unexpected 'http' parameter 'nam'.");
 		}
 
 		[Test]
@@ -276,14 +276,14 @@ namespace Facility.Definition.UnitTests.Http
 		public void HttpGetNormalRequestField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: normal)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,72): HTTP GET does not support normal fields.");
+				.ToString().Should().Be("TestApi.fsd(1,72): HTTP GET does not support normal fields.");
 		}
 
 		[Test]
 		public void HttpDeleteNormalRequestField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: delete)] method do { [http(from: normal)] id: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,75): HTTP DELETE does not support normal fields.");
+				.ToString().Should().Be("TestApi.fsd(1,75): HTTP DELETE does not support normal fields.");
 		}
 
 		[TestCase("Dto")]
@@ -309,28 +309,28 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyRequestFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type))
-				.Message.Should().Be("TestApi.fsd(1,78): Request fields with [http(from: body)] must not use a primitive type.");
+				.ToString().Should().Be("TestApi.fsd(1,78): Request fields with [http(from: body)] must not use a primitive type.");
 		}
 
 		[Test]
 		public void BodyRequestFieldNoStatusCode()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: body, code: 200)] id: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,61): Request fields do not support status codes.");
+				.ToString().Should().Be("TestApi.fsd(1,61): Request fields do not support status codes.");
 		}
 
 		[Test]
 		public void MultipleBodyRequestFields()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: body)] body1: Thing; [http(from: body)] body2: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,83): Requests do not support multiple [http(from: body)] fields.");
+				.ToString().Should().Be("TestApi.fsd(1,83): Requests do not support multiple [http(from: body)] fields.");
 		}
 
 		[Test]
 		public void BodyAndNormalRequestFields()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { id: string; [http(from: body)] body: Thing; }: {} data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,62): A request cannot have a normal field and a body field.");
+				.ToString().Should().Be("TestApi.fsd(1,62): A request cannot have a normal field and a body field.");
 		}
 
 		[Test]
@@ -368,7 +368,7 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { [http(code: 204)] method do {}: { [...] id: string; } }".Replace("[...]",
 				isExplicit ? "[http(from: normal)]" : ""))
-				.Message.Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 204 does not support normal fields.");
+				.ToString().Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 204 does not support normal fields.");
 		}
 
 		[TestCase(false)]
@@ -377,14 +377,14 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { [http(code: 304)] method do {}: { [...] id: string; } }".Replace("[...]",
 				isExplicit ? "[http(from: normal)]" : ""))
-				.Message.Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 304 does not support normal fields.");
+				.ToString().Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 304 does not support normal fields.");
 		}
 
 		[Test]
 		public void NormalFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(name: identifier)] id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,41): Unexpected 'http' parameter 'name'.");
+				.ToString().Should().Be("TestApi.fsd(1,41): Unexpected 'http' parameter 'name'.");
 		}
 
 		[TestCase("Dto")]
@@ -414,7 +414,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyResponseFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))
-				.Message.Should().Be("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a non-primitive type or a Boolean.");
+				.ToString().Should().Be("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a non-primitive type or a Boolean.");
 		}
 
 		[Test]
@@ -449,7 +449,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyResponseFieldWithMethodStatusCodeConflict()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: post, code: 200)] method do {}: { [http(from: body)] body: Thing; } data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,51): Multiple handlers for status code 200.");
+				.ToString().Should().Be("TestApi.fsd(1,51): Multiple handlers for status code 200.");
 		}
 
 		[Test]
@@ -538,35 +538,35 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			string statusCodeString = ((int) statusCode).ToString();
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: error; } }".Replace("CODE", statusCodeString))
-				.Message.Should().Be("TestApi.fsd(1,65): A body field with HTTP status code CODE must be Boolean.".Replace("CODE", statusCodeString));
+				.ToString().Should().Be("TestApi.fsd(1,65): A body field with HTTP status code CODE must be Boolean.".Replace("CODE", statusCodeString));
 		}
 
 		[Test]
 		public void ConflictingBodyResponseFields()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body)] body1: Thing; [http(from: body)] body2: Thing; } data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,19): Multiple handlers for status code 200.");
+				.ToString().Should().Be("TestApi.fsd(1,19): Multiple handlers for status code 200.");
 		}
 
 		[Test]
 		public void BodyFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body, cod: 200)] id: Thing; } data Thing { id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,53): Unexpected 'http' parameter 'cod'.");
+				.ToString().Should().Be("TestApi.fsd(1,53): Unexpected 'http' parameter 'cod'.");
 		}
 
 		[Test]
 		public void ResponsePathField()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: path)] id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,54): Response fields do not support '[http(from: path)]'.");
+				.ToString().Should().Be("TestApi.fsd(1,54): Response fields do not support '[http(from: path)]'.");
 		}
 
 		[Test]
 		public void ResponseQueryField()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: query)] id: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,55): Response fields do not support '[http(from: query)]'.");
+				.ToString().Should().Be("TestApi.fsd(1,55): Response fields do not support '[http(from: query)]'.");
 		}
 
 		[Test]
@@ -589,42 +589,42 @@ namespace Facility.Definition.UnitTests.Http
 		public void RequestHeaderFieldBadType()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: header)] xyzzy: error; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,52): Request fields with [http(from: header)] must use the string type.");
+				.ToString().Should().Be("TestApi.fsd(1,52): Request fields with [http(from: header)] must use the string type.");
 		}
 
 		[Test]
 		public void ResponseHeaderFieldBadType()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: header)] xyzzy: error; } }")
-				.Message.Should().Be("TestApi.fsd(1,56): Response fields with [http(from: header)] must use the string type.");
+				.ToString().Should().Be("TestApi.fsd(1,56): Response fields with [http(from: header)] must use the string type.");
 		}
 
 		[Test]
 		public void RequestHeaderFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: header, nam: x)] xyzzy: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,51): Unexpected 'http' parameter 'nam'.");
+				.ToString().Should().Be("TestApi.fsd(1,51): Unexpected 'http' parameter 'nam'.");
 		}
 
 		[Test]
 		public void ResponseHeaderFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: header, nam: x)] xyzzy: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,55): Unexpected 'http' parameter 'nam'.");
+				.ToString().Should().Be("TestApi.fsd(1,55): Unexpected 'http' parameter 'nam'.");
 		}
 
 		[Test]
 		public void RequestFieldInvalidFrom()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: heade)] xyzzy: string; }: {} }")
-				.Message.Should().Be("TestApi.fsd(1,51): Unsupported 'from' parameter of 'http' attribute: 'heade'");
+				.ToString().Should().Be("TestApi.fsd(1,51): Unsupported 'from' parameter of 'http' attribute: 'heade'");
 		}
 
 		[Test]
 		public void ResponseFieldInvalidFrom()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: heade)] xyzzy: string; } }")
-				.Message.Should().Be("TestApi.fsd(1,55): Unsupported 'from' parameter of 'http' attribute: 'heade'");
+				.ToString().Should().Be("TestApi.fsd(1,55): Unsupported 'from' parameter of 'http' attribute: 'heade'");
 		}
 
 		[TestCase("", "", -1)]
@@ -640,7 +640,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void ByRouteComparer(string leftHttp, string rightHttp, int expected)
 		{
 			string fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);
-			var service = new HttpServiceInfo(new FsdParser().ParseDefinition(new NamedText("", fsdText)));
+			var service = HttpServiceInfo.Create(new FsdParser().ParseDefinition(new ServiceDefinitionText("", fsdText)));
 			var left = service.Methods.Single(x => x.ServiceMethod.Name == "left");
 			var right = service.Methods.Single(x => x.ServiceMethod.Name == "right");
 			int actual = HttpMethodInfo.ByRouteComparer.Compare(left, right);

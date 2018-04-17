@@ -1,3 +1,4 @@
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
@@ -7,8 +8,7 @@ namespace Facility.Definition.UnitTests
 		[Test]
 		public void InvalidNameThrows()
 		{
-			var position = new NamedTextPosition("source");
-			TestUtility.ThrowsServiceDefinitionException(() => new ServiceDtoInfo(name: "4u", position: position), position);
+			new ServiceDtoInfo(name: "4u").IsValid.Should().BeFalse();
 		}
 
 		[Test]
@@ -16,10 +16,10 @@ namespace Facility.Definition.UnitTests
 		{
 			var fields = new[]
 			{
-				new ServiceFieldInfo("why", "int32", position: new NamedTextPosition("source", 1)),
-				new ServiceFieldInfo("Why", "int32", position: new NamedTextPosition("source", 2)),
+				new ServiceFieldInfo("why", "int32"),
+				new ServiceFieldInfo("Why", "int32"),
 			};
-			TestUtility.ThrowsServiceDefinitionException(() => new ServiceDtoInfo(name: "x", fields: fields), fields[1].Position);
+			new ServiceDtoInfo(name: "x", fields: fields).IsValid.Should().BeFalse();
 		}
 	}
 }

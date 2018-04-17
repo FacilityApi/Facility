@@ -69,16 +69,16 @@ namespace Facility.CodeGen.Console
 
 				argsReader.VerifyComplete();
 
-				NamedText input;
+				ServiceDefinitionText input;
 				if (inputPath == "-")
 				{
-					input = new NamedText("", System.Console.In.ReadToEnd());
+					input = new ServiceDefinitionText("", System.Console.In.ReadToEnd());
 				}
 				else
 				{
 					if (!File.Exists(inputPath))
 						throw new ApplicationException("Input file does not exist: " + inputPath);
-					input = new NamedText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
+					input = new ServiceDefinitionText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
 				}
 
 				ServiceInfo service;
@@ -104,42 +104,42 @@ namespace Facility.CodeGen.Console
 					!outputPath.EndsWith("\\", StringComparison.Ordinal) &&
 					!Directory.Exists(outputPath))
 				{
-					if (output.NamedTexts.Count > 1)
+					if (output.Files.Count > 1)
 						throw new InvalidOperationException("Multiple outputs not expected.");
 
-					if (output.NamedTexts.Count == 1)
+					if (output.Files.Count == 1)
 					{
-						var namedText = output.NamedTexts[0];
+						var file = output.Files[0];
 
 						if (outputPath == "-")
-							System.Console.Write(namedText.Text);
-						else if (ShouldWriteByteOrderMark(namedText.Name))
-							File.WriteAllText(outputPath, namedText.Text, s_utf8WithBom);
+							System.Console.Write(file.Text);
+						else if (ShouldWriteByteOrderMark(file.Name))
+							File.WriteAllText(outputPath, file.Text, s_utf8WithBom);
 						else
-							File.WriteAllText(outputPath, namedText.Text);
+							File.WriteAllText(outputPath, file.Text);
 					}
 				}
 				else
 				{
-					var namedTextsToWrite = new List<NamedText>();
-					foreach (var namedText in output.NamedTexts)
+					var filesToWrite = new List<CodeGenFile>();
+					foreach (var file in output.Files)
 					{
-						string existingFilePath = Path.Combine(outputPath, namedText.Name);
+						string existingFilePath = Path.Combine(outputPath, file.Name);
 						if (File.Exists(existingFilePath))
 						{
 							// ignore CR when comparing files
-							if (namedText.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
+							if (file.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
 							{
-								namedTextsToWrite.Add(namedText);
+								filesToWrite.Add(file);
 								if (!isQuiet)
-									System.Console.WriteLine("changed " + namedText.Name);
+									System.Console.WriteLine("changed " + file.Name);
 							}
 						}
 						else
 						{
-							namedTextsToWrite.Add(namedText);
+							filesToWrite.Add(file);
 							if (!isQuiet)
-								System.Console.WriteLine("added " + namedText.Name);
+								System.Console.WriteLine("added " + file.Name);
 						}
 					}
 
@@ -151,7 +151,7 @@ namespace Facility.CodeGen.Console
 						{
 							foreach (string nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
 							{
-								if (output.NamedTexts.All(x => x.Name != nameMatchingPattern))
+								if (output.Files.All(x => x.Name != nameMatchingPattern))
 								{
 									namesToDelete.Add(nameMatchingPattern);
 									if (!isQuiet)
@@ -162,25 +162,25 @@ namespace Facility.CodeGen.Console
 					}
 
 					if (isVerify)
-						return namedTextsToWrite.Count != 0 || namesToDelete.Count != 0 ? 1 : 0;
+						return filesToWrite.Count != 0 || namesToDelete.Count != 0 ? 1 : 0;
 
 					if (!isDryRun)
 					{
 						if (!Directory.Exists(outputPath))
 							Directory.CreateDirectory(outputPath);
 
-						foreach (var namedText in namedTextsToWrite)
+						foreach (var fileToWrite in filesToWrite)
 						{
-							string outputFilePath = Path.Combine(outputPath, namedText.Name);
+							string outputFilePath = Path.Combine(outputPath, fileToWrite.Name);
 
 							string outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
 							if (outputFileDirectoryPath != null && outputFileDirectoryPath != outputPath && !Directory.Exists(outputFileDirectoryPath))
 								Directory.CreateDirectory(outputFileDirectoryPath);
 
-							if (ShouldWriteByteOrderMark(namedText.Name))
-								File.WriteAllText(outputFilePath, namedText.Text, s_utf8WithBom);
+							if (ShouldWriteByteOrderMark(fileToWrite.Name))
+								File.WriteAllText(outputFilePath, fileToWrite.Text, s_utf8WithBom);
 							else
-								File.WriteAllText(outputFilePath, namedText.Text);
+								File.WriteAllText(outputFilePath, fileToWrite.Text);
 						}
 
 						foreach (string nameToDelete in namesToDelete)

@@ -10,24 +10,24 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Creates a single-output instance.
 		/// </summary>
-		public CodeGenOutput(NamedText namedText)
-			: this(namedTexts: namedText == null ? null : new[] { namedText }, patternsToClean: null)
+		public CodeGenOutput(CodeGenFile file)
+			: this(files: file == null ? null : new[] { file }, patternsToClean: null)
 		{
 		}
 
 		/// <summary>
 		/// Creates a multi-output instance.
 		/// </summary>
-		public CodeGenOutput(IReadOnlyList<NamedText> namedTexts, IReadOnlyList<CodeGenPattern> patternsToClean)
+		public CodeGenOutput(IReadOnlyList<CodeGenFile> files, IReadOnlyList<CodeGenPattern> patternsToClean)
 		{
-			NamedTexts = namedTexts ?? new NamedText[0];
+			Files = files ?? new CodeGenFile[0];
 			PatternsToClean = patternsToClean ?? new CodeGenPattern[0];
 		}
 
 		/// <summary>
-		/// The named texts.
+		/// The files.
 		/// </summary>
-		public IReadOnlyList<NamedText> NamedTexts { get; }
+		public IReadOnlyList<CodeGenFile> Files { get; }
 
 		/// <summary>
 		/// The patterns to clean.

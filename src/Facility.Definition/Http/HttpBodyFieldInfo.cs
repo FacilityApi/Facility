@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Facility.Definition.Http
@@ -6,7 +7,7 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// Information about a DTO field used as a request or response body.
 	/// </summary>
-	public sealed class HttpBodyFieldInfo
+	public sealed class HttpBodyFieldInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The service field.
@@ -18,27 +19,22 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public HttpStatusCode? StatusCode { get; }
 
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
+
 		internal HttpBodyFieldInfo(ServiceFieldInfo fieldInfo)
 		{
 			ServiceField = fieldInfo;
 
-			foreach (var parameter in fieldInfo.GetHttpParameters())
+			foreach (var parameter in GetHttpParameters(fieldInfo))
 			{
 				if (parameter.Name == "code")
-				{
-					StatusCode = HttpAttributeUtility.TryParseStatusCodeInteger(parameter, out var error);
-					if (error != null)
-						m_errors.Add(error);
-				}
+					StatusCode = TryParseStatusCodeInteger(parameter);
 				else if (parameter.Name != "from")
-				{
-					m_errors.Add(parameter.CreateInvalidHttpParameterError());
-				}
+					AddInvalidHttpParameterError(parameter);
 			}
 		}
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors;
-
-		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

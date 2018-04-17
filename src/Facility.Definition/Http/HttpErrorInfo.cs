@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Facility.Definition.Http
@@ -6,7 +7,7 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// The HTTP mapping of an error.
 	/// </summary>
-	public sealed class HttpErrorInfo
+	public sealed class HttpErrorInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The error.
@@ -23,23 +24,18 @@ namespace Facility.Definition.Http
 			ServiceError = errorInfo;
 			StatusCode = HttpStatusCode.InternalServerError;
 
-			foreach (var parameter in errorInfo.GetHttpParameters())
+			foreach (var parameter in GetHttpParameters(errorInfo))
 			{
 				if (parameter.Name == "code")
-				{
-					StatusCode = HttpAttributeUtility.TryParseStatusCodeInteger(parameter, out var error) ?? HttpStatusCode.InternalServerError;
-					if (error != null)
-						m_errors.Add(error);
-				}
+					StatusCode = TryParseStatusCodeInteger(parameter) ?? HttpStatusCode.InternalServerError;
 				else if (parameter.Name != "from")
-				{
-					m_errors.Add(parameter.CreateInvalidHttpParameterError());
-				}
+					AddInvalidHttpParameterError(parameter);
 			}
 		}
 
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors;
-
-		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 	}
 }

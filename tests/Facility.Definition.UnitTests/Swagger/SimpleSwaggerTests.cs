@@ -25,13 +25,13 @@ namespace Facility.Definition.UnitTests.Swagger
 		{
 			var generator = new SwaggerGenerator { GeneratorName = "tests" };
 			var fsdService = TestUtility.ParseTestApi(s_fsdText);
-			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
-			namedText.Name.Should().Be("TestApi.json");
-			var jToken = JToken.Parse(namedText.Text);
+			var file = generator.GenerateOutput(fsdService).Files.Single();
+			file.Name.Should().Be("TestApi.json");
+			var jToken = JToken.Parse(file.Text);
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
 			JToken.DeepEquals(jToken, jTokenExpected).Should().BeTrue("{0} should be {1}", jToken, jTokenExpected);
 
-			var service = new SwaggerParser().ParseDefinition(namedText);
+			var service = new SwaggerParser().ParseDefinition(new ServiceDefinitionText(name: file.Name, text: file.Text));
 			service.Summary.Should().Be("TestApi");
 			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 
@@ -45,13 +45,13 @@ namespace Facility.Definition.UnitTests.Swagger
 		{
 			var generator = new SwaggerGenerator { Yaml = true, GeneratorName = "tests" };
 			var fsdService = TestUtility.ParseTestApi(s_fsdText);
-			var namedText = generator.GenerateOutput(fsdService).NamedTexts.Single();
-			namedText.Name.Should().Be("TestApi.yaml");
-			var jToken = JToken.FromObject(new YamlDotNet.Serialization.DeserializerBuilder().Build().Deserialize(new StringReader(namedText.Text)));
+			var file = generator.GenerateOutput(fsdService).Files.Single();
+			file.Name.Should().Be("TestApi.yaml");
+			var jToken = JToken.FromObject(new YamlDotNet.Serialization.DeserializerBuilder().Build().Deserialize(new StringReader(file.Text)));
 			var jTokenExpected = JToken.FromObject(s_swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings));
 			JToken.DeepEquals(jToken, jTokenExpected).Should().BeTrue("{0} should be {1}", jToken, jTokenExpected);
 
-			var service = new SwaggerParser().ParseDefinition(namedText);
+			var service = new SwaggerParser().ParseDefinition(new ServiceDefinitionText(name: file.Name, text: file.Text));
 			service.Summary.Should().Be("TestApi");
 			service.Methods.Count.Should().Be(fsdService.Methods.Count);
 		}

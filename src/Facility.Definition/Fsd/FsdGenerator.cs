@@ -15,7 +15,7 @@ namespace Facility.Definition.Fsd
 		/// </summary>
 		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
 		{
-			var output = CreateNamedText($"{service.Name}.fsd", code =>
+			var output = CreateFile($"{service.Name}.fsd", code =>
 			{
 				if (!string.IsNullOrWhiteSpace(GeneratorName))
 				{
@@ -91,7 +91,8 @@ namespace Facility.Definition.Fsd
 			return new CodeGenOutput(output);
 		}
 
-		private void WriteSummaryAndAttributes(CodeWriter code, IServiceElementInfo info)
+		private void WriteSummaryAndAttributes<T>(CodeWriter code, T info)
+			where T : ServiceElementWithAttributesInfo, IServiceHasSummary
 		{
 			WriteSummary(code, info.Summary);
 			WriteAttributes(code, info.Attributes);
@@ -184,7 +185,7 @@ namespace Facility.Definition.Fsd
 			}
 		}
 
-		static readonly Regex s_unquotedAttributeValueRegex = new Regex(@"^[0-9a-zA-Z.+_-]+$");
-		static readonly Regex s_escapeAttributeValueRegex = new Regex(@"[\\""\u0000-\u001F]");
+		private static readonly Regex s_unquotedAttributeValueRegex = new Regex(@"^[0-9a-zA-Z.+_-]+$");
+		private static readonly Regex s_escapeAttributeValueRegex = new Regex(@"[\\""\u0000-\u001F]");
 	}
 }

@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests.Swagger
 		{
 			try
 			{
-				new SwaggerParser().ParseDefinition(new NamedText("", text));
+				new SwaggerParser().ParseDefinition(new ServiceDefinitionText("", text));
 				Assert.Fail("Parse didn't fail.");
 			}
 			catch (ServiceDefinitionException exception)

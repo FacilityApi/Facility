@@ -8,13 +8,12 @@ namespace Facility.Definition
 	public sealed class ServiceDefinitionError
 	{
 		/// <summary>
-		/// Creates an error.
+		/// Creates a service definition error.
 		/// </summary>
-		public ServiceDefinitionError(string message, NamedTextPosition position = null, Exception exception = null)
+		public ServiceDefinitionError(string message, ServiceDefinitionPosition position = null)
 		{
 			Message = message ?? throw new ArgumentNullException(nameof(message));
 			Position = position;
-			Exception = exception;
 		}
 
 		/// <summary>
@@ -25,15 +24,10 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position where the error took place, if any.
 		/// </summary>
-		public NamedTextPosition Position { get; }
+		public ServiceDefinitionPosition Position { get; }
 
 		/// <summary>
-		/// The exception that caused the error, if any.
-		/// </summary>
-		public Exception Exception { get; }
-
-		/// <summary>
-		/// Returns a string that represents the current object.
+		/// Returns a string with the position and the error message.
 		/// </summary>
 		public override string ToString() => Position != null ? $"{Position}: {Message}" : Message;
 	}

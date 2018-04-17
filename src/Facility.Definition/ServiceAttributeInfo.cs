@@ -1,30 +1,25 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
-	/// An attribute.
+	/// A service attribute.
 	/// </summary>
-	public sealed class ServiceAttributeInfo : IServiceNamedInfo
+	public sealed class ServiceAttributeInfo : ServiceElementInfo, IServiceHasName
 	{
 		/// <summary>
-		/// Creates an attribute.
+		/// Creates a service attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, NamedTextPosition position = null)
-			: this(ValidationMode.Throw, name, parameters, position)
-		{
-		}
-
-		internal ServiceAttributeInfo(ValidationMode validationMode, string name, IEnumerable<ServiceAttributeParameterInfo> parameters, NamedTextPosition position)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, params ServicePart[] parts)
+			: base(parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Parameters = parameters.ToReadOnlyList();
-			Position = position;
 
-			if (validationMode == ValidationMode.Throw)
-				GetValidationErrors().ThrowIfAny();
+			ValidateName();
+			ValidateNoDuplicateNames(Parameters, "attribute parameter");
 		}
 
 		/// <summary>
@@ -38,14 +33,18 @@ namespace Facility.Definition
 		public IReadOnlyList<ServiceAttributeParameterInfo> Parameters { get; }
 
 		/// <summary>
-		/// The position of the attribute.
+		/// Returns the attribute parameter with the specified name.
 		/// </summary>
-		public NamedTextPosition Position { get; }
+		public ServiceAttributeParameterInfo TryGetParameter(string name) => Parameters.FirstOrDefault(x => x.Name == name);
 
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Parameters, "attribute parameter"));
-		}
+		/// <summary>
+		/// Returns the value of the attribute parameter with the specified name.
+		/// </summary>
+		public string TryGetParameterValue(string name) => TryGetParameter(name)?.Value;
+
+		/// <summary>
+		/// The children of the service element, if any.
+		/// </summary>
+		public override IEnumerable<ServiceElementInfo> GetChildren() => Parameters;
 	}
 }

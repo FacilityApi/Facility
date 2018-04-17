@@ -150,8 +150,8 @@ namespace Facility.Definition.CodeGen
 			Action m_action;
 		}
 
-		int m_indentDepth;
-		bool m_isNewLine;
-		bool m_wasWriteLineSkipped;
+		private int m_indentDepth;
+		private bool m_isNewLine;
+		private bool m_wasWriteLineSkipped;
 	}
 }

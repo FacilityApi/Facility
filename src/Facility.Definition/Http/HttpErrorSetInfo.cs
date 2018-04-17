@@ -6,7 +6,7 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// The HTTP mapping of an error set.
 	/// </summary>
-	public sealed class HttpErrorSetInfo
+	public sealed class HttpErrorSetInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The error set.
@@ -18,19 +18,20 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public IReadOnlyList<HttpErrorInfo> Errors { get; }
 
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => Errors;
+
 		internal HttpErrorSetInfo(ServiceErrorSetInfo errorSetInfo)
 		{
 			ServiceErrorSet = errorSetInfo;
 
-			var parameter = errorSetInfo.GetHttpParameters().FirstOrDefault();
+			var parameter = GetHttpParameters(errorSetInfo).FirstOrDefault();
 			if (parameter != null)
-				m_errors.Add(parameter.CreateInvalidHttpParameterError());
+				AddInvalidHttpParameterError(parameter);
 
 			Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
 		}
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors.Concat(Errors.SelectMany(x => x.GetValidationErrors()));
-
-		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

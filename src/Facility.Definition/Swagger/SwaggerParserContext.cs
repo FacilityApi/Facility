@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,33 +7,35 @@ namespace Facility.Definition.Swagger
 {
 	internal sealed class SwaggerParserContext
 	{
-		public static SwaggerParserContext None => new SwaggerParserContext(namedText: null, isYaml: false);
+		public static SwaggerParserContext None => new SwaggerParserContext(serviceDefinitionText: null, isYaml: false);
 
-		public static SwaggerParserContext FromYaml(NamedText namedText) => new SwaggerParserContext(namedText, isYaml: true);
+		public static SwaggerParserContext FromYaml(ServiceDefinitionText serviceDefinitionText) => new SwaggerParserContext(serviceDefinitionText, isYaml: true);
 
-		public static SwaggerParserContext FromJson(NamedText namedText) => new SwaggerParserContext(namedText, isYaml: false);
+		public static SwaggerParserContext FromJson(ServiceDefinitionText serviceDefinitionText) => new SwaggerParserContext(serviceDefinitionText, isYaml: false);
 
-		public SwaggerParserContext Root => new SwaggerParserContext(m_namedText, m_isYaml);
+		public SwaggerParserContext Root => new SwaggerParserContext(m_serviceDefinitionText, m_isYaml);
 
-		public NamedTextPosition CreatePosition(string path = null) => m_namedText == null ? null : new NamedTextPosition(m_namedText.Name, () => FindLineColumn(path));
+		public ServiceDefinitionPosition CreatePosition(string path = null) => m_serviceDefinitionText == null ? null : new ServiceDefinitionPosition(m_serviceDefinitionText.Name, () => FindLineColumn(path));
 
-		public ServiceDefinitionException CreateException(string error, string path = null) => new ServiceDefinitionException(error, CreatePosition(path));
+		public ServicePart CreatePart(string path = null) => m_serviceDefinitionText == null ? null : new ServicePart(ServicePartKind.Swagger, CreatePosition(path));
 
-		public SwaggerParserContext CreateContext(string path) => new SwaggerParserContext(m_namedText, m_isYaml, ResolvePath(path));
+		public ServiceDefinitionError CreateError(string error, string path = null) => new ServiceDefinitionError(error, CreatePosition(path));
 
-		private SwaggerParserContext(NamedText namedText, bool isYaml, string path = null)
+		public SwaggerParserContext CreateContext(string path) => new SwaggerParserContext(m_serviceDefinitionText, m_isYaml, ResolvePath(path));
+
+		private SwaggerParserContext(ServiceDefinitionText serviceDefinitionText, bool isYaml, string path = null)
 		{
-			m_namedText = namedText;
+			m_serviceDefinitionText = serviceDefinitionText;
 			m_isYaml = isYaml;
 			m_path = path;
 		}
 
-		private Tuple<int, int> FindLineColumn(string path)
+		private (int, int) FindLineColumn(string path)
 		{
 			if (m_isYaml)
 			{
 				var yamlStream = new YamlStream();
-				using (var stringReader = new StringReader(m_namedText.Text))
+				using (var stringReader = new StringReader(m_serviceDefinitionText.Text))
 					yamlStream.Load(stringReader);
 
 				var node = yamlStream.Documents[0].RootNode;
@@ -53,11 +54,11 @@ namespace Facility.Definition.Swagger
 					}
 				}
 
-				return Tuple.Create(node.End.Line, node.End.Column);
+				return (node.End.Line, node.End.Column);
 			}
 			else
 			{
-				JToken token = JToken.Parse(m_namedText.Text);
+				JToken token = JToken.Parse(m_serviceDefinitionText.Text);
 
 				if (!string.IsNullOrEmpty(path))
 				{
@@ -76,13 +77,13 @@ namespace Facility.Definition.Swagger
 				JToken pathToken = string.IsNullOrEmpty(path) ? token : token.SelectToken(ResolvePath(path));
 
 				var lineInfo = (IJsonLineInfo) (pathToken ?? token);
-				return Tuple.Create(lineInfo.LineNumber, lineInfo.LinePosition);
+				return (lineInfo.LineNumber, lineInfo.LinePosition);
 			}
 		}
 
 		private string ResolvePath(string path) => string.IsNullOrEmpty(path) ? m_path : string.IsNullOrEmpty(m_path) ? path : m_path + "." + path;
 
-		readonly NamedText m_namedText;
+		readonly ServiceDefinitionText m_serviceDefinitionText;
 		readonly bool m_isYaml;
 		readonly string m_path;
 	}

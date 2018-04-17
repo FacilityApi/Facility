@@ -81,54 +81,43 @@ namespace Facility.Definition
 			case ServiceTypeKind.Map:
 				return $"map<{ValueType}>";
 			default:
-				return s_primitiveTuples.Where(x => x.Item1 == Kind).Select(x => x.Item2).Single();
+				return s_primitives.Where(x => x.Kind == Kind).Select(x => x.Name).Single();
 			}
 		}
 
-		internal static ServiceTypeInfo Parse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position = null)
-		{
-			var typeInfo = TryParse(text, findMember, position, out var error);
-			if (error != null)
-				throw new ServiceDefinitionException(error);
-			return typeInfo;
-		}
-
-		internal static ServiceTypeInfo TryParse(string text, Func<string, IServiceMemberInfo> findMember, NamedTextPosition position, out ServiceDefinitionError error)
+		internal static ServiceTypeInfo TryParse(string text, Func<string, ServiceMemberInfo> findMember)
 		{
 			if (text == null)
 				throw new ArgumentNullException(nameof(text));
 
-			error = null;
-
-			var primitiveTuple = s_primitiveTuples.FirstOrDefault(x => text == x.Item2);
-			if (primitiveTuple != null)
-				return CreatePrimitive(primitiveTuple.Item1);
+			var primitive = s_primitives.FirstOrDefault(x => text == x.Name);
+			if (primitive.Name != null)
+				return CreatePrimitive(primitive.Kind);
 
 			string resultValueType = TryPrefixSuffix(text, "result<", ">");
 			if (resultValueType != null)
 			{
-				var valueType = TryParse(resultValueType, findMember, position, out error);
+				var valueType = TryParse(resultValueType, findMember);
 				return valueType == null ? null : CreateResult(valueType);
 			}
 
 			string arrayValueType = TryPrefixSuffix(text, "", "[]");
 			if (arrayValueType != null)
 			{
-				var valueType = TryParse(arrayValueType, findMember, position, out error);
+				var valueType = TryParse(arrayValueType, findMember);
 				return valueType == null ? null : CreateArray(valueType);
 			}
 
 			string mapValueType = TryPrefixSuffix(text, "map<", ">");
 			if (mapValueType != null)
 			{
-				var valueType = TryParse(mapValueType, findMember, position, out error);
+				var valueType = TryParse(mapValueType, findMember);
 				return valueType == null ? null : CreateMap(valueType);
 			}
 
-			if (findMember != null)
+			var member = findMember(text);
+			if (member != null)
 			{
-				var member = findMember(text);
-
 				if (member is ServiceDtoInfo dto)
 					return CreateDto(dto);
 
@@ -136,7 +125,6 @@ namespace Facility.Definition
 					return CreateEnum(@enum);
 			}
 
-			error = new ServiceDefinitionError($"Unknown field type '{text}'.", position);
 			return null;
 		}
 
@@ -154,17 +142,17 @@ namespace Facility.Definition
 				text.Substring(prefix.Length, text.Length - prefix.Length - suffix.Length) : null;
 		}
 
-		static readonly Tuple<ServiceTypeKind, string>[] s_primitiveTuples =
+		static readonly (ServiceTypeKind Kind, string Name)[] s_primitives =
 		{
-			Tuple.Create(ServiceTypeKind.String, "string"),
-			Tuple.Create(ServiceTypeKind.Boolean, "boolean"),
-			Tuple.Create(ServiceTypeKind.Double, "double"),
-			Tuple.Create(ServiceTypeKind.Int32, "int32"),
-			Tuple.Create(ServiceTypeKind.Int64, "int64"),
-			Tuple.Create(ServiceTypeKind.Decimal, "decimal"),
-			Tuple.Create(ServiceTypeKind.Bytes, "bytes"),
-			Tuple.Create(ServiceTypeKind.Object, "object"),
-			Tuple.Create(ServiceTypeKind.Error, "error"),
+			(ServiceTypeKind.String, "string"),
+			(ServiceTypeKind.Boolean, "boolean"),
+			(ServiceTypeKind.Double, "double"),
+			(ServiceTypeKind.Int32, "int32"),
+			(ServiceTypeKind.Int64, "int64"),
+			(ServiceTypeKind.Decimal, "decimal"),
+			(ServiceTypeKind.Bytes, "bytes"),
+			(ServiceTypeKind.Object, "object"),
+			(ServiceTypeKind.Error, "error"),
 		};
 	}
 }

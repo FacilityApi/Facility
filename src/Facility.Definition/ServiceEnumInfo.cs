@@ -1,69 +1,28 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Facility.Definition
 {
 	/// <summary>
 	/// A service enumerated type.
 	/// </summary>
-	public sealed class ServiceEnumInfo : IServiceMemberInfo
+	public sealed class ServiceEnumInfo : ServiceMemberInfo
 	{
 		/// <summary>
-		/// Creates an enum.
+		/// Creates an enumerated type.
 		/// </summary>
-		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, NamedTextPosition position = null)
-			: this(ValidationMode.Throw, name, values, attributes, summary, remarks, position)
+		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, params ServicePart[] parts)
+			: base(name, attributes, summary, remarks, parts)
 		{
-		}
-
-		internal ServiceEnumInfo(ValidationMode validationMode, string name, IEnumerable<ServiceEnumValueInfo> values, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, NamedTextPosition position)
-		{
-			Name = name ?? throw new ArgumentNullException(nameof(name));
 			Values = values.ToReadOnlyList();
-			Attributes = attributes.ToReadOnlyList();
-			Summary = summary ?? "";
-			Remarks = remarks.ToReadOnlyList();
-			Position = position;
 
-			if (validationMode == ValidationMode.Throw)
-				GetValidationErrors().ThrowIfAny();
+			ValidateNoDuplicateNames(Values, "enumerated value");
 		}
-
-		/// <summary>
-		/// The name of the enumerated type.
-		/// </summary>
-		public string Name { get; }
 
 		/// <summary>
 		/// The values of the enumerated type.
 		/// </summary>
 		public IReadOnlyList<ServiceEnumValueInfo> Values { get; }
 
-		/// <summary>
-		/// The attributes of the enumerated type.
-		/// </summary>
-		public IReadOnlyList<ServiceAttributeInfo> Attributes { get; }
-
-		/// <summary>
-		/// The summary of the enumerated type.
-		/// </summary>
-		public string Summary { get; }
-
-		/// <summary>
-		/// The remarks of the enumerated type.
-		/// </summary>
-		public IReadOnlyList<string> Remarks { get; }
-
-		/// <summary>
-		/// The position of the enumerated type in the definition.
-		/// </summary>
-		public NamedTextPosition Position { get; }
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return ServiceDefinitionUtility.ValidateName(Name, Position)
-				.Concat(ServiceDefinitionUtility.ValidateNoDuplicateNames(Values, "enumerated value"));
-		}
+		private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Values;
 	}
 }

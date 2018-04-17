@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A219E328-B15A-41FF-BAA5-5F46679EF9C8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
@@ -13,21 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{A219E328-B
 		build.ps1 = build.ps1
 		build.sh = build.sh
 		CONTRIBUTING.md = CONTRIBUTING.md
+		src\Directory.Build.props = src\Directory.Build.props
+		example\ExampleApi.fsd = example\ExampleApi.fsd
+		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 		LICENSE = LICENSE
 		README.md = README.md
-		SolutionInfo.cs = SolutionInfo.cs
-		SolutionInfo.props = SolutionInfo.props
 		VersionHistory.md = VersionHistory.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{F7A3DE98-4FD5-46BE-9606-4121422F686B}"
-	ProjectSection(SolutionItems) = preProject
-		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{569B4B9E-C089-496A-9503-8D502A74B9BF}"
-	ProjectSection(SolutionItems) = preProject
-		example\ExampleApi.fsd = example\ExampleApi.fsd
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Definition", "src\Facility.Definition\Facility.Definition.csproj", "{803FAFD4-5B25-4486-9BB4-6151D250944C}"

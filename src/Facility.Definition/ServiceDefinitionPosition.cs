@@ -1,26 +1,25 @@
-﻿using System;
+using System;
 
 namespace Facility.Definition
 {
 	/// <summary>
-	/// A position in a named text.
+	/// A position in a service definition text.
 	/// </summary>
-	public sealed class NamedTextPosition
+	public sealed class ServiceDefinitionPosition
 	{
 		/// <summary>
 		/// Creates a position.
 		/// </summary>
-		public NamedTextPosition(string name, int lineNumber = 0, int columnNumber = 0)
+		public ServiceDefinitionPosition(string name, int lineNumber = 0, int columnNumber = 0)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
-			m_lineNumber = lineNumber;
-			m_columnNumber = columnNumber;
+			m_lineColumn = (lineNumber, columnNumber);
 		}
 
 		/// <summary>
 		/// Creates a position.
 		/// </summary>
-		public NamedTextPosition(string name, Func<Tuple<int, int>> getLineColumn)
+		public ServiceDefinitionPosition(string name, Func<(int LineNumber, int ColumnNumber)> getLineColumn)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
 			m_getLineColumn = getLineColumn;
@@ -34,26 +33,12 @@ namespace Facility.Definition
 		/// <summary>
 		/// The line number.
 		/// </summary>
-		public int LineNumber
-		{
-			get
-			{
-				EnsureLineColumn();
-				return m_lineNumber;
-			}
-		}
+		public int LineNumber => GetLineColumn().LineNumber;
 
 		/// <summary>
 		/// The column number.
 		/// </summary>
-		public int ColumnNumber
-		{
-			get
-			{
-				EnsureLineColumn();
-				return m_columnNumber;
-			}
-		}
+		public int ColumnNumber => GetLineColumn().ColumnNumber;
 
 		/// <summary>
 		/// The position as a source name, line number, and column number.
@@ -68,19 +53,18 @@ namespace Facility.Definition
 				return Name;
 		}
 
-		private void EnsureLineColumn()
+		private (int LineNumber, int ColumnNumber) GetLineColumn()
 		{
 			if (m_getLineColumn != null)
 			{
-				var tuple = m_getLineColumn();
-				m_lineNumber = tuple.Item1;
-				m_columnNumber = tuple.Item2;
+				m_lineColumn = m_getLineColumn();
 				m_getLineColumn = null;
 			}
+
+			return m_lineColumn;
 		}
 
-		int m_lineNumber;
-		int m_columnNumber;
-		Func<Tuple<int, int>> m_getLineColumn;
+		private (int LineNumber, int ColumnNumber) m_lineColumn;
+		private Func<(int LineNumber, int ColumnNumber)> m_getLineColumn;
 	}
 }

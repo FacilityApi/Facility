@@ -28,7 +28,7 @@ namespace Facility.Definition.Swagger
 		/// </summary>
 		public SwaggerService GenerateSwaggerService(ServiceInfo service)
 		{
-			var httpServiceInfo = new HttpServiceInfo(service);
+			var httpServiceInfo = HttpServiceInfo.Create(service);
 
 			var swaggerService = new SwaggerService
 			{
@@ -103,7 +103,7 @@ namespace Facility.Definition.Swagger
 
 			if (Yaml)
 			{
-				return new CodeGenOutput(CreateNamedText($"{service.Name}.yaml", code =>
+				return new CodeGenOutput(CreateFile($"{service.Name}.yaml", code =>
 				{
 					var yamlObject = ConvertJTokenToObject(JToken.FromObject(swaggerService, JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings)));
 					new SerializerBuilder().DisableAliases().EmitDefaults().WithEventEmitter(x => new OurEventEmitter(x)).Build().Serialize(code.TextWriter, yamlObject);
@@ -111,7 +111,7 @@ namespace Facility.Definition.Swagger
 			}
 			else
 			{
-				return new CodeGenOutput(CreateNamedText($"{service.Name}.json", code =>
+				return new CodeGenOutput(CreateFile($"{service.Name}.json", code =>
 				{
 					using (var jsonTextWriter = new JsonTextWriter(code.TextWriter) { Formatting = Formatting.Indented, CloseOutput = false })
 						JsonSerializer.Create(SwaggerUtility.JsonSerializerSettings).Serialize(jsonTextWriter, swaggerService);
@@ -173,20 +173,11 @@ namespace Facility.Definition.Swagger
 			}
 		}
 
-		private static string GetSummaryOrNull(IServiceElementInfo info)
-		{
-			return info.Summary.Length == 0 ? null : info.Summary;
-		}
+		private static string GetSummaryOrNull(IServiceHasSummary info) => info.Summary.Length == 0 ? null : info.Summary;
 
-		private static string GetRemarksOrNull(IServiceMemberInfo info)
-		{
-			return info.Remarks.Count == 0 ? null : string.Join("\n", info.Remarks);
-		}
+		private static string GetRemarksOrNull(ServiceMemberInfo info) => info.Remarks.Count == 0 ? null : string.Join("\n", info.Remarks);
 
-		private static bool? GetObsoleteOrNull(IServiceElementInfo info)
-		{
-			return info.IsObsolete() ? true : default(bool?);
-		}
+		private static bool? GetObsoleteOrNull(ServiceElementWithAttributesInfo info) => info.IsObsolete ? true : default(bool?);
 
 		private static ServiceDtoInfo GetErrorDto()
 		{
@@ -237,15 +228,13 @@ namespace Facility.Definition.Swagger
 			if (!paths.TryGetValue(httpMethodInfo.Path, out var operations))
 				paths[httpMethodInfo.Path] = operations = new SwaggerOperations();
 
-			var tagNames = methodInfo.GetTagNames();
-
 			var operation = new SwaggerOperation
 			{
 				Summary = GetSummaryOrNull(methodInfo),
 				Description = GetRemarksOrNull(methodInfo),
 				OperationId = methodInfo.Name,
 				Deprecated = GetObsoleteOrNull(methodInfo),
-				Tags = tagNames.Count == 0 ? null : tagNames.ToList(),
+				Tags = methodInfo.TagNames.Count == 0 ? null : methodInfo.TagNames.ToList(),
 			};
 
 			if (httpMethodInfo.RequestNormalFields.Count != 0 || httpMethodInfo.RequestBodyField != null)

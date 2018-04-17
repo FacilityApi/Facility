@@ -9,7 +9,7 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// The HTTP mapping for a service method.
 	/// </summary>
-	public sealed class HttpMethodInfo
+	public sealed class HttpMethodInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The service method.
@@ -76,7 +76,7 @@ namespace Facility.Definition.Http
 			Path = $"/{methodInfo.Name}";
 			HttpStatusCode? statusCode = null;
 
-			foreach (var methodParameter in methodInfo.GetHttpParameters())
+			foreach (var methodParameter in GetHttpParameters(methodInfo))
 			{
 				if (methodParameter.Name == "method")
 				{
@@ -85,18 +85,16 @@ namespace Facility.Definition.Http
 				else if (methodParameter.Name == "path")
 				{
 					if (methodParameter.Value.Length == 0 || methodParameter.Value[0] != '/')
-						m_errors.Add(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.ValuePosition));
+						AddValidationError(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.GetPart(ServicePartKind.Value)?.Position));
 					Path = methodParameter.Value;
 				}
 				else if (methodParameter.Name == "code")
 				{
-					statusCode = HttpAttributeUtility.TryParseStatusCodeInteger(methodParameter, out var error);
-					if (error != null)
-						m_errors.Add(error);
+					statusCode = TryParseStatusCodeInteger(methodParameter);
 				}
 				else
 				{
-					m_errors.Add(methodParameter.CreateInvalidHttpParameterError());
+					AddInvalidHttpParameterError(methodParameter);
 				}
 			}
 
@@ -111,59 +109,58 @@ namespace Facility.Definition.Http
 			foreach (var requestField in methodInfo.RequestFields)
 			{
 				string from = requestField.TryGetHttpAttribute()?.TryGetParameterValue("from");
-
 				if (from == "path")
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
 					var pathInfo = new HttpPathFieldInfo(requestField);
 					if (!pathParameterNames.Remove(pathInfo.Name))
-						m_errors.Add(new ServiceDefinitionError("Request field with [http(from: path)] has no placeholder in the method path.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request field with [http(from: path)] has no placeholder in the method path.", requestField.Position));
 					requestPathFields.Add(pathInfo);
 				}
 				else if (from == "query")
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
 					requestQueryFields.Add(new HttpQueryFieldInfo(requestField));
 				}
 				else if (from == "normal")
 				{
 					if (Method == "GET" || Method == "DELETE")
-						m_errors.Add(new ServiceDefinitionError($"HTTP {Method} does not support normal fields.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError($"HTTP {Method} does not support normal fields.", requestField.Position));
 					requestNormalFields.Add(new HttpNormalFieldInfo(requestField));
 				}
 				else if (from == "body")
 				{
 					if (!IsValidRequestBodyField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request fields with [http(from: body)] must not use a primitive type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request fields with [http(from: body)] must not use a primitive type.", requestField.Position));
 					if (requestBodyField != null)
-						m_errors.Add(new ServiceDefinitionError("Requests do not support multiple [http(from: body)] fields.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Requests do not support multiple [http(from: body)] fields.", requestField.Position));
 					var bodyInfo = new HttpBodyFieldInfo(requestField);
 					if (bodyInfo.StatusCode != null)
-						m_errors.Add(new ServiceDefinitionError("Request fields do not support status codes.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request fields do not support status codes.", requestField.Position));
 					requestBodyField = bodyInfo;
 				}
 				else if (from == "header")
 				{
 					if (!IsValidHeaderField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request fields with [http(from: header)] must use the string type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request fields with [http(from: header)] must use the string type.", requestField.Position));
 					requestHeaderFields.Add(new HttpHeaderFieldInfo(requestField));
 				}
 				else if (from != null)
 				{
-					m_errors.Add(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", requestField.Position));
+					AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", requestField.Position));
 				}
 				else if (pathParameterNames.Remove(requestField.Name))
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
 					requestPathFields.Add(new HttpPathFieldInfo(requestField));
 				}
 				else if (Method == "GET" || Method == "DELETE")
 				{
 					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
 					requestQueryFields.Add(new HttpQueryFieldInfo(requestField));
 				}
 				else
@@ -173,9 +170,9 @@ namespace Facility.Definition.Http
 			}
 
 			if (pathParameterNames.Count != 0)
-				m_errors.Add(new ServiceDefinitionError($"Unused path parameter '{pathParameterNames.First()}'.", methodInfo.Position));
+				AddValidationError(new ServiceDefinitionError($"Unused path parameter '{pathParameterNames.First()}'.", methodInfo.Position));
 			if (requestBodyField != null && requestNormalFields.Count != 0)
-				m_errors.Add(new ServiceDefinitionError("A request cannot have a normal field and a body field.", requestBodyField.ServiceField.Position));
+				AddValidationError(new ServiceDefinitionError("A request cannot have a normal field and a body field.", requestBodyField.ServiceField.Position));
 
 			PathFields = requestPathFields;
 			QueryFields = requestQueryFields;
@@ -190,21 +187,20 @@ namespace Facility.Definition.Http
 			foreach (var responseField in methodInfo.ResponseFields)
 			{
 				string from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
-
 				if (from == "path" || from == "query")
 				{
-					m_errors.Add(new ServiceDefinitionError($"Response fields do not support '[http(from: {from})]'.", responseField.Position));
+					AddValidationError(new ServiceDefinitionError($"Response fields do not support '[http(from: {from})]'.", responseField.Position));
 				}
 				else if (from == "body")
 				{
 					if (!IsValidResponseBodyField(responseField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Response fields with [http(from: body)] must be a non-primitive type or a Boolean.", responseField.Position));
+						AddValidationError(new ServiceDefinitionError("Response fields with [http(from: body)] must be a non-primitive type or a Boolean.", responseField.Position));
 					responseBodyFields.Add(new HttpBodyFieldInfo(responseField));
 				}
 				else if (from == "header")
 				{
 					if (!IsValidHeaderField(responseField, serviceInfo))
-						m_errors.Add(new ServiceDefinitionError("Response fields with [http(from: header)] must use the string type.", responseField.Position));
+						AddValidationError(new ServiceDefinitionError("Response fields with [http(from: header)] must use the string type.", responseField.Position));
 					responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
 				}
 				else if (from == "normal" || from == null)
@@ -213,7 +209,7 @@ namespace Facility.Definition.Http
 				}
 				else
 				{
-					m_errors.Add(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position));
+					AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position));
 				}
 			}
 
@@ -222,27 +218,22 @@ namespace Facility.Definition.Http
 
 			var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
 			if (duplicateStatusCode != null)
-				m_errors.Add(new ServiceDefinitionError($"Multiple handlers for status code {(int) duplicateStatusCode.Key}.", methodInfo.Position));
+				AddValidationError(new ServiceDefinitionError($"Multiple handlers for status code {(int) duplicateStatusCode.Key}.", methodInfo.Position));
 		}
 
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors()
-		{
-			return m_errors
-				.Concat(PathFields.SelectMany(x => x.GetValidationErrors()))
-				.Concat(QueryFields.SelectMany(x => x.GetValidationErrors()))
-				.Concat(RequestNormalFields.SelectMany(x => x.GetValidationErrors()))
-				.Concat(RequestBodyField?.GetValidationErrors() ?? Enumerable.Empty<ServiceDefinitionError>())
-				.Concat(RequestHeaderFields.SelectMany(x => x.GetValidationErrors()))
-				.Concat(ResponseHeaderFields.SelectMany(x => x.GetValidationErrors()))
-				.Concat(ValidResponses.SelectMany(x => x.GetValidationErrors()));
-		}
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => PathFields.AsEnumerable<HttpElementInfo>()
+			.Concat(QueryFields).Concat(RequestNormalFields).Concat(new[] { RequestBodyField }.Where(x => x != null))
+			.Concat(RequestHeaderFields).Concat(ResponseHeaderFields).Concat(ValidResponses);
 
 		private string GetHttpMethodFromParameter(ServiceAttributeParameterInfo parameter)
 		{
 			var httpMethod = parameter.Value.ToUpperInvariant();
 			if (!s_httpMethods.Contains(httpMethod))
 			{
-				m_errors.Add(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.ValuePosition));
+				AddValidationError(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.GetPart(ServicePartKind.Value)?.Position));
 				return null;
 			}
 
@@ -251,7 +242,7 @@ namespace Facility.Definition.Http
 
 		private static bool IsValidPathOrQueryField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind;
+			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
 			return fieldTypeKind != null && (
 				fieldTypeKind == ServiceTypeKind.String ||
 				fieldTypeKind == ServiceTypeKind.Boolean ||
@@ -262,11 +253,11 @@ namespace Facility.Definition.Http
 				fieldTypeKind == ServiceTypeKind.Enum);
 		}
 
-		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) => serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.String;
+		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) => serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.String;
 
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind;
+			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
 			return fieldInfo != null && (
 				fieldTypeKind == ServiceTypeKind.Object ||
 				fieldTypeKind == ServiceTypeKind.Error ||
@@ -279,7 +270,7 @@ namespace Facility.Definition.Http
 		private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
 			return IsValidRequestBodyField(fieldInfo, serviceInfo) ||
-				serviceInfo.TryGetFieldType(fieldInfo, out _)?.Kind == ServiceTypeKind.Boolean;
+				serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.Boolean;
 		}
 
 		private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
@@ -288,7 +279,7 @@ namespace Facility.Definition.Http
 			{
 				// use the status code on the field or the default: OK or NoContent
 				HttpStatusCode bodyStatusCode;
-				bool isBoolean = serviceInfo.TryGetFieldType(responseBodyField.ServiceField, out _)?.Kind == ServiceTypeKind.Boolean;
+				bool isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField)?.Kind == ServiceTypeKind.Boolean;
 				if (responseBodyField.StatusCode != null)
 					bodyStatusCode = responseBodyField.StatusCode.Value;
 				else
@@ -296,11 +287,9 @@ namespace Facility.Definition.Http
 
 				// 204 and 304 don't support content
 				if (IsNoContentStatusCode(bodyStatusCode) && !isBoolean)
-					m_errors.Add(new ServiceDefinitionError($"A body field with HTTP status code {(int) bodyStatusCode} must be Boolean.", responseBodyField.ServiceField.Position));
+					AddValidationError(new ServiceDefinitionError($"A body field with HTTP status code {(int) bodyStatusCode} must be Boolean.", responseBodyField.ServiceField.Position));
 
-				yield return new HttpResponseInfo(
-					statusCode: bodyStatusCode,
-					bodyField: responseBodyField);
+				yield return new HttpResponseInfo(bodyStatusCode, responseBodyField);
 			}
 
 			// if the DTO has a status code, or there are any normal fields, or there are no body fields, the DTO must represent a status code
@@ -313,18 +302,16 @@ namespace Facility.Definition.Http
 			{
 				// 204 and 304 don't support content
 				if (IsNoContentStatusCode(responseStatusCode) && responseNormalFields.Count != 0)
-					m_errors.Add(new ServiceDefinitionError($"HTTP status code {(int) responseStatusCode} does not support normal fields.", responseNormalFields[0].ServiceField.Position));
+					AddValidationError(new ServiceDefinitionError($"HTTP status code {(int) responseStatusCode} does not support normal fields.", responseNormalFields[0].ServiceField.Position));
 
-				yield return new HttpResponseInfo(
-					statusCode: responseStatusCode.Value,
-					normalFields: responseNormalFields);
+				yield return new HttpResponseInfo(responseStatusCode.Value, responseNormalFields);
 			}
 		}
 
 		private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
 
-		private static IReadOnlyList<string> GetPathParameterNames(string routePath)
-			=> s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
+		private static IReadOnlyList<string> GetPathParameterNames(string routePath) =>
+			s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 
 		private class NestedByRouteComparer : IComparer<HttpMethodInfo>
 		{
@@ -373,12 +360,12 @@ namespace Facility.Definition.Http
 				if (rightRank >= 0)
 					return 1;
 
-				return string.CompareOrdinal(left.Method?.ToString(), right.Method?.ToString());
+				return string.CompareOrdinal(left.Method, right.Method);
 			}
 		}
 
-		static readonly List<string> s_httpMethods = new List<string> { "GET", "POST", "PUT", "PATCH", "DELETE" };
-		static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
+		private static readonly List<string> s_httpMethods = new List<string> { "GET", "POST", "PUT", "PATCH", "DELETE" };
+		private static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
 
 		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}

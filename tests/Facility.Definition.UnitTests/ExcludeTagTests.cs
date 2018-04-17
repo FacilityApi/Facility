@@ -59,11 +59,8 @@ namespace Facility.Definition.UnitTests
 			var oldService = TestUtility.ParseTestApi("service TestApi { method do { it: It; }: { it: It; } [tag(name: hidden)] data It { value: string; } }");
 			oldService.TryExcludeTag("hidden", out var _, out var errors).Should().BeFalse();
 			errors.Select(x => x.ToString()).Should().Equal(
-				new[]
-				{
-					"TestApi.fsd(1,35): Unknown field type 'It'. ('hidden' tags are excluded.)",
-					"TestApi.fsd(1,48): Unknown field type 'It'. ('hidden' tags are excluded.)",
-				});
+				"TestApi.fsd(1,35): Unknown field type 'It'. ('hidden' tags are excluded.)",
+				"TestApi.fsd(1,48): Unknown field type 'It'. ('hidden' tags are excluded.)");
 		}
 
 		[Test]

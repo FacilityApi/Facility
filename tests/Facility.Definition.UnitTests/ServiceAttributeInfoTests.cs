@@ -1,3 +1,4 @@
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
@@ -5,10 +6,9 @@ namespace Facility.Definition.UnitTests
 	public class ServiceAttributeInfoTests
 	{
 		[Test]
-		public void InvalidNameThrows()
+		public void InvalidName()
 		{
-			var position = new NamedTextPosition("source");
-			TestUtility.ThrowsServiceDefinitionException(() => new ServiceAttributeInfo(name: "4u", position: position), position);
+			new ServiceAttributeInfo(name: "4u").IsValid.Should().BeFalse();
 		}
 	}
 }

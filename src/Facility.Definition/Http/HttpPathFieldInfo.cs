@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition.Http
 {
 	/// <summary>
 	/// Information about a field that corresponds to a request path parameter.
 	/// </summary>
-	public sealed class HttpPathFieldInfo
+	public sealed class HttpPathFieldInfo : HttpElementInfo
 	{
 		/// <summary>
 		/// The service field.
@@ -17,19 +18,20 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public string Name => ServiceField.Name;
 
+		/// <summary>
+		/// The children of the element, if any.
+		/// </summary>
+		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
+
 		internal HttpPathFieldInfo(ServiceFieldInfo fieldInfo)
 		{
 			ServiceField = fieldInfo;
 
-			foreach (var parameter in fieldInfo.GetHttpParameters())
+			foreach (var parameter in GetHttpParameters(fieldInfo))
 			{
 				if (parameter.Name != "from")
-					m_errors.Add(parameter.CreateInvalidHttpParameterError());
+					AddInvalidHttpParameterError(parameter);
 			}
 		}
-
-		internal IEnumerable<ServiceDefinitionError> GetValidationErrors() => m_errors;
-
-		private readonly List<ServiceDefinitionError> m_errors = new List<ServiceDefinitionError>();
 	}
 }

@@ -34,9 +34,9 @@ namespace Facility.Definition.CodeGen
 		protected abstract CodeGenOutput GenerateOutputCore(ServiceInfo service);
 
 		/// <summary>
-		/// Creates a text source from a name and code writer.
+		/// Creates a file from a name and code writer.
 		/// </summary>
-		protected NamedText CreateNamedText(string name, Action<CodeWriter> writeTo)
+		protected CodeGenFile CreateFile(string name, Action<CodeWriter> writeTo)
 		{
 			using (var stringWriter = new StringWriter())
 			{
@@ -50,7 +50,7 @@ namespace Facility.Definition.CodeGen
 
 				writeTo(code);
 
-				return new NamedText(name, stringWriter.ToString());
+				return new CodeGenFile(name, stringWriter.ToString());
 			}
 		}
 	}

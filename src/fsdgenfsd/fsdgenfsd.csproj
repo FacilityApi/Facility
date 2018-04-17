@@ -15,8 +15,6 @@
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <Import Project="..\..\SolutionInfo.props" />
-
   <ItemGroup>
     <None Include="bin\$(Configuration)\*.dll">
       <PackagePath>tools/</PackagePath>

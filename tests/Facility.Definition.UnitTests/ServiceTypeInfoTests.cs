@@ -29,7 +29,7 @@ namespace Facility.Definition.UnitTests
 		public void DtoType()
 		{
 			var service = new ServiceInfo(name: "MyApi",
-				members: new IServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyDto") }), new ServiceDtoInfo("MyDto") });
+				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyDto") }), new ServiceDtoInfo("MyDto") });
 			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
 			type.Kind.Should().Be(ServiceTypeKind.Dto);
 			type.Dto.Should().Be(service.Dtos[0]);
@@ -42,7 +42,7 @@ namespace Facility.Definition.UnitTests
 		public void EnumType()
 		{
 			var service = new ServiceInfo(name: "MyApi",
-				members: new IServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyEnum") }), new ServiceEnumInfo("MyEnum") });
+				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyEnum") }), new ServiceEnumInfo("MyEnum") });
 			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
 			type.Kind.Should().Be(ServiceTypeKind.Enum);
 			type.Dto.Should().BeNull();
@@ -57,7 +57,7 @@ namespace Facility.Definition.UnitTests
 		public void ContainerOfDtoType(string name, ServiceTypeKind kind)
 		{
 			var service = new ServiceInfo(name: "MyApi",
-				members: new IServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", name) }), new ServiceDtoInfo("MyDto") });
+				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", name) }), new ServiceDtoInfo("MyDto") });
 			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
 			type.Kind.Should().Be(kind);
 			type.Dto.Should().BeNull();

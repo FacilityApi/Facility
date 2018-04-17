@@ -25,14 +25,14 @@ namespace Facility.Definition.UnitTests.Http
 		public void ErrorStatusCodeOutOfRange()
 		{
 			ParseInvalidHttpApi("service TestApi { errors bad { [http(code: 999)] boom } }")
-				.Message.Should().Be("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
+				.ToString().Should().Be("TestApi.fsd(1,44): 'code' parameter must be an integer between 200 and 599.");
 		}
 
 		[Test]
 		public void ErrorInvalidParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { errors bad { [http(cod: 400)] boom } }")
-				.Message.Should().Be("TestApi.fsd(1,38): Unexpected 'http' parameter 'cod'.");
+				.ToString().Should().Be("TestApi.fsd(1,38): Unexpected 'http' parameter 'cod'.");
 		}
 
 		[Test]
@@ -46,7 +46,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void HttpAttributeParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(name: error)] errors bad { boom } }")
-				.Message.Should().Be("TestApi.fsd(1,25): Unexpected 'http' parameter 'name'.");
+				.ToString().Should().Be("TestApi.fsd(1,25): Unexpected 'http' parameter 'name'.");
 		}
 	}
 }

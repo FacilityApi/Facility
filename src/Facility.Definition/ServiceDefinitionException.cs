@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Facility.Definition
 {
@@ -10,22 +8,6 @@ namespace Facility.Definition
 	/// </summary>
 	public sealed class ServiceDefinitionException : Exception
 	{
-		/// <summary>
-		/// Creates an exception.
-		/// </summary>
-		public ServiceDefinitionException(string error, NamedTextPosition position = null, Exception innerException = null)
-			: this(new ServiceDefinitionError(error, position), innerException)
-		{
-		}
-
-		/// <summary>
-		/// Creates an exception.
-		/// </summary>
-		public ServiceDefinitionException(ServiceDefinitionError error, Exception innerException = null)
-			: this(new[] { error }, innerException)
-		{
-		}
-
 		/// <summary>
 		/// Creates an exception.
 		/// </summary>
