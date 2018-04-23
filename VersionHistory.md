@@ -11,7 +11,7 @@ Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in
 * [minor] Report multiple definition errors from command-line tools.
 * [minor] Improve http attribute errors.
 * [major] Drop support for arbitrary HTTP methods (to help detect typos).
-* [major] Upgrade to .NET Standard 2.0 and .NET 4.6.1. Upgrade NuGet dependencies.
+* [major] Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
 * [major] Stop using System.Net.Http.HttpMethod.
 
 ## Released
