@@ -70,14 +70,15 @@ Task("NuGetPackage")
 	});
 
 Task("UpdateDocs")
-	.WithCriteria(!string.IsNullOrEmpty(buildBotPassword))
 	.IsDependentOn("Build")
 	.Does(() =>
 	{
-		var docsDirectory = new DirectoryPath(docsRepoBranch);
-		GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
+		bool shouldCommit = !string.IsNullOrEmpty(buildBotPassword);
+		var docsDirectory = new DirectoryPath($"release{slash}{docsRepoBranch}");
+		if (shouldCommit)
+			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
-		var outputPath = $"{docsRepoBranch}{slash}reference";
+		var outputPath = $"release{slash}{docsRepoBranch}{slash}reference";
 		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
 		if (isPreview)
@@ -86,11 +87,15 @@ Task("UpdateDocs")
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"src/{docsAssembly}/bin/{configuration}/net47/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+			XmlDocMarkdownGenerate(File($"src/fsdgenfsd/bin/{configuration}/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
-		if (GitHasUncommitedChanges(docsDirectory))
+		if (!shouldCommit)
+		{
+			Information("Set BUILD_BOT_PASSWORD to publish documentation changes.");
+		}
+		else if (GitHasUncommitedChanges(docsDirectory))
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
