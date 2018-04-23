@@ -1,5 +1,5 @@
 #addin nuget:?package=Cake.Git&version=0.17.0
-#addin nuget:?package=Cake.XmlDocMarkdown&version=1.2.1
+#addin nuget:?package=Cake.XmlDocMarkdown&version=1.4.0
 
 using System.Text.RegularExpressions;
 
@@ -11,6 +11,7 @@ var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "Facility.sln";
 var docsAssemblies = new[] { "Facility.Definition", "Facility.CodeGen.Console" };
+var docsAssemblyDirectory = $"src/fsdgenfsd/bin/{configuration}";
 var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
 var docsRepoBranch = "master";
 var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src";
@@ -18,7 +19,6 @@ var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src";
 var nugetSource = "https://api.nuget.org/v3/index.json";
 var buildBotUserName = "ejball";
 var buildBotPassword = EnvironmentVariable("BUILD_BOT_PASSWORD");
-var slash = System.IO.Path.DirectorySeparatorChar;
 
 Task("Clean")
 	.Does(() =>
@@ -74,20 +74,20 @@ Task("UpdateDocs")
 	.Does(() =>
 	{
 		bool shouldCommit = !string.IsNullOrEmpty(buildBotPassword);
-		var docsDirectory = new DirectoryPath($"release{slash}{docsRepoBranch}");
+		var docsDirectory = Directory($"release/{docsRepoBranch}");
 		if (shouldCommit)
 			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
-		var outputPath = $"release{slash}{docsRepoBranch}{slash}reference";
+		var outputPath = $"release/{docsRepoBranch}/reference";
 		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
 		if (isPreview)
-			outputPath += $"{slash}preview{slash}{buildBranch}";
+			outputPath += $"/preview/{buildBranch}";
 
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"src/fsdgenfsd/bin/{configuration}/{docsAssembly}.dll").ToString(), $"{outputPath}{slash}",
+			XmlDocMarkdownGenerate(File($"{docsAssemblyDirectory}/{docsAssembly}.dll").ToString(), $"{outputPath}/",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
@@ -147,15 +147,15 @@ Task("Default")
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/fsd")}{slash}", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/nowidgets")}{slash} --excludeTag widgets", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}{slash} --swagger", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}{slash} --swagger --yaml", verify);
-	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.json")} {Directory("example/output/swagger/fsd")}{slash}", verify);
-	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.yaml")} {Directory("example/output/swagger/fsd")}{slash}", verify: true);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/fsd")}/", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/nowidgets")}/ --excludeTag widgets", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}/ --swagger", verify);
+	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}/ --swagger --yaml", verify);
+	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.json")} {Directory("example/output/swagger/fsd")}/", verify);
+	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.yaml")} {Directory("example/output/swagger/fsd")}/", verify: true);
 
 	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($@"{yamlPath} {Directory("example/output/fsd")}{slash}", verify);
+		ExecuteCodeGen($@"{yamlPath} {Directory("example/output/fsd")}/", verify);
 
 	CreateDirectory("example/output/fsd/swagger");
 	foreach (var fsdPath in GetFiles($"example/output/fsd/*.fsd"))
