@@ -79,7 +79,7 @@ namespace Facility.CodeGen.Console
 					input = new ServiceDefinitionText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
 				}
 
-				ServiceInfo service = new FsdParser().ParseDefinition(input);
+				var service = ParseDefinition(input);
 
 				foreach (string excludeTag in excludeTags)
 					service = service.ExcludeTag(excludeTag);
@@ -250,6 +250,11 @@ namespace Facility.CodeGen.Console
 		/// True if a BOM should be written for a file with the specified name.
 		/// </summary>
 		protected virtual bool ShouldWriteByteOrderMark(string name) => false;
+
+		/// <summary>
+		/// Parses the input into a service definition. (Uses an FSD parser by default.)
+		/// </summary>
+		protected virtual ServiceInfo ParseDefinition(ServiceDefinitionText text) => new FsdParser().ParseDefinition(text);
 
 		private IEnumerable<string> FindNamesMatchingPatterns(DirectoryInfo directoryInfo, IReadOnlyList<CodeGenPattern> patternsToClean)
 		{
