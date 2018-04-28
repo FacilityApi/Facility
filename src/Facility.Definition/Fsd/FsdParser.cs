@@ -10,26 +10,12 @@ namespace Facility.Definition.Fsd
 	/// <summary>
 	/// Parses FSD files.
 	/// </summary>
-	public sealed class FsdParser
+	public sealed class FsdParser : ServiceParser
 	{
 		/// <summary>
-		/// Parses an FSD file into a service definition.
+		/// Implements TryParseDefinition.
 		/// </summary>
-		/// <exception cref="ServiceDefinitionException">Thrown if parsing fails or the service would be invalid.</exception>
-		public ServiceInfo ParseDefinition(ServiceDefinitionText source)
-		{
-			if (TryParseDefinition(source, out var service, out var errors))
-				return service;
-			else
-				throw new ServiceDefinitionException(errors);
-		}
-
-		/// <summary>
-		/// Parses an FSD file into a service definition.
-		/// </summary>
-		/// <returns>True if parsing succeeds and the service is valid, i.e. there are no errors.</returns>
-		/// <remarks>Even if parsing fails, an invalid service may be returned.</remarks>
-		public bool TryParseDefinition(ServiceDefinitionText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
+		protected override bool TryParseDefinitionCore(ServiceDefinitionText source, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors)
 		{
 			var errorList = new List<ServiceDefinitionError>();
 			IReadOnlyList<string> definitionLines = null;
