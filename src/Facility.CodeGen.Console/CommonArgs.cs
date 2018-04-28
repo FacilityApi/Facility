@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using ArgsReading;
-using Facility.Definition;
 
 namespace Facility.CodeGen.Console
 {
