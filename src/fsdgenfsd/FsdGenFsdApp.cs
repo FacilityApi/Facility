@@ -12,7 +12,7 @@ namespace fsdgenfsd
 
 		protected override IReadOnlyList<string> Description => new[]
 		{
-			"Generates Facility Service Definitions.",
+			"Generates FSD for a Facility Service Definition",
 		};
 
 		protected override CodeGenerator CreateGenerator(ArgsReader args) => new FsdGenerator();
