@@ -2,10 +2,16 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Facility.Definition.UnitTests.Fsd
+namespace Facility.Definition.UnitTests
 {
 	public sealed class EnumTests
 	{
+		[Test]
+		public void InvalidName()
+		{
+			new ServiceEnumInfo(name: "4u").IsValid.Should().BeFalse();
+		}
+
 		[Test]
 		public void OneMinimalEnum()
 		{

@@ -2,7 +2,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Facility.Definition.UnitTests.Fsd
+namespace Facility.Definition.UnitTests
 {
 	public sealed class ServiceTests
 	{

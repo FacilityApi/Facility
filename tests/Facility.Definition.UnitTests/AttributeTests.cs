@@ -2,10 +2,22 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Facility.Definition.UnitTests.Fsd
+namespace Facility.Definition.UnitTests
 {
 	public sealed class AttributeTests
 	{
+		[Test]
+		public void InvalidAttributeName()
+		{
+			new ServiceAttributeInfo(name: "4u").IsValid.Should().BeFalse();
+		}
+
+		[Test]
+		public void InvalidParameterName()
+		{
+			new ServiceAttributeParameterInfo(name: "4u", value: "").IsValid.Should().BeFalse();
+		}
+
 		[Test]
 		public void NoParameters()
 		{

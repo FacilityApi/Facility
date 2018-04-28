@@ -2,10 +2,27 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Facility.Definition.UnitTests.Fsd
+namespace Facility.Definition.UnitTests
 {
 	public sealed class DtoTests
 	{
+		[Test]
+		public void InvalidName()
+		{
+			new ServiceDtoInfo(name: "4u").IsValid.Should().BeFalse();
+		}
+
+		[Test]
+		public void DuplicateField()
+		{
+			var fields = new[]
+			{
+				new ServiceFieldInfo("why", "int32"),
+				new ServiceFieldInfo("Why", "int32"),
+			};
+			new ServiceDtoInfo(name: "x", fields: fields).IsValid.Should().BeFalse();
+		}
+
 		[Test]
 		public void OneMinimalDto()
 		{
