@@ -99,7 +99,7 @@ Task("UpdateDocs")
 			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
 		var outputPath = $"release/{docsRepoBranch}/reference";
-		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
+		var isPreview = buildBranch != "master" || trigger == null || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
 		if (isPreview)
 			outputPath += $"/preview/{buildBranch}";
 
