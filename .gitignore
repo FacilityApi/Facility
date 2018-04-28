@@ -1,0 +1,13 @@
+.vs/
+bin/
+cake/
+obj/
+release/
+
+*.cache
+*.log
+*.ncrunchproject
+*.ncrunchsolution
+*.user
+launchSettings.json
+nCrunchTemp*
