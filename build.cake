@@ -5,20 +5,40 @@ using System.Text.RegularExpressions;
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var nugetApiKey = Argument("nugetApiKey", "");
-var trigger = Argument("trigger", "");
 var versionSuffix = Argument("versionSuffix", "");
 
 var solutionFileName = "Facility.sln";
 var docsAssemblies = new[] { "Facility.Definition", "Facility.CodeGen.Console" };
 var docsAssemblyDirectory = $"src/fsdgenfsd/bin/{configuration}";
-var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
-var docsRepoBranch = "master";
 var docsSourceUri = "https://github.com/FacilityApi/Facility/tree/master/src";
+var codeGenExe = $"src/fsdgenfsd/bin/{configuration}/fsdgenfsd.exe";
 
 var nugetSource = "https://api.nuget.org/v3/index.json";
-var buildBotUserName = "ejball";
+var nugetApiKey = EnvironmentVariable("NUGET_API_KEY");
+var docsRepoUri = "https://github.com/FacilityApi/FacilityApi.github.io.git";
+var docsRepoBranch = "master";
+var buildBotUserName = "FacilityApiBot";
+var buildBotEmail = "facilityapi@gmail.com";
 var buildBotPassword = EnvironmentVariable("BUILD_BOT_PASSWORD");
+var trigger = EnvironmentVariable("APPVEYOR_REPO_TAG_NAME");;
+var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
+
+void CodeGen(bool verify)
+{
+	ExecuteCodeGen("example/ExampleApi.fsd example/output/fsd", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd example/output/nowidgets --excludeTag widgets", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd example/output/swagger --swagger", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd example/output/swagger --swagger --yaml", verify);
+	ExecuteCodeGen("example/output/swagger/ExampleApi.json example/output/swagger/fsd", verify);
+	ExecuteCodeGen("example/output/swagger/ExampleApi.yaml example/output/swagger/fsd", verify: true);
+
+	foreach (var yamlPath in GetFiles($"example/*.yaml"))
+		ExecuteCodeGen($"{yamlPath} example/output/fsd", verify);
+
+	CreateDirectory("example/output/fsd/swagger");
+	foreach (var fsdPath in GetFiles("example/output/fsd/*.fsd"))
+		ExecuteCodeGen($"{fsdPath} example/output/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml", verify);
+}
 
 Task("Clean")
 	.Does(() =>
@@ -57,7 +77,7 @@ Task("Test")
 			DotNetCoreTest(projectPath, new DotNetCoreTestSettings { Configuration = configuration });
 	});
 
-Task("NuGetPackage")
+Task("Package")
 	.IsDependentOn("Rebuild")
 	.IsDependentOn("Test")
 	.Does(() =>
@@ -79,7 +99,6 @@ Task("UpdateDocs")
 			GitClone(docsRepoUri, docsDirectory, new GitCloneSettings { BranchName = docsRepoBranch });
 
 		var outputPath = $"release/{docsRepoBranch}/reference";
-		var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 		var isPreview = buildBranch != "master" || !Regex.IsMatch(trigger, @"^(v[0-9]+\.[0-9]+\.[0-9]+|update-docs)$");
 		if (isPreview)
 			outputPath += $"/preview/{buildBranch}";
@@ -87,7 +106,7 @@ Task("UpdateDocs")
 		Information($"Updating documentation at {outputPath}.");
 		foreach (var docsAssembly in docsAssemblies)
 		{
-			XmlDocMarkdownGenerate(File($"{docsAssemblyDirectory}/{docsAssembly}.dll").ToString(), $"{outputPath}/",
+			XmlDocMarkdownGenerate($"{docsAssemblyDirectory}/{docsAssembly}.dll", $"{outputPath}/",
 				new XmlDocMarkdownSettings { SourceCodePath = $"{docsSourceUri}/{docsAssembly}", NewLine = "\n", ShouldClean = true });
 		}
 
@@ -99,7 +118,7 @@ Task("UpdateDocs")
 		{
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
-			GitCommit(docsDirectory, "Ed Ball", "ejball@gmail.com",
+			GitCommit(docsDirectory, buildBotUserName, buildBotEmail,
 				"Automatic documentation update." + (isPreview ? $" (preview {buildBranch})" : ""));
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
@@ -110,8 +129,8 @@ Task("UpdateDocs")
 		}
 	});
 
-Task("NuGetPublish")
-	.IsDependentOn("NuGetPackage")
+Task("Publish")
+	.IsDependentOn("Package")
 	.IsDependentOn("UpdateDocs")
 	.Does(() =>
 	{
@@ -145,27 +164,10 @@ Task("NuGetPublish")
 Task("Default")
 	.IsDependentOn("Test");
 
-void CodeGen(bool verify)
-{
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/fsd")}/", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/nowidgets")}/ --excludeTag widgets", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}/ --swagger", verify);
-	ExecuteCodeGen($@"{File("example/ExampleApi.fsd")} {Directory("example/output/swagger")}/ --swagger --yaml", verify);
-	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.json")} {Directory("example/output/swagger/fsd")}/", verify);
-	ExecuteCodeGen($@"{File("example/output/swagger/ExampleApi.yaml")} {Directory("example/output/swagger/fsd")}/", verify: true);
-
-	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($@"{yamlPath} {Directory("example/output/fsd")}/", verify);
-
-	CreateDirectory("example/output/fsd/swagger");
-	foreach (var fsdPath in GetFiles($"example/output/fsd/*.fsd"))
-		ExecuteCodeGen($@"{fsdPath} {File($"example/output/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml")} --swagger --yaml", verify);
-}
-
 void ExecuteCodeGen(string args, bool verify)
 {
 	Information(args);
-	string exePath = File($"src/fsdgenfsd/bin/{configuration}/fsdgenfsd.exe");
+	string exePath = codeGenExe;
 	if (IsRunningOnUnix())
 	{
 		args = exePath + " " + args;
