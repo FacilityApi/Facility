@@ -6,11 +6,10 @@
     <FrameworkPathOverride Condition="'$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.7-api/</FrameworkPathOverride>
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);1591</NoWarn>
     <DebugType>portable</DebugType>
     <DebugSymbols>True</DebugSymbols>
-    <Description>A tool that generates FSD or Swagger (OpenAPI) 2.0 for a Facility Service Definition.</Description>
-    <PackageTags>Facility FSD Swagger OpenAPI CodeGen</PackageTags>
+    <Description>A tool that generates FSD for a Facility Service Definition.</Description>
+    <PackageTags>Facility FSD CodeGen</PackageTags>
     <IsTool>True</IsTool>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

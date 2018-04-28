@@ -24,10 +24,5 @@ namespace Facility.Definition
 		/// The type name of the element.
 		/// </summary>
 		TypeName,
-
-		/// <summary>
-		/// The Swagger element.
-		/// </summary>
-		Swagger,
 	}
 }

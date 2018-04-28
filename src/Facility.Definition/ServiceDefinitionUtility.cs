@@ -12,24 +12,6 @@ namespace Facility.Definition
 	public static class ServiceDefinitionUtility
 	{
 		/// <summary>
-		/// Attempts to determine the format of the service definition.
-		/// </summary>
-		public static ServiceDefinitionFormat? DetectFormat(ServiceDefinitionText definitionText)
-		{
-			if (definitionText.Name.EndsWith(".fsd", StringComparison.OrdinalIgnoreCase))
-				return ServiceDefinitionFormat.Fsd;
-
-			if (definitionText.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
-				definitionText.Name.EndsWith(".yml", StringComparison.OrdinalIgnoreCase) ||
-				definitionText.Name.EndsWith(".yaml", StringComparison.OrdinalIgnoreCase))
-			{
-				return ServiceDefinitionFormat.Swagger;
-			}
-
-			return null;
-		}
-
-		/// <summary>
 		/// Creates an error for a duplicate attribute.
 		/// </summary>
 		public static ServiceDefinitionError CreateDuplicateAttributeError(ServiceAttributeInfo attribute) =>

@@ -25,19 +25,8 @@ var buildBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH");
 
 void CodeGen(bool verify)
 {
-	ExecuteCodeGen("example/ExampleApi.fsd example/output/fsd", verify);
-	ExecuteCodeGen("example/ExampleApi.fsd example/output/nowidgets --excludeTag widgets", verify);
-	ExecuteCodeGen("example/ExampleApi.fsd example/output/swagger --swagger", verify);
-	ExecuteCodeGen("example/ExampleApi.fsd example/output/swagger --swagger --yaml", verify);
-	ExecuteCodeGen("example/output/swagger/ExampleApi.json example/output/swagger/fsd", verify);
-	ExecuteCodeGen("example/output/swagger/ExampleApi.yaml example/output/swagger/fsd", verify: true);
-
-	foreach (var yamlPath in GetFiles($"example/*.yaml"))
-		ExecuteCodeGen($"{yamlPath} example/output/fsd", verify);
-
-	CreateDirectory("example/output/fsd/swagger");
-	foreach (var fsdPath in GetFiles("example/output/fsd/*.fsd"))
-		ExecuteCodeGen($"{fsdPath} example/output/fsd/swagger/{System.IO.Path.GetFileNameWithoutExtension(fsdPath.FullPath)}.yaml --swagger --yaml", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd example/output", verify);
+	ExecuteCodeGen("example/ExampleApi.fsd example/output/ExampleApi-nowidgets.fsd --excludeTag widgets", verify);
 }
 
 Task("Clean")

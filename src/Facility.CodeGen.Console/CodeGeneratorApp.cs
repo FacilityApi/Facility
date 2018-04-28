@@ -8,7 +8,6 @@ using ArgsReading;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
-using Facility.Definition.Swagger;
 
 namespace Facility.CodeGen.Console
 {
@@ -52,7 +51,6 @@ namespace Facility.CodeGen.Console
 						generator.NewLine = newLine;
 				}
 
-				string serviceName = argsReader.ReadServiceNameOption();
 				bool shouldClean = SupportsClean && argsReader.ReadCleanFlag();
 				bool isQuiet = argsReader.ReadQuietFlag();
 				bool isVerify = argsReader.ReadVerifyFlag();
@@ -81,17 +79,7 @@ namespace Facility.CodeGen.Console
 					input = new ServiceDefinitionText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
 				}
 
-				ServiceInfo service;
-				if (ServiceDefinitionUtility.DetectFormat(input) == ServiceDefinitionFormat.Swagger)
-				{
-					service = new SwaggerParser { ServiceName = serviceName }.ParseDefinition(input);
-				}
-				else
-				{
-					if (serviceName != null)
-						throw new ArgsReaderException("--serviceName not supported for FSD input.");
-					service = new FsdParser().ParseDefinition(input);
-				}
+				ServiceInfo service = new FsdParser().ParseDefinition(input);
 
 				foreach (string excludeTag in excludeTags)
 					service = service.ExcludeTag(excludeTag);

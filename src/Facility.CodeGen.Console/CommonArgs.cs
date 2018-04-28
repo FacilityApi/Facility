@@ -7,14 +7,6 @@ namespace Facility.CodeGen.Console
 {
 	internal static class CommonArgs
 	{
-		public static string ReadServiceNameOption(this ArgsReader args)
-		{
-			string serviceName = args.ReadOption("serviceName");
-			if (serviceName != null && ServiceDefinitionUtility.IsValidName(serviceName))
-				throw new ArgsReaderException($"Invalid service name '{serviceName}'.");
-			return serviceName;
-		}
-
 		public static bool ReadCleanFlag(this ArgsReader args) => args.ReadFlag("clean");
 
 		public static bool ReadDryRunFlag(this ArgsReader args) => args.ReadFlag("dryrun");
