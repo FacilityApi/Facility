@@ -146,9 +146,9 @@ Task("Publish")
 				throw new InvalidOperationException($"Mismatched package versions '{version}' and '{nupkgVersion}'.");
 		}
 
-		if (!string.IsNullOrEmpty(nugetApiKey) && (trigger == null || Regex.IsMatch(trigger, "^v[0-9]")))
+		if (!string.IsNullOrEmpty(nugetApiKey) && trigger != null && Regex.IsMatch(trigger, "^v[0-9]")))
 		{
-			if (trigger != null && trigger != $"v{version}")
+			if (trigger != $"v{version}")
 				throw new InvalidOperationException($"Trigger '{trigger}' doesn't match package version '{version}'.");
 
 			var pushSettings = new NuGetPushSettings { ApiKey = nugetApiKey, Source = nugetSource };
