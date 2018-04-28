@@ -1,4 +1,4 @@
-# Contributing to Facility
+# Contributing
 
 ## Prerequisites
 
