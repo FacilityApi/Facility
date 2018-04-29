@@ -139,5 +139,68 @@ namespace Facility.Definition.UnitTests
 				"}",
 				"");
 		}
+
+		[Test]
+		public void ObsoleteEverything()
+		{
+			var service = TestUtility.ParseTestApi("[obsolete] service TestApi {" +
+				"[obsolete] method myMethod { [obsolete] in: string; }: { [obsolete] out: string; }" +
+				"[obsolete] data MyData { [obsolete] field: string; }" +
+				"[obsolete] enum MyEnum { [obsolete] x }" +
+				"[obsolete] errors MyErrors { [obsolete] x }" +
+				"}");
+			service.GetElementAndDescendants().OfType<ServiceElementWithAttributesInfo>().All(x => x.IsObsolete).Should().BeTrue();
+		}
+
+		[Test]
+		public void ObsoleteMessage()
+		{
+			var service = TestUtility.ParseTestApi("[obsolete] service TestApi { [obsolete(message: hey)] data MyData {} }");
+			service.ObsoleteMessage.Should().BeNull();
+			service.Dtos.Single().ObsoleteMessage.Should().Be("hey");
+		}
+
+		[Test]
+		public void TwoObsoletes()
+		{
+			TestUtility.ParseInvalidTestApi("[obsolete] [obsolete] service TestApi {}");
+		}
+
+		[Test]
+		public void BadObsoleteParameter()
+		{
+			TestUtility.ParseInvalidTestApi("[obsolete(name: hey)] service TestApi {}");
+		}
+
+		[Test]
+		public void TagEverything()
+		{
+			var service = TestUtility.ParseTestApi("[tag(name: hey)] service TestApi {" +
+				"[tag(name: hey)] method myMethod { [tag(name: hey)] in: string; }: { [tag(name: hey)] out: string; }" +
+				"[tag(name: hey)] data MyData { [tag(name: hey)] field: string; }" +
+				"[tag(name: hey)] enum MyEnum { [tag(name: hey)] x }" +
+				"[tag(name: hey)] errors MyErrors { [tag(name: hey)] x }" +
+				"}");
+			service.GetElementAndDescendants().OfType<ServiceElementWithAttributesInfo>().All(x => x.TagNames.Single() == "hey").Should().BeTrue();
+		}
+
+		[Test]
+		public void TwoTags()
+		{
+			var service = TestUtility.ParseTestApi("[tag(name: hey), tag(name: you)] service TestApi {}");
+			service.TagNames.Should().BeEquivalentTo("hey", "you");
+		}
+
+		[Test]
+		public void TagNoName()
+		{
+			TestUtility.ParseInvalidTestApi("[tag] service TestApi {}");
+		}
+
+		[Test]
+		public void TagBadParameter()
+		{
+			TestUtility.ParseInvalidTestApi("[tag(names: hey)] service TestApi {}");
+		}
 	}
 }
