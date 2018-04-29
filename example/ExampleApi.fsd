@@ -12,6 +12,9 @@ service ExampleApi
 		[http(name: "q")]
 		query: string;
 
+		/// The widget IDs.
+		ids: string[];
+
 		/// The limit of returned results.
 		limit: int32;
 
@@ -151,6 +154,38 @@ service ExampleApi
 		value: double;
 	}
 
+	/// Gets the widget image.
+	[http(method: GET, path: "/widgets/{id}/image")]
+	[tag(name: widgets)]
+	method getWidgetImage
+	{
+	}:
+	{
+		/// The content of the widget image.
+		[http(from: body)]
+		content: bytes;
+
+		/// The media type of the widget image.
+		[http(from: header, name: Content-Type)]
+		type: string;
+	}
+
+	/// Sets the widget image.
+	[http(method: PUT, path: "/widgets/{id}/image")]
+	[tag(name: widgets)]
+	method setWidgetImage
+	{
+		/// The content of the widget image.
+		[http(from: body)]
+		content: bytes;
+
+		/// The media type of the widget image.
+		[http(from: header, name: Content-Type)]
+		type: string;
+	}:
+	{
+	}
+
 	/// Gets a widget preference.
 	[http(method: GET, path: "/prefs/{key}")]
 	method getPreference
@@ -203,6 +238,11 @@ service ExampleApi
 		sink: KitchenSink;
 	}:
 	{
+		[http(from: header)]
+		prices: decimal[];
+
+		[http(from: body)]
+		text: string;
 	}
 
 	method transform

@@ -57,6 +57,11 @@ service ExampleApi
 		sink: KitchenSink;
 	}:
 	{
+		[http(from: header)]
+		prices: decimal[];
+
+		[http(from: body)]
+		text: string;
 	}
 
 	method transform
