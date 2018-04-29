@@ -29,39 +29,16 @@ namespace Facility.Definition.UnitTests.Http
 			response.BodyField.Should().BeNull();
 		}
 
-		[Test]
-		public void HttpGetMethod()
+		[TestCase("get")]
+		[TestCase("get")]
+		[TestCase("post")]
+		[TestCase("put")]
+		[TestCase("delete")]
+		[TestCase("patch")]
+		public void HttpMethod(string name)
 		{
-			var method = ParseHttpApi("service TestApi { [http(method: get)] method do {}: {} }").Methods.Single();
-			method.Method.Should().Be("GET");
-		}
-
-		[Test]
-		public void HttpPostMethod()
-		{
-			var method = ParseHttpApi("service TestApi { [http(method: post)] method do {}: {} }").Methods.Single();
-			method.Method.Should().Be("POST");
-		}
-
-		[Test]
-		public void HttpPutMethod()
-		{
-			var method = ParseHttpApi("service TestApi { [http(method: put)] method do {}: {} }").Methods.Single();
-			method.Method.Should().Be("PUT");
-		}
-
-		[Test]
-		public void HttpDeleteMethod()
-		{
-			var method = ParseHttpApi("service TestApi { [http(method: delete)] method do {}: {} }").Methods.Single();
-			method.Method.Should().Be("DELETE");
-		}
-
-		[Test]
-		public void HttpPatchMethod()
-		{
-			var method = ParseHttpApi("service TestApi { [http(method: patch)] method do {}: {} }").Methods.Single();
-			method.Method.Should().Be("PATCH");
+			var method = ParseHttpApi("service TestApi { [http(method: _)] method do {}: {} }".Replace("_", name)).Methods.Single();
+			method.Method.Should().Be(name.ToUpperInvariant());
 		}
 
 		[Test]
@@ -154,7 +131,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void MissingPathPlaceholder()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: path)] id: string; }: {} }")
-				.ToString().Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
+				.ToString().Should().Be("TestApi.fsd(1,70): Path request field has no placeholder in the method path.");
 		}
 
 		[Test]
@@ -168,21 +145,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void UnusedPathField()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(from: path)] id: string; }: {} }")
-				.ToString().Should().Be("TestApi.fsd(1,70): Request field with [http(from: path)] has no placeholder in the method path.");
-		}
-
-		[Test]
-		public void ImplicitPathFieldTypeNotSupported()
-		{
-			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: Thing; }: {} data Thing { id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,72): Request field used in path must use a simple type.");
-		}
-
-		[Test]
-		public void ExplicitPathFieldTypeNotSupported()
-		{
-			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(from: path)] id: Thing; }: {} data Thing { id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,91): Request field used in path must use a simple type.");
+				.ToString().Should().Be("TestApi.fsd(1,70): Path request field has no placeholder in the method path.");
 		}
 
 		[Test]
@@ -238,20 +201,6 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[Test]
-		public void ImplicitQueryFieldTypeNotSupported()
-		{
-			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { id: Thing; }: {} data Thing { id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,67): Request field used in query must use a simple type.");
-		}
-
-		[Test]
-		public void ExplicitQueryFieldTypeNotSupported()
-		{
-			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { [http(from: query)] id: Thing; }: {} data Thing { id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,87): Request field used in query must use a simple type.");
-		}
-
-		[Test]
 		public void QueryFieldBadParameter()
 		{
 			ParseInvalidHttpApi("service TestApi { [http(method: get)] method do { [http(nam: identifier)] id: string; }: {} }")
@@ -292,24 +241,25 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("result<Dto>")]
 		[TestCase("Dto[]")]
 		[TestCase("map<Dto>")]
+		[TestCase("map<string[]>[]")]
+		[TestCase("string")]
+		[TestCase("bytes")]
 		public void BodyRequestField(string type)
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type)).Methods.Single();
 			method.RequestBodyField.ServiceField.Name.Should().Be("id");
 		}
 
-		[TestCase("string")]
 		[TestCase("boolean")]
 		[TestCase("double")]
 		[TestCase("int32")]
 		[TestCase("int64")]
 		[TestCase("decimal")]
-		[TestCase("bytes")]
 		[TestCase("Enum")]
 		public void BodyRequestFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type))
-				.ToString().Should().Be("TestApi.fsd(1,78): Request fields with [http(from: body)] must not use a primitive type.");
+				.ToString().Should().Be("TestApi.fsd(1,78): Type not supported by body request field.");
 		}
 
 		[Test]
@@ -323,7 +273,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void MultipleBodyRequestFields()
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: body)] body1: Thing; [http(from: body)] body2: Thing; }: {} data Thing { id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,83): Requests do not support multiple [http(from: body)] fields.");
+				.ToString().Should().Be("TestApi.fsd(1,83): Requests do not support multiple body fields.");
 		}
 
 		[Test]
@@ -393,6 +343,9 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("result<Dto>")]
 		[TestCase("Dto[]")]
 		[TestCase("map<Dto>")]
+		[TestCase("map<string[]>[]")]
+		[TestCase("string")]
+		[TestCase("bytes")]
 		public void BodyResponseField(string type)
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type)).Methods.Single();
@@ -404,17 +357,15 @@ namespace Facility.Definition.UnitTests.Http
 			response.BodyField.StatusCode.Should().BeNull();
 		}
 
-		[TestCase("string")]
 		[TestCase("double")]
 		[TestCase("int32")]
 		[TestCase("int64")]
 		[TestCase("decimal")]
-		[TestCase("bytes")]
 		[TestCase("Enum")]
 		public void BodyResponseFieldInvalidType(string type)
 		{
 			ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))
-				.ToString().Should().Be("TestApi.fsd(1,82): Response fields with [http(from: body)] must be a non-primitive type or a Boolean.");
+				.ToString().Should().Be("TestApi.fsd(1,82): Type not supported by body response field.");
 		}
 
 		[Test]
@@ -559,14 +510,14 @@ namespace Facility.Definition.UnitTests.Http
 		public void ResponsePathField()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: path)] id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,54): Response fields do not support '[http(from: path)]'.");
+				.ToString().Should().Be("TestApi.fsd(1,54): Response fields must not be path or query fields.");
 		}
 
 		[Test]
 		public void ResponseQueryField()
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: query)] id: string; } }")
-				.ToString().Should().Be("TestApi.fsd(1,55): Response fields do not support '[http(from: query)]'.");
+				.ToString().Should().Be("TestApi.fsd(1,55): Response fields must not be path or query fields.");
 		}
 
 		[Test]
@@ -583,20 +534,6 @@ namespace Facility.Definition.UnitTests.Http
 			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: header, name: Our-Xyzzy)] xyzzy: string; } }").Methods.Single();
 			method.ResponseHeaderFields.Single().ServiceField.Name.Should().Be("xyzzy");
 			method.ResponseHeaderFields.Single().Name.Should().Be("Our-Xyzzy");
-		}
-
-		[Test]
-		public void RequestHeaderFieldBadType()
-		{
-			ParseInvalidHttpApi("service TestApi { method do { [http(from: header)] xyzzy: error; }: {} }")
-				.ToString().Should().Be("TestApi.fsd(1,52): Request fields with [http(from: header)] must use the string type.");
-		}
-
-		[Test]
-		public void ResponseHeaderFieldBadType()
-		{
-			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: header)] xyzzy: error; } }")
-				.ToString().Should().Be("TestApi.fsd(1,56): Response fields with [http(from: header)] must use the string type.");
 		}
 
 		[Test]
@@ -625,6 +562,63 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: heade)] xyzzy: string; } }")
 				.ToString().Should().Be("TestApi.fsd(1,55): Unsupported 'from' parameter of 'http' attribute: 'heade'");
+		}
+
+		[TestCase("string")]
+		[TestCase("boolean")]
+		[TestCase("double")]
+		[TestCase("int32")]
+		[TestCase("int64")]
+		[TestCase("decimal")]
+		[TestCase("Enum")]
+		[TestCase("string[]")]
+		[TestCase("boolean[]")]
+		[TestCase("double[]")]
+		[TestCase("int32[]")]
+		[TestCase("int64[]")]
+		[TestCase("decimal[]")]
+		[TestCase("Enum[]")]
+		public void SimpleFieldTypeSupported(string type)
+		{
+			ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: _; }: {} enum Enum { x } }".Replace("_", type))
+				.Methods.Single().PathFields.Single().ServiceField.TypeName.Should().Be(type);
+			ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(from: path)] id: _; }: {} enum Enum { x } }".Replace("_", type))
+				.Methods.Single().PathFields.Single().ServiceField.TypeName.Should().Be(type);
+
+			ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { id: _; }: {} data Thing { id: string; } enum Enum { x } }".Replace("_", type))
+				.Methods.Single().QueryFields.Single().ServiceField.TypeName.Should().Be(type);
+			ParseHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { [http(from: query)] id: _; }: {} data Thing { id: string; } enum Enum { x } }".Replace("_", type))
+				.Methods.Single().QueryFields.Single().ServiceField.TypeName.Should().Be(type);
+
+			ParseHttpApi("service TestApi { method do { [http(from: header)] xyzzy: _; }: {} data Thing { id: string; } enum Enum { x } }".Replace("_", type))
+				.Methods.Single().RequestHeaderFields.Single().ServiceField.TypeName.Should().Be(type);
+			ParseHttpApi("service TestApi { method do {}: { [http(from: header)] xyzzy: _; } data Thing { id: string; } enum Enum { x } }".Replace("_", type))
+				.Methods.Single().ResponseHeaderFields.Single().ServiceField.TypeName.Should().Be(type);
+		}
+
+		[TestCase("bytes")]
+		[TestCase("object")]
+		[TestCase("error")]
+		[TestCase("map<string>")]
+		[TestCase("result<string>")]
+		[TestCase("string[][]")]
+		[TestCase("Thing")]
+		public void NonSimpleFieldTypeNotSupported(string type)
+		{
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: _; }: {} data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,72): Type not supported by path field.");
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { [http(from: path)] id: _; }: {} data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,91): Type not supported by path field.");
+
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { id: _; }: {} data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,67): Type not supported by query field.");
+			ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy\")] method do { [http(from: query)] id: _; }: {} data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,87): Type not supported by query field.");
+
+			ParseInvalidHttpApi("service TestApi { method do { [http(from: header)] xyzzy: _; }: {} data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,52): Type not supported by header request field.");
+			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: header)] xyzzy: _; } data Thing { id: string; } }".Replace("_", type))
+				.ToString().Should().Be("TestApi.fsd(1,56): Type not supported by header response field.");
 		}
 
 		[TestCase("", "", -1)]

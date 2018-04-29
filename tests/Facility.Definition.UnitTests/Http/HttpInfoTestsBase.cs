@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Facility.Definition.Http;
 
 namespace Facility.Definition.UnitTests.Http
@@ -17,13 +16,6 @@ namespace Facility.Definition.UnitTests.Http
 			if (errors.Count == 0)
 				throw new InvalidOperationException("Parse did not fail.");
 			return errors[0];
-		}
-
-		protected IReadOnlyList<ServiceDefinitionError> TryParseInvalidHttpApi(string text)
-		{
-			if (HttpServiceInfo.TryCreate(TestUtility.ParseTestApi(text), out _, out var errors))
-				throw new InvalidOperationException("Parse did not fail.");
-			return errors;
 		}
 	}
 }

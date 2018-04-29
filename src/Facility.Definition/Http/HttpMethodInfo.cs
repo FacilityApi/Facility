@@ -111,31 +111,31 @@ namespace Facility.Definition.Http
 				string from = requestField.TryGetHttpAttribute()?.TryGetParameterValue("from");
 				if (from == "path")
 				{
-					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
+					if (!IsValidSimpleField(requestField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by path field.", requestField.Position));
 					var pathInfo = new HttpPathFieldInfo(requestField);
 					if (!pathParameterNames.Remove(pathInfo.Name))
-						AddValidationError(new ServiceDefinitionError("Request field with [http(from: path)] has no placeholder in the method path.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Path request field has no placeholder in the method path.", requestField.Position));
 					requestPathFields.Add(pathInfo);
 				}
 				else if (from == "query")
 				{
-					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
+					if (!IsValidSimpleField(requestField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by query field.", requestField.Position));
 					requestQueryFields.Add(new HttpQueryFieldInfo(requestField));
 				}
 				else if (from == "normal")
 				{
-					if (Method == "GET" || Method == "DELETE")
+					if (IsNoContentMethod(Method))
 						AddValidationError(new ServiceDefinitionError($"HTTP {Method} does not support normal fields.", requestField.Position));
 					requestNormalFields.Add(new HttpNormalFieldInfo(requestField));
 				}
 				else if (from == "body")
 				{
 					if (!IsValidRequestBodyField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request fields with [http(from: body)] must not use a primitive type.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Type not supported by body request field.", requestField.Position));
 					if (requestBodyField != null)
-						AddValidationError(new ServiceDefinitionError("Requests do not support multiple [http(from: body)] fields.", requestField.Position));
+						AddValidationError(new ServiceDefinitionError("Requests do not support multiple body fields.", requestField.Position));
 					var bodyInfo = new HttpBodyFieldInfo(requestField);
 					if (bodyInfo.StatusCode != null)
 						AddValidationError(new ServiceDefinitionError("Request fields do not support status codes.", requestField.Position));
@@ -143,8 +143,8 @@ namespace Facility.Definition.Http
 				}
 				else if (from == "header")
 				{
-					if (!IsValidHeaderField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request fields with [http(from: header)] must use the string type.", requestField.Position));
+					if (!IsValidSimpleField(requestField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by header request field.", requestField.Position));
 					requestHeaderFields.Add(new HttpHeaderFieldInfo(requestField));
 				}
 				else if (from != null)
@@ -153,14 +153,14 @@ namespace Facility.Definition.Http
 				}
 				else if (pathParameterNames.Remove(requestField.Name))
 				{
-					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request field used in path must use a simple type.", requestField.Position));
+					if (!IsValidSimpleField(requestField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by path field.", requestField.Position));
 					requestPathFields.Add(new HttpPathFieldInfo(requestField));
 				}
 				else if (Method == "GET" || Method == "DELETE")
 				{
-					if (!IsValidPathOrQueryField(requestField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Request field used in query must use a simple type.", requestField.Position));
+					if (!IsValidSimpleField(requestField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by query field.", requestField.Position));
 					requestQueryFields.Add(new HttpQueryFieldInfo(requestField));
 				}
 				else
@@ -189,18 +189,18 @@ namespace Facility.Definition.Http
 				string from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
 				if (from == "path" || from == "query")
 				{
-					AddValidationError(new ServiceDefinitionError($"Response fields do not support '[http(from: {from})]'.", responseField.Position));
+					AddValidationError(new ServiceDefinitionError("Response fields must not be path or query fields.", responseField.Position));
 				}
 				else if (from == "body")
 				{
 					if (!IsValidResponseBodyField(responseField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Response fields with [http(from: body)] must be a non-primitive type or a Boolean.", responseField.Position));
+						AddValidationError(new ServiceDefinitionError("Type not supported by body response field.", responseField.Position));
 					responseBodyFields.Add(new HttpBodyFieldInfo(responseField));
 				}
 				else if (from == "header")
 				{
-					if (!IsValidHeaderField(responseField, serviceInfo))
-						AddValidationError(new ServiceDefinitionError("Response fields with [http(from: header)] must use the string type.", responseField.Position));
+					if (!IsValidSimpleField(responseField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by header response field.", responseField.Position));
 					responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
 				}
 				else if (from == "normal" || from == null)
@@ -240,20 +240,24 @@ namespace Facility.Definition.Http
 			return httpMethod;
 		}
 
-		private static bool IsValidPathOrQueryField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
+		private static bool IsValidSimpleField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
-			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
-			return fieldTypeKind != null && (
-				fieldTypeKind == ServiceTypeKind.String ||
+			var fieldType = serviceInfo.GetFieldType(fieldInfo);
+			var fieldTypeKind = fieldType?.Kind;
+			if (fieldTypeKind == null)
+				return false;
+
+			if (fieldTypeKind == ServiceTypeKind.Array)
+				fieldTypeKind = fieldType.ValueType.Kind;
+
+			return fieldTypeKind == ServiceTypeKind.String ||
 				fieldTypeKind == ServiceTypeKind.Boolean ||
 				fieldTypeKind == ServiceTypeKind.Double ||
 				fieldTypeKind == ServiceTypeKind.Int32 ||
 				fieldTypeKind == ServiceTypeKind.Int64 ||
 				fieldTypeKind == ServiceTypeKind.Decimal ||
-				fieldTypeKind == ServiceTypeKind.Enum);
+				fieldTypeKind == ServiceTypeKind.Enum;
 		}
-
-		private static bool IsValidHeaderField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) => serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.String;
 
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
@@ -264,7 +268,9 @@ namespace Facility.Definition.Http
 				fieldTypeKind == ServiceTypeKind.Dto ||
 				fieldTypeKind == ServiceTypeKind.Result ||
 				fieldTypeKind == ServiceTypeKind.Array ||
-				fieldTypeKind == ServiceTypeKind.Map);
+				fieldTypeKind == ServiceTypeKind.Map ||
+				fieldTypeKind == ServiceTypeKind.Bytes ||
+				fieldTypeKind == ServiceTypeKind.String);
 		}
 
 		private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
@@ -307,6 +313,8 @@ namespace Facility.Definition.Http
 				yield return new HttpResponseInfo(responseStatusCode.Value, responseNormalFields);
 			}
 		}
+
+		private static bool IsNoContentMethod(string method) => method == "GET" || method == "DELETE";
 
 		private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
 

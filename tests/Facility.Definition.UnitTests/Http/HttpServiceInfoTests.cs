@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using Facility.Definition.Http;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -70,8 +73,8 @@ namespace Facility.Definition.UnitTests.Http
 		[Test]
 		public void MultipleErrors()
 		{
-			TryParseInvalidHttpApi("[http(xyzzy: true)] service TestApi { [http] data Hey {} }")
-				.Count.Should().Be(2);
+			HttpServiceInfo.TryCreate(TestUtility.ParseTestApi("[http(xyzzy: true)] service TestApi { [http] data Hey {} }"), out _, out var errors);
+			errors.Count.Should().Be(2);
 		}
 	}
 }

@@ -13,6 +13,9 @@ Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in
 * [major] Drop support for arbitrary HTTP methods (to help detect typos).
 * [major] Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
 * [major] Stop using System.Net.Http.HttpMethod.
+* [minor] Allow arrays in path and query fields.
+* [minor] Allow non-strings in header fields.
+* [minor] Allow bytes and strings in body fields.
 
 ## Released
 
