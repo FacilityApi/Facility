@@ -30,7 +30,6 @@ namespace Facility.Definition.UnitTests.Http
 		}
 
 		[TestCase("get")]
-		[TestCase("get")]
 		[TestCase("post")]
 		[TestCase("put")]
 		[TestCase("delete")]
