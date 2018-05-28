@@ -31,11 +31,7 @@ namespace Facility.Definition.Http
 			m_validationErrors = new List<ServiceDefinitionError>();
 		}
 
-		private protected void AddValidationError(ServiceDefinitionError error)
-		{
-			if (error != null)
-				m_validationErrors.Add(error);
-		}
+		private protected void AddValidationError(ServiceDefinitionError error) => m_validationErrors.Add(error);
 
 		private protected IReadOnlyList<ServiceAttributeParameterInfo> GetHttpParameters(ServiceElementWithAttributesInfo element) =>
 			element.TryGetHttpAttribute()?.Parameters ?? new ServiceAttributeParameterInfo[0];
