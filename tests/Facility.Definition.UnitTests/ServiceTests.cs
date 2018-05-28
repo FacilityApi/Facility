@@ -82,6 +82,41 @@ namespace Facility.Definition.UnitTests
 		}
 
 		[Test]
+		public void DuplicateMethod()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { method xyzzy {}: {} method xyzzy {}: {} }")
+				.Message.Should().Be("TestApi.fsd(1,39): Duplicate service member: xyzzy");
+		}
+
+		[Test]
+		public void DuplicateDto()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { data xyzzy {} data xyzzy {} }")
+				.Message.Should().Be("TestApi.fsd(1,33): Duplicate service member: xyzzy");
+		}
+
+		[Test]
+		public void DuplicateEnum()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { enum xyzzy { x } enum xyzzy { x } }")
+				.Message.Should().Be("TestApi.fsd(1,36): Duplicate service member: xyzzy");
+		}
+
+		[Test]
+		public void DuplicateErrorSet()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { errors xyzzy { x } errors xyzzy { x } }")
+				.Message.Should().Be("TestApi.fsd(1,38): Duplicate service member: xyzzy");
+		}
+
+		[Test]
+		public void DuplicateMember()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi { method xyzzy {}: {} data xyzzy {} }")
+				.Message.Should().Be("TestApi.fsd(1,39): Duplicate service member: xyzzy");
+		}
+
+		[Test]
 		public void ServiceSummary()
 		{
 			var service = TestUtility.ParseTestApi("/// test\n/// summary\nservice TestApi{}");
