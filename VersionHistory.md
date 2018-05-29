@@ -16,6 +16,7 @@ Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in
 * [minor] Allow arrays in path and query fields.
 * [minor] Allow non-strings in header fields.
 * [minor] Allow bytes and strings in body fields.
+* [minor] Prohibit duplicate file names in output.
 
 ## Released
 

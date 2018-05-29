@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Facility.Definition.CodeGen
 {
@@ -22,6 +24,10 @@ namespace Facility.Definition.CodeGen
 		{
 			Files = files ?? new CodeGenFile[0];
 			PatternsToClean = patternsToClean ?? new CodeGenPattern[0];
+
+			var duplicate = Files.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(x => x.Skip(1).Any());
+			if (duplicate != null)
+				throw new ArgumentException($"File names must be unique but '{duplicate.Key}' is duplicated.", nameof(files));
 		}
 
 		/// <summary>
