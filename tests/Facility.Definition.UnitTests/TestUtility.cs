@@ -7,28 +7,6 @@ namespace Facility.Definition.UnitTests
 {
 	internal static class TestUtility
 	{
-		public static void ThrowsServiceDefinitionException(Action action, ServiceDefinitionPosition position)
-		{
-			try
-			{
-				action();
-				throw new InvalidOperationException("Action did not throw.");
-			}
-			catch (ServiceDefinitionException exception)
-			{
-				Assert.AreSame(position, exception.Errors[0].Position);
-			}
-		}
-
-		public static void ThrowsServiceDefinitionException(Func<object> func, ServiceDefinitionPosition position)
-		{
-			ThrowsServiceDefinitionException(
-				() =>
-				{
-					func();
-				}, position);
-		}
-
 		public static ServiceInfo ParseTestApi(string text)
 		{
 			return new FsdParser().ParseDefinition(new ServiceDefinitionText("TestApi.fsd", text));
