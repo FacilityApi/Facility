@@ -157,13 +157,16 @@ namespace Facility.Definition.Fsd
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from keyword in KeywordParser("service").Positioned()
 			from name in NameParser.Named("service name").Positioned()
-			from items in ServiceItemParser(context).Many().Bracketed("{", "}")
+			from start in PunctuationParser("{")
+			from items in ServiceItemParser(context).Many()
+			from end in PunctuationParser("}").Positioned()
 			select new ServiceInfo(name.Value, items,
 				attributes.SelectMany(x => x),
 				BuildSummary(comments1, comments2),
 				context.GetRemarksSection(name.Value)?.Lines,
 				context.GetPart(ServicePartKind.Keyword, keyword),
-				context.GetPart(ServicePartKind.Name, name));
+				context.GetPart(ServicePartKind.Name, name),
+				context.GetPart(ServicePartKind.End, end));
 
 		private static IParser<ServiceInfo> DefinitionParser(Context context) =>
 			from service in ServiceParser(context).FollowedBy(CommentOrWhiteSpaceParser.Many())
@@ -205,17 +208,17 @@ namespace Facility.Definition.Fsd
 
 		private sealed class Context
 		{
-			public Context(ServiceDefinitionText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSections)
+			public Context(ServiceDefinitionText source, IReadOnlyDictionary<string, FsdRemarksSection> remarksSectionsByName)
 			{
 				m_source = source;
-				m_remarksSections = remarksSections;
+				m_remarksSectionsByName = remarksSectionsByName;
 			}
 
 			public ServicePart GetPart<T>(ServicePartKind kind, Positioned<T> positioned) => new ServicePart(kind, GetPosition(positioned.Position), GetPosition(positioned.Position.WithNextIndex(positioned.Length)));
 
 			public FsdRemarksSection GetRemarksSection(string name)
 			{
-				m_remarksSections.TryGetValue(name, out var section);
+				m_remarksSectionsByName.TryGetValue(name, out var section);
 				return section;
 			}
 
@@ -226,7 +229,7 @@ namespace Facility.Definition.Fsd
 			}
 
 			readonly ServiceDefinitionText m_source;
-			readonly IReadOnlyDictionary<string, FsdRemarksSection> m_remarksSections;
+			readonly IReadOnlyDictionary<string, FsdRemarksSection> m_remarksSectionsByName;
 		}
 	}
 }

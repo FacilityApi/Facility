@@ -4,14 +4,11 @@ namespace Facility.Definition.Fsd
 {
 	internal sealed class FsdRemarksSection
 	{
-		public FsdRemarksSection(string name, IReadOnlyList<string> lines, ServiceDefinitionPosition position)
+		public FsdRemarksSection(IReadOnlyList<string> lines, ServiceDefinitionPosition position)
 		{
-			Name = name;
 			Lines = lines;
 			Position = position;
 		}
-
-		public string Name { get; }
 
 		public IReadOnlyList<string> Lines { get; }
 
