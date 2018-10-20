@@ -108,7 +108,8 @@ Task("UpdateDocs")
 			Information("Committing all documentation changes.");
 			GitAddAll(docsDirectory);
 			GitCommit(docsDirectory, buildBotUserName, buildBotEmail,
-				"Automatic documentation update." + (isPreview ? $" (preview {buildBranch})" : ""));
+				$"Automatic documentation update for {System.IO.Path.GetFileNameWithoutExtension(solutionFileName)}." +
+				(isPreview ? $" (preview {buildBranch})" : ""));
 			Information("Pushing updated documentation to GitHub.");
 			GitPush(docsDirectory, buildBotUserName, buildBotPassword, docsRepoBranch);
 		}
