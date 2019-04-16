@@ -66,7 +66,7 @@ namespace Facility.Definition.UnitTests
 		[Test]
 		public void MissingServiceBody()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi").Message.Should().Be("TestApi.fsd(1,16): expected '{'");
+			TestUtility.ParseInvalidTestApi("service TestApi").Message.Should().Be("TestApi.fsd(1,16): expected '[' or 'data' or 'enum' or 'errors' or 'method' or '{'");
 		}
 
 		[Test]
@@ -198,6 +198,30 @@ namespace Facility.Definition.UnitTests
 		{
 			TestUtility.TryParseInvalidTestApi("service TestApi { method do {}: {} data MyDto { x: InvalidData; } data One {} data One {} }\n# do\nremarks\n# do\nremarks\n# TestApi2\ntest\nremarks")
 				.Count.Should().Be(4);
+		}
+
+		[Test]
+		public void ServiceParts()
+		{
+			var service = TestUtility.ParseTestApi("service TestApi\r\n{\r\n}\r\n");
+
+			var keywordPart = service.GetPart(ServicePartKind.Keyword);
+			keywordPart.Position.LineNumber.Should().Be(1);
+			keywordPart.Position.ColumnNumber.Should().Be(1);
+			keywordPart.EndPosition.LineNumber.Should().Be(1);
+			keywordPart.EndPosition.ColumnNumber.Should().Be(8);
+
+			var namePart = service.GetPart(ServicePartKind.Name);
+			namePart.Position.LineNumber.Should().Be(1);
+			namePart.Position.ColumnNumber.Should().Be(9);
+			namePart.EndPosition.LineNumber.Should().Be(1);
+			namePart.EndPosition.ColumnNumber.Should().Be(16);
+
+			var endPart = service.GetPart(ServicePartKind.End);
+			endPart.Position.LineNumber.Should().Be(3);
+			endPart.Position.ColumnNumber.Should().Be(1);
+			endPart.EndPosition.LineNumber.Should().Be(3);
+			endPart.EndPosition.ColumnNumber.Should().Be(2);
 		}
 	}
 }

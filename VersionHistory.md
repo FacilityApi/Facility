@@ -17,6 +17,8 @@ Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in
 * [minor] Allow non-strings in header fields.
 * [minor] Allow bytes and strings in body fields.
 * [minor] Prohibit duplicate file names in output.
+* [minor] Support definitions interleaved within Markdown.
+* [minor] Braces are optional around service members.
 
 ## Released
 

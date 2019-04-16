@@ -24,5 +24,10 @@ namespace Facility.Definition
 		/// The type name of the element.
 		/// </summary>
 		TypeName,
+
+		/// <summary>
+		/// The end of the element.
+		/// </summary>
+		End,
 	}
 }

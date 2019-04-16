@@ -21,7 +21,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The remarks of the service member.
 		/// </summary>
-		public IReadOnlyList<string> Remarks { get; }
+		public IReadOnlyList<string> Remarks { get; internal set; }
 
 		private protected ServiceMemberInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, IReadOnlyList<ServicePart> parts)
 			: base(attributes, parts)
