@@ -66,7 +66,7 @@ namespace Facility.Definition.UnitTests
 		[Test]
 		public void MissingServiceBody()
 		{
-			TestUtility.ParseInvalidTestApi("service TestApi").Message.Should().Be("TestApi.fsd(1,16): expected '{'");
+			TestUtility.ParseInvalidTestApi("service TestApi").Message.Should().Be("TestApi.fsd(1,16): expected '[' or 'data' or 'enum' or 'errors' or 'method' or '{'");
 		}
 
 		[Test]

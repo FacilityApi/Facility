@@ -87,5 +87,44 @@ That's it.
 			service.Dtos.Single().Remarks.Should().BeEmpty();
 			service.Methods.Single().Remarks.Should().Equal("A test method.");
 		}
+
+		[Test]
+		public void VariousRemarksNoServiceBraces()
+		{
+			var service = TestUtility.ParseTestApi(@"
+# TestApi
+
+```fsd
+service TestApi
+```
+
+A test API.
+
+```fsd
+// nothing
+```
+
+More remarks.
+
+```fsd
+data Data
+{
+}
+
+method do
+{
+}:
+{
+}
+```
+
+A test method.
+");
+
+			service.Name.Should().Be("TestApi");
+			service.Remarks.Should().Equal("A test API.", "", "More remarks.");
+			service.Dtos.Single().Remarks.Should().BeEmpty();
+			service.Methods.Single().Remarks.Should().Equal("A test method.");
+		}
 	}
 }

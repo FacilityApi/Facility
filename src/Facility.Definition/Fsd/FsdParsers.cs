@@ -157,9 +157,9 @@ namespace Facility.Definition.Fsd
 			from comments2 in CommentOrWhiteSpaceParser.Many()
 			from keyword in KeywordParser("service")
 			from name in NameParser.Named("service name")
-			from start in PunctuationParser("{")
-			from items in ServiceItemParser(context).Many()
-			from end in PunctuationParser("}")
+			from start in PunctuationParser("{").OrDefault()
+			from items in ServiceItemParser(context).AtLeast(start != null ? 0 : 1)
+			from end in start != null ? PunctuationParser("}") : Parser.Success("").Positioned()
 			select new ServiceInfo(name.Value, items,
 				attributes.SelectMany(x => x),
 				BuildSummary(comments1, comments2),

@@ -5,7 +5,6 @@
 [http(url: "http://local.example.com/v1")]
 [csharp(namespace: Facility.ExampleApi)]
 service ExampleApi
-{
 ```
 
 Additional service remarks.
@@ -454,9 +453,5 @@ data KitchenSink
 
 	[obsolete(message: "This field was never used.")]
 	oldField: string;
-}
-```
-
-```fsd
 }
 ```
