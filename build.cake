@@ -27,6 +27,12 @@ void CodeGen(bool verify)
 {
 	ExecuteCodeGen("example/ExampleApi.fsd example/output", verify);
 	ExecuteCodeGen("example/ExampleApi.fsd example/output/ExampleApi-nowidgets.fsd --excludeTag widgets", verify);
+
+	if (verify)
+	{
+		ExecuteCodeGen("example/ExampleApi.fsd.md example/output", verify);
+		ExecuteCodeGen("example/ExampleApi.fsd.md example/output/ExampleApi-nowidgets.fsd --excludeTag widgets", verify);
+	}
 }
 
 Task("Clean")
