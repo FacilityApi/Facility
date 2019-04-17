@@ -2,9 +2,9 @@
 
 ## Pending
 
-Add changes here when they're committed to the `master` branch. To publish, update the version number in [Directory.Build.props](Directory.Build.props), move the pending changes below to a new [Released](#released) section, and [create a new release](https://github.com/FacilityApi/Facility/releases) using the version number, e.g. `v2.3.4`.
+Describe changes here when they're committed to the `master` branch. To publish, update the version number in [Directory.Build.props](src/Directory.Build.props), move the pending changes below to a new [Released](#released) section, and push a git tag using the version number, e.g. `v2.3.4`.
 
-Prefix the description of each change with `[major]`, `[minor]`, or `[patch]` in accordance with [SemVer](http://semver.org).
+Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
 
 * [minor] Support tags via attribute: `[tags(name: shiny)]`
 * [minor] Support tag exclusion via command-line: `--excludeTags shiny`

@@ -1,12 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>True</DebugSymbols>
     <Description>Used by code generators to process Facility Service Definitions.</Description>
     <PackageTags>Facility FSD Definition</PackageTags>
   </PropertyGroup>
@@ -14,14 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Faithlife.Parsing" Version="1.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SourceLink.Create.GitHub" Version="2.8.1" PrivateAssets="all" />
-    <PackageReference Include="SourceLink.Test" Version="2.8.1" PrivateAssets="all" />
-    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.1" PrivateAssets="all" />
-    <DotNetCliToolReference Include="dotnet-sourcelink" Version="2.8.1" />
-    <DotNetCliToolReference Include="dotnet-sourcelink-git" Version="2.8.1" />
   </ItemGroup>
 
 </Project>
