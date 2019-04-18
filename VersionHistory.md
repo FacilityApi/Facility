@@ -19,6 +19,11 @@ Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in 
 * [minor] Prohibit duplicate file names in output.
 * [minor] Support definitions interleaved within Markdown.
 * [minor] Braces are optional around service members.
+* [major] Change `fsdgenfsd` to .NET Core Global Tool.
+* [minor] Support static `FsdGenerator.GenerateFsd` for C# build scripts.
+* [minor] Use kebab case for multi-word command-line options.
+* [major] Refactor code generator app framework.
+* [minor] Support `[required]` field attribute.
 
 ## Released
 
