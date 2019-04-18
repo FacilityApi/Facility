@@ -26,12 +26,35 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Generates output for the specified service.
 		/// </summary>
-		public CodeGenOutput GenerateOutput(ServiceInfo service) => GenerateOutputCore(service);
+		public abstract CodeGenOutput GenerateOutput(ServiceInfo service);
 
 		/// <summary>
-		/// Generates output for the specified service.
+		/// True if the generator writes output to a single file. (Default false.)
 		/// </summary>
-		protected abstract CodeGenOutput GenerateOutputCore(ServiceInfo service);
+		public virtual bool HasSingleOutput => false;
+
+		/// <summary>
+		/// True if patterns to clean are returned with the output. (Default false.)
+		/// </summary>
+		public virtual bool HasPatternsToClean => false;
+
+		/// <summary>
+		/// True if the generator respects <see cref="IndentText"/>. (Default true.)
+		/// </summary>
+		public virtual bool RespectsIndentText => true;
+
+		/// <summary>
+		/// True if the generator respects <see cref="NewLine"/>. (Default true.)
+		/// </summary>
+		public virtual bool RespectsNewLine => true;
+
+		/// <summary>
+		/// Applies any generator-specific settings.
+		/// </summary>
+		/// <param name="settings">The settings.</param>
+		public virtual void ApplySettings(FileGeneratorSettings settings)
+		{
+		}
 
 		/// <summary>
 		/// Creates a file from a name and code writer.

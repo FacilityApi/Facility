@@ -13,7 +13,15 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Generates an FSD file for a service definition.
 		/// </summary>
-		protected override CodeGenOutput GenerateOutputCore(ServiceInfo service)
+		/// <param name="settings">The settings.</param>
+		/// <returns>The number of updated files.</returns>
+		public static int GenerateFsd(FsdGeneratorSettings settings) =>
+			FileGenerator.GenerateFiles(new FsdGenerator { GeneratorName = nameof(FsdGenerator) }, settings);
+
+		/// <summary>
+		/// Generates an FSD file for a service definition.
+		/// </summary>
+		public override CodeGenOutput GenerateOutput(ServiceInfo service)
 		{
 			var output = CreateFile($"{service.Name}.fsd", code =>
 			{
@@ -90,6 +98,11 @@ namespace Facility.Definition.Fsd
 			});
 			return new CodeGenOutput(output);
 		}
+
+		/// <summary>
+		/// The generator writes output to a single file.
+		/// </summary>
+		public override bool HasSingleOutput => true;
 
 		private void WriteSummaryAndAttributes<T>(CodeWriter code, T info)
 			where T : ServiceElementWithAttributesInfo, IServiceHasSummary

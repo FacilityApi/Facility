@@ -15,8 +15,8 @@ namespace fsdgenfsd
 			"Generates FSD for a Facility Service Definition",
 		};
 
-		protected override CodeGenerator CreateGenerator(ArgsReader args) => new FsdGenerator();
+		protected override CodeGenerator CreateGenerator() => new FsdGenerator();
 
-		protected override bool SupportsSingleOutput => true;
+		protected override FileGeneratorSettings CreateSettings(ArgsReader argsReader) => new FsdGeneratorSettings();
 	}
 }

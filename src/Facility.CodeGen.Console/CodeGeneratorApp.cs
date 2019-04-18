@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using ArgsReading;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
-using Facility.Definition.Fsd;
 
 namespace Facility.CodeGen.Console
 {
@@ -23,6 +19,9 @@ namespace Facility.CodeGen.Console
 		/// <returns>The exit code.</returns>
 		public int Run(IReadOnlyList<string> args)
 		{
+			var generator = CreateGenerator();
+			generator.GeneratorName = Assembly.GetEntryAssembly().GetName().Name;
+
 			try
 			{
 				var argsReader = new ArgsReader(args) { LongOptionIgnoreCase = true };
@@ -31,152 +30,34 @@ namespace Facility.CodeGen.Console
 					foreach (string line in Description)
 						System.Console.WriteLine(line);
 					System.Console.WriteLine();
-					WriteUsage();
+					WriteUsage(generator);
 					return 0;
 				}
 
-				var parser = CreateParser(argsReader);
-
-				var generator = CreateGenerator(argsReader);
-				generator.GeneratorName = s_assemblyName;
-				if (SupportsCustomIndent)
-				{
-					string indentText = argsReader.ReadIndentOption();
-					if (indentText != null)
-						generator.IndentText = indentText;
-				}
-
-				if (SupportsCustomNewLine)
-				{
-					string newLine = argsReader.ReadNewLineOption();
-					if (newLine != null)
-						generator.NewLine = newLine;
-				}
-
-				bool shouldClean = SupportsClean && argsReader.ReadCleanFlag();
-				bool isQuiet = argsReader.ReadQuietFlag();
+				var settings = CreateSettings(argsReader);
 				bool isVerify = argsReader.ReadVerifyFlag();
-				bool isDryRun = argsReader.ReadDryRunFlag();
-				var excludeTags = argsReader.ReadExcludeTagOptions();
 
-				string inputPath = argsReader.ReadArgument();
-				if (inputPath == null)
+				settings.IndentText = generator.RespectsIndentText ? argsReader.ReadIndentOption() : null;
+				settings.NewLine = generator.RespectsNewLine ? argsReader.ReadNewLineOption() : null;
+				settings.ShouldClean = generator.HasPatternsToClean && argsReader.ReadCleanFlag();
+				settings.IsQuiet = argsReader.ReadQuietFlag();
+				settings.IsDryRun = isVerify || argsReader.ReadDryRunFlag();
+				settings.ExcludeTags = argsReader.ReadExcludeTagOptions();
+
+				settings.InputPath = argsReader.ReadArgument();
+				if (settings.InputPath == null)
 					throw new ArgsReaderException("Missing input path.");
 
-				string outputPath = argsReader.ReadArgument();
-				if (outputPath == null)
+				settings.OutputPath = argsReader.ReadArgument();
+				if (settings.OutputPath == null)
 					throw new ArgsReaderException("Missing output path.");
 
 				argsReader.VerifyComplete();
 
-				ServiceDefinitionText input;
-				if (inputPath == "-")
-				{
-					input = new ServiceDefinitionText("", System.Console.In.ReadToEnd());
-				}
-				else
-				{
-					if (!File.Exists(inputPath))
-						throw new ApplicationException("Input file does not exist: " + inputPath);
-					input = new ServiceDefinitionText(Path.GetFileName(inputPath), File.ReadAllText(inputPath));
-				}
+				int filesChanged = FileGenerator.GenerateFiles(generator, settings);
 
-				var service = parser.ParseDefinition(input);
-
-				foreach (string excludeTag in excludeTags)
-					service = service.ExcludeTag(excludeTag);
-
-				PrepareGenerator(generator, service, outputPath);
-				var output = generator.GenerateOutput(service);
-
-				if (SupportsSingleOutput &&
-					!outputPath.EndsWith("/", StringComparison.Ordinal) &&
-					!outputPath.EndsWith("\\", StringComparison.Ordinal) &&
-					!Directory.Exists(outputPath))
-				{
-					if (output.Files.Count > 1)
-						throw new InvalidOperationException("Multiple outputs not expected.");
-
-					if (output.Files.Count == 1)
-					{
-						var file = output.Files[0];
-
-						if (outputPath == "-")
-							System.Console.Write(file.Text);
-						else if (ShouldWriteByteOrderMark(file.Name))
-							File.WriteAllText(outputPath, file.Text, s_utf8WithBom);
-						else
-							File.WriteAllText(outputPath, file.Text);
-					}
-				}
-				else
-				{
-					var filesToWrite = new List<CodeGenFile>();
-					foreach (var file in output.Files)
-					{
-						string existingFilePath = Path.Combine(outputPath, file.Name);
-						if (File.Exists(existingFilePath))
-						{
-							// ignore CR when comparing files
-							if (file.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
-							{
-								filesToWrite.Add(file);
-								if (!isQuiet)
-									System.Console.WriteLine("changed " + file.Name);
-							}
-						}
-						else
-						{
-							filesToWrite.Add(file);
-							if (!isQuiet)
-								System.Console.WriteLine("added " + file.Name);
-						}
-					}
-
-					var namesToDelete = new List<string>();
-					if (shouldClean && output.PatternsToClean.Count != 0)
-					{
-						var directoryInfo = new DirectoryInfo(outputPath);
-						if (directoryInfo.Exists)
-						{
-							foreach (string nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
-							{
-								if (output.Files.All(x => x.Name != nameMatchingPattern))
-								{
-									namesToDelete.Add(nameMatchingPattern);
-									if (!isQuiet)
-										System.Console.WriteLine("removed " + nameMatchingPattern);
-								}
-							}
-						}
-					}
-
-					if (isVerify)
-						return filesToWrite.Count != 0 || namesToDelete.Count != 0 ? 1 : 0;
-
-					if (!isDryRun)
-					{
-						if (!Directory.Exists(outputPath))
-							Directory.CreateDirectory(outputPath);
-
-						foreach (var fileToWrite in filesToWrite)
-						{
-							string outputFilePath = Path.Combine(outputPath, fileToWrite.Name);
-
-							string outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
-							if (outputFileDirectoryPath != null && outputFileDirectoryPath != outputPath && !Directory.Exists(outputFileDirectoryPath))
-								Directory.CreateDirectory(outputFileDirectoryPath);
-
-							if (ShouldWriteByteOrderMark(fileToWrite.Name))
-								File.WriteAllText(outputFilePath, fileToWrite.Text, s_utf8WithBom);
-							else
-								File.WriteAllText(outputFilePath, fileToWrite.Text);
-						}
-
-						foreach (string nameToDelete in namesToDelete)
-							File.Delete(Path.Combine(outputPath, nameToDelete));
-					}
-				}
+				if (isVerify)
+					return filesChanged == 0 ? 0 : 1;
 
 				return 0;
 			}
@@ -191,7 +72,7 @@ namespace Facility.CodeGen.Console
 			{
 				System.Console.Error.WriteLine(exception.Message);
 				System.Console.Error.WriteLine();
-				WriteUsage();
+				WriteUsage(generator);
 				return 2;
 			}
 			catch (ApplicationException exception)
@@ -217,109 +98,43 @@ namespace Facility.CodeGen.Console
 		protected virtual IReadOnlyList<string> ExtraUsage => new string[0];
 
 		/// <summary>
-		/// True if the application supports output to a file and/or standard output. (Default false.)
-		/// </summary>
-		protected virtual bool SupportsSingleOutput => false;
-
-		/// <summary>
-		/// True if the application supports the clean option. (Default false.)
-		/// </summary>
-		protected virtual bool SupportsClean => false;
-
-		/// <summary>
-		/// True if the application supports the custom indent option. (Default true.)
-		/// </summary>
-		protected virtual bool SupportsCustomIndent => true;
-
-		/// <summary>
-		/// True if the application supports the custom new line option. (Default true.)
-		/// </summary>
-		protected virtual bool SupportsCustomNewLine => true;
-
-		/// <summary>
-		/// Creates the service parser. (Default FSD.)
-		/// </summary>
-		protected virtual ServiceParser CreateParser(ArgsReader args) => new FsdParser();
-
-		/// <summary>
 		/// Creates the code generator.
 		/// </summary>
-		protected abstract CodeGenerator CreateGenerator(ArgsReader args);
+		protected abstract CodeGenerator CreateGenerator();
 
 		/// <summary>
-		/// Prepares the code generator.
+		/// Creates the file generator settings.
 		/// </summary>
-		protected virtual void PrepareGenerator(CodeGenerator generator, ServiceInfo service, string outputPath)
+		/// <param name="argsReader">Used to support extra arguments.</param>
+		/// <returns>The file generator settings.</returns>
+		protected abstract FileGeneratorSettings CreateSettings(ArgsReader argsReader);
+
+		private void WriteUsage(CodeGenerator generator)
 		{
-		}
-
-		/// <summary>
-		/// True if a BOM should be written for a file with the specified name.
-		/// </summary>
-		protected virtual bool ShouldWriteByteOrderMark(string name) => false;
-
-		private IEnumerable<string> FindNamesMatchingPatterns(DirectoryInfo directoryInfo, IReadOnlyList<CodeGenPattern> patternsToClean)
-		{
-			foreach (var patternToClean in patternsToClean)
-			{
-				foreach (string name in FindNamesMatchingPattern(directoryInfo, patternToClean))
-					yield return name;
-			}
-		}
-
-		private IEnumerable<string> FindNamesMatchingPattern(DirectoryInfo directoryInfo, CodeGenPattern patternToClean)
-		{
-			var parts = patternToClean.NamePattern.Split(new[] { '/' }, 2);
-			if (parts[0].Length == 0)
-				throw new InvalidOperationException("Invalid name pattern.");
-
-			if (parts.Length == 1)
-			{
-				foreach (var fileInfo in directoryInfo.GetFiles(parts[0]))
-				{
-					if (File.ReadAllText(fileInfo.FullName).Contains(patternToClean.RequiredSubstring))
-						yield return fileInfo.Name;
-				}
-			}
-			else
-			{
-				foreach (var subdirectoryInfo in directoryInfo.GetDirectories(parts[0]))
-				{
-					foreach (string name in FindNamesMatchingPattern(subdirectoryInfo, new CodeGenPattern(parts[1], patternToClean.RequiredSubstring)))
-						yield return subdirectoryInfo.Name + '/' + name;
-				}
-			}
-		}
-
-		private void WriteUsage()
-		{
-			System.Console.WriteLine($"Usage: {s_assemblyName} input output [options]");
+			System.Console.WriteLine($"Usage: {generator.GeneratorName} input output [options]");
 			System.Console.WriteLine();
 			System.Console.WriteLine("   input");
 			System.Console.WriteLine("      The path to the input file (- for stdin).");
 			System.Console.WriteLine("   output");
-			System.Console.WriteLine("      The path to the output directory" + (SupportsSingleOutput ? " or file (- for stdout)." : "."));
+			System.Console.WriteLine("      The path to the output directory" + (generator.HasSingleOutput ? " or file (- for stdout)." : "."));
 			System.Console.WriteLine();
 
 			foreach (var usage in ExtraUsage)
 				System.Console.WriteLine(usage);
 
-			System.Console.WriteLine("   --serviceName <name>");
-			System.Console.WriteLine("      The name of the input service (for non-FSD input).");
-
-			if (SupportsClean)
+			if (generator.HasPatternsToClean)
 			{
 				System.Console.WriteLine("   --clean");
 				System.Console.WriteLine("      Deletes previously generated files that are no longer used.");
 			}
 
-			if (SupportsCustomIndent)
+			if (generator.RespectsIndentText)
 			{
 				System.Console.WriteLine("   --indent (tab|1|2|3|4|5|6|7|8)");
 				System.Console.WriteLine("      The indent used in the output: a tab or a number of spaces.");
 			}
 
-			if (SupportsCustomNewLine)
+			if (generator.RespectsNewLine)
 			{
 				System.Console.WriteLine("   --newline (auto|lf|crlf)");
 				System.Console.WriteLine("      The newline used in the output.");
@@ -334,8 +149,5 @@ namespace Facility.CodeGen.Console
 			System.Console.WriteLine("   --quiet");
 			System.Console.WriteLine("      Suppresses normal console output.");
 		}
-
-		static readonly string s_assemblyName = Assembly.GetEntryAssembly().GetName().Name;
-		static readonly Encoding s_utf8WithBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
 	}
 }
