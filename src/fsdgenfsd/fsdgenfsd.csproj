@@ -2,37 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net47</TargetFramework>
-    <FrameworkPathOverride Condition="'$(MONO_ROOT)' != ''">$(MONO_ROOT)/lib/mono/4.7-api/</FrameworkPathOverride>
-    <LangVersion>latest</LangVersion>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>True</DebugSymbols>
-    <Description>A tool that generates FSD for a Facility Service Definition.</Description>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Description>A .NET Core Global Tool that generates FSD for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD CodeGen</PackageTags>
-    <IsTool>True</IsTool>
-    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <PackAsTool>True</PackAsTool>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="bin\$(Configuration)\*.dll">
-      <PackagePath>tools/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj" />
     <ProjectReference Include="..\Facility.Definition\Facility.Definition.csproj" />
   </ItemGroup>
-
-  <ItemDefinitionGroup>
-    <PackageReference>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <ProjectReference>
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
-  </ItemDefinitionGroup>
 
 </Project>
