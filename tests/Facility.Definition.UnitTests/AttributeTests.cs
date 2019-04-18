@@ -173,6 +173,30 @@ namespace Facility.Definition.UnitTests
 		}
 
 		[Test]
+		public void RequiredFields()
+		{
+			var service = TestUtility.ParseTestApi("service TestApi {" +
+				"method myMethod { [required] in: string; }: { [required] out: string; }" +
+				"data MyData { [required] field: string; }" +
+				"enum MyEnum { x }" +
+				"errors MyErrors { x }" +
+				"}");
+			service.GetElementAndDescendants().OfType<ServiceFieldInfo>().All(x => x.IsRequired).Should().BeTrue();
+		}
+
+		[Test]
+		public void TwoRequireds()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi data MyData { [required] [required] field: string; }");
+		}
+
+		[Test]
+		public void BadRequiredParameter()
+		{
+			TestUtility.ParseInvalidTestApi("service TestApi data MyData { [required(hey: you)] field: string; }");
+		}
+
+		[Test]
 		public void TagEverything()
 		{
 			var service = TestUtility.ParseTestApi("[tag(name: hey)] service TestApi {" +

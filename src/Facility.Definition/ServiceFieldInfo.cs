@@ -20,6 +20,18 @@ namespace Facility.Definition
 			Summary = summary ?? "";
 
 			ValidateName();
+
+			var requiredAttributes = GetAttributes("required");
+			if (requiredAttributes.Count > 1)
+				AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(requiredAttributes[1]));
+			var requiredAttribute = requiredAttributes.Count == 0 ? null : requiredAttributes[0];
+			if (requiredAttribute != null)
+			{
+				IsRequired = true;
+
+				foreach (var requiredParameter in requiredAttribute.Parameters)
+					AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(requiredAttribute.Name, requiredParameter));
+			}
 		}
 
 		/// <summary>
@@ -36,6 +48,11 @@ namespace Facility.Definition
 		/// The summary of the field.
 		/// </summary>
 		public string Summary { get; }
+
+		/// <summary>
+		/// True if the field is required.
+		/// </summary>
+		public bool IsRequired { get; }
 
 		private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Enumerable.Empty<ServiceElementInfo>();
 	}
