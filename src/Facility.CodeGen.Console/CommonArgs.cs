@@ -8,7 +8,7 @@ namespace Facility.CodeGen.Console
 	{
 		public static bool ReadCleanFlag(this ArgsReader args) => args.ReadFlag("clean");
 
-		public static bool ReadDryRunFlag(this ArgsReader args) => args.ReadFlag("dryrun");
+		public static bool ReadDryRunFlag(this ArgsReader args) => args.ReadFlag("dry-run");
 
 		public static bool ReadHelpFlag(this ArgsReader args) => args.ReadFlag("help|h|?");
 
@@ -55,7 +55,7 @@ namespace Facility.CodeGen.Console
 			var values = new List<string>();
 			while (true)
 			{
-				string value = args.ReadOption("excludeTag");
+				string value = args.ReadOption("exclude-tag");
 				if (value == null)
 					break;
 				values.Add(value);

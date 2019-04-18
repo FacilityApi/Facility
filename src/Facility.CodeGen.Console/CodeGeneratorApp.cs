@@ -24,7 +24,7 @@ namespace Facility.CodeGen.Console
 
 			try
 			{
-				var argsReader = new ArgsReader(args) { LongOptionIgnoreCase = true };
+				var argsReader = new ArgsReader(args) { LongOptionIgnoreCase = true, LongOptionIgnoreKebabCase = true };
 				if (argsReader.ReadHelpFlag())
 				{
 					foreach (string line in Description)
@@ -140,9 +140,9 @@ namespace Facility.CodeGen.Console
 				System.Console.WriteLine("      The newline used in the output.");
 			}
 
-			System.Console.WriteLine("   --excludeTag <tag>");
+			System.Console.WriteLine("   --exclude-tag <tag>");
 			System.Console.WriteLine("      Excludes service elements with the specified tag.");
-			System.Console.WriteLine("   --dryrun");
+			System.Console.WriteLine("   --dry-run");
 			System.Console.WriteLine("      Executes the tool without making changes to the file system.");
 			System.Console.WriteLine("   --verify");
 			System.Console.WriteLine("      Exits with error code 1 if changes to the file system are needed.");
