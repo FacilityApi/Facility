@@ -85,49 +85,45 @@ namespace Facility.Definition.CodeGen
 				if (output.Files.Count > 1)
 					throw new InvalidOperationException("Multiple outputs not expected.");
 
-				if (output.Files.Count == 1)
-				{
-					filesToWrite.Add(output.Files[0]);
-					outputIsFile = true;
-					writeToConsole = settings.OutputPath == "-";
-				}
+				outputIsFile = true;
+				writeToConsole = settings.OutputPath == "-";
 			}
-			else
+
+			bool notQuiet = !settings.IsQuiet && !outputIsFile;
+
+			foreach (var file in output.Files)
 			{
-				foreach (var file in output.Files)
+				string existingFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, file.Name);
+				if (File.Exists(existingFilePath))
 				{
-					string existingFilePath = Path.Combine(settings.OutputPath, file.Name);
-					if (File.Exists(existingFilePath))
-					{
-						// ignore CR when comparing files
-						if (file.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
-						{
-							filesToWrite.Add(file);
-							if (!settings.IsQuiet)
-								Console.WriteLine("changed " + file.Name);
-						}
-					}
-					else
+					// ignore CR when comparing files
+					if (file.Text.Replace("\r", "") != File.ReadAllText(existingFilePath).Replace("\r", ""))
 					{
 						filesToWrite.Add(file);
-						if (!settings.IsQuiet)
-							Console.WriteLine("added " + file.Name);
+						if (notQuiet)
+							Console.WriteLine("changed " + file.Name);
 					}
 				}
-
-				if (shouldClean && output.PatternsToClean.Count != 0)
+				else
 				{
-					var directoryInfo = new DirectoryInfo(settings.OutputPath);
-					if (directoryInfo.Exists)
+					filesToWrite.Add(file);
+					if (notQuiet)
+						Console.WriteLine("added " + file.Name);
+				}
+			}
+
+			if (shouldClean && output.PatternsToClean.Count != 0)
+			{
+				var directoryInfo = new DirectoryInfo(settings.OutputPath);
+				if (directoryInfo.Exists)
+				{
+					foreach (string nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
 					{
-						foreach (string nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
+						if (output.Files.All(x => x.Name != nameMatchingPattern))
 						{
-							if (output.Files.All(x => x.Name != nameMatchingPattern))
-							{
-								namesToDelete.Add(nameMatchingPattern);
-								if (!settings.IsQuiet)
-									Console.WriteLine("removed " + nameMatchingPattern);
-							}
+							namesToDelete.Add(nameMatchingPattern);
+							if (notQuiet)
+								Console.WriteLine("removed " + nameMatchingPattern);
 						}
 					}
 				}
@@ -140,7 +136,7 @@ namespace Facility.Definition.CodeGen
 
 				foreach (var fileToWrite in filesToWrite)
 				{
-					string outputFilePath = outputIsFile ? fileToWrite.Name : Path.Combine(settings.OutputPath, fileToWrite.Name);
+					string outputFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, fileToWrite.Name);
 
 					string outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
 					if (outputFileDirectoryPath != null && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
