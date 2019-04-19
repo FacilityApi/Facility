@@ -7,7 +7,7 @@ Describe changes here when they're committed to the `master` branch. To publish,
 Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
 
 * [minor] Support tags via attribute: `[tags(name: shiny)]`
-* [minor] Support tag exclusion via command-line: `--excludeTags shiny`
+* [minor] Support tag exclusion via command-line: `--exclude-tags shiny`
 * [minor] Report multiple definition errors from command-line tools.
 * [minor] Improve http attribute errors.
 * [major] Drop support for arbitrary HTTP methods (to help detect typos).
