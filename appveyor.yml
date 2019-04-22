@@ -4,11 +4,12 @@ image:
 - Ubuntu
 environment:
   NUGET_API_KEY:
-    secure: QEn16fxymoBroWnkHAsN94ARrAA8tX/L48Ue90x3zfxN0YMgwczJEVtTs/71HR5A
+    secure: ui2NHCkD1RaeInP9garBAG67yxHp78AykDTSKGZcWX25GehDjWz/K8w24QkHItgz
   BUILD_BOT_PASSWORD:
     secure: nRnlm4SD3Htof+YIoW7URXirI8vKtVrZX24Cou4mtfjwvj1OZkotbS5jogxhf06x
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
 build_script:
-- ps: .\build.ps1 --target=Publish
-- sh: ./build.sh --target=Package
+- cmd: .\build.cmd publish "--trigger=%APPVEYOR_REPO_TAG_NAME%" "--branch=%APPVEYOR_REPO_BRANCH%" "--nuget-api-key=%NUGET_API_KEY%"
+- sh: ./build.sh package
 test: off
+artifacts:
+- path: 'release\*.nupkg'
