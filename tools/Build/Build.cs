@@ -11,6 +11,8 @@ internal static class Build
 {
 	public static int Main(string[] args) => BuildRunner.Execute(args, build =>
 	{
+		var codegen = "fsdgenfsd";
+
 		var dotNetTools = new DotNetTools(Path.Combine("tools", "bin")).AddSource(Path.Combine("tools", "bin"));
 
 		var dotNetBuildSettings = new DotNetBuildSettings
@@ -45,12 +47,12 @@ internal static class Build
 		{
 			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
 			string versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
-			RunDotNet("pack", Path.Combine("src", "fsdgenfsd", "fsdgenfsd.csproj"), "-c", configuration, "--no-build",
+			RunDotNet("pack", Path.Combine("src", codegen, $"{codegen}.csproj"), "-c", configuration, "--no-build",
 				"--output", Path.GetFullPath(Path.Combine("tools", "bin")), "--version-suffix", versionSuffix);
 
-			string packagePath = FindFiles($"tools/bin/fsdgenfsd.*-{versionSuffix}.nupkg").Single();
+			string packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
 			string packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
-			string toolPath = dotNetTools.GetToolPath($"fsdgenfsd/{packageVersion}");
+			string toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
 
 			string verifyOption = verify ? "--verify" : null;
 
