@@ -116,7 +116,7 @@ namespace Facility.CodeGen.Console
 			System.Console.WriteLine("   input");
 			System.Console.WriteLine("      The path to the input file (- for stdin).");
 			System.Console.WriteLine("   output");
-			System.Console.WriteLine("      The path to the output directory" + (generator.HasSingleOutput ? " or file (- for stdout)." : "."));
+			System.Console.WriteLine("      The path to the output directory" + (generator.SupportsSingleOutput ? " or file (- for stdout)." : "."));
 			System.Console.WriteLine();
 
 			foreach (var usage in ExtraUsage)

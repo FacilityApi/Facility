@@ -29,9 +29,9 @@ namespace Facility.Definition.CodeGen
 		public abstract CodeGenOutput GenerateOutput(ServiceInfo service);
 
 		/// <summary>
-		/// True if the generator writes output to a single file. (Default false.)
+		/// True if the generator supports writing output to a single file. (Default false.)
 		/// </summary>
-		public virtual bool HasSingleOutput => false;
+		public virtual bool SupportsSingleOutput => false;
 
 		/// <summary>
 		/// True if patterns to clean are returned with the output. (Default false.)

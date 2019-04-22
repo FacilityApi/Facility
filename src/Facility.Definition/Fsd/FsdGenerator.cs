@@ -102,7 +102,7 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// The generator writes output to a single file.
 		/// </summary>
-		public override bool HasSingleOutput => true;
+		public override bool SupportsSingleOutput => true;
 
 		private void WriteSummaryAndAttributes<T>(CodeWriter code, T info)
 			where T : ServiceElementWithAttributesInfo, IServiceHasSummary

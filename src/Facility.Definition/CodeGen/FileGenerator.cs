@@ -77,14 +77,12 @@ namespace Facility.Definition.CodeGen
 			bool outputIsFile = false;
 			bool writeToConsole = false;
 
-			if (generator.HasSingleOutput &&
+			if (generator.SupportsSingleOutput &&
 				!settings.OutputPath.EndsWith("/", StringComparison.Ordinal) &&
 				!settings.OutputPath.EndsWith("\\", StringComparison.Ordinal) &&
-				!Directory.Exists(settings.OutputPath))
+				!Directory.Exists(settings.OutputPath) &&
+				output.Files.Count == 1)
 			{
-				if (output.Files.Count > 1)
-					throw new InvalidOperationException("Multiple outputs not expected.");
-
 				outputIsFile = true;
 				writeToConsole = settings.OutputPath == "-";
 			}
