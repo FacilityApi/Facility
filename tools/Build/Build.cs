@@ -27,6 +27,20 @@ internal static class Build
 
 		build.AddDotNetTargets(dotNetBuildSettings);
 
+		build.Target("codegen")
+			.DependsOn("build")
+			.Does(() => codeGen(verify: false));
+
+		build.Target("verify-codegen")
+			.DependsOn("build")
+			.Does(() => codeGen(verify: true));
+
+		build.Target("test")
+			.DependsOn("verify-codegen");
+
+		build.Target("default")
+			.DependsOn("build");
+
 		void codeGen(bool verify)
 		{
 			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
@@ -48,19 +62,5 @@ internal static class Build
 			if (verify)
 				RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", verifyOption);
 		}
-
-		build.Target("codegen")
-			.DependsOn("build")
-			.Does(() => codeGen(verify: false));
-
-		build.Target("verify-codegen")
-			.DependsOn("build")
-			.Does(() => codeGen(verify: true));
-
-		build.Target("test")
-			.DependsOn("verify-codegen");
-
-		build.Target("default")
-			.DependsOn("build");
 	});
 }
