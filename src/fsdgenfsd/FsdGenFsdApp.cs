@@ -17,6 +17,6 @@ namespace fsdgenfsd
 
 		protected override CodeGenerator CreateGenerator() => new FsdGenerator();
 
-		protected override FileGeneratorSettings CreateSettings(ArgsReader argsReader) => new FsdGeneratorSettings();
+		protected override FileGeneratorSettings CreateSettings(ArgsReader args) => new FsdGeneratorSettings();
 	}
 }

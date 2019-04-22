@@ -105,9 +105,9 @@ namespace Facility.CodeGen.Console
 		/// <summary>
 		/// Creates the file generator settings.
 		/// </summary>
-		/// <param name="argsReader">Used to support extra arguments.</param>
+		/// <param name="args">Used to support extra arguments.</param>
 		/// <returns>The file generator settings.</returns>
-		protected abstract FileGeneratorSettings CreateSettings(ArgsReader argsReader);
+		protected abstract FileGeneratorSettings CreateSettings(ArgsReader args);
 
 		private void WriteUsage(CodeGenerator generator)
 		{
