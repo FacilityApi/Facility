@@ -40,9 +40,6 @@ internal static class Build
 		build.Target("test")
 			.DependsOn("verify-codegen");
 
-		build.Target("default")
-			.DependsOn("build");
-
 		void codeGen(bool verify)
 		{
 			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
