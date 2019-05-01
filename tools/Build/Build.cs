@@ -31,17 +31,16 @@ internal static class Build
 
 		build.Target("codegen")
 			.DependsOn("build")
+			.Describe("Generates code from the FSD")
 			.Does(() => codeGen(verify: false));
 
 		build.Target("verify-codegen")
 			.DependsOn("build")
+			.Describe("Ensures the generated code is up-to-date")
 			.Does(() => codeGen(verify: true));
 
 		build.Target("test")
 			.DependsOn("verify-codegen");
-
-		build.Target("default")
-			.DependsOn("build");
 
 		void codeGen(bool verify)
 		{
