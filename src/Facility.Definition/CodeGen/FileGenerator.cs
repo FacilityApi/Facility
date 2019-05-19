@@ -33,6 +33,11 @@ namespace Facility.Definition.CodeGen
 			if (generator == null)
 				throw new ArgumentNullException(nameof(generator));
 
+			if (settings.InputPath == null)
+				throw new ArgumentException("InputPath required.", nameof(settings));
+			if (settings.OutputPath == null)
+				throw new ArgumentException("OutputPath required.", nameof(settings));
+
 			if (settings.IndentText != null)
 			{
 				if (!generator.RespectsIndentText)
@@ -67,8 +72,11 @@ namespace Facility.Definition.CodeGen
 
 			var service = parser.ParseDefinition(input);
 
-			foreach (string excludeTag in settings.ExcludeTags)
-				service = service.ExcludeTag(excludeTag);
+			if (settings.ExcludeTags != null)
+			{
+				foreach (string excludeTag in settings.ExcludeTags)
+					service = service.ExcludeTag(excludeTag);
+			}
 
 			var output = generator.GenerateOutput(service);
 
