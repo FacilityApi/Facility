@@ -57,13 +57,11 @@ internal static class Build
 
 			string verifyOption = verify ? "--verify" : null;
 
-			RunApp(toolPath, "example/ExampleApi.fsd", "example/output", verifyOption);
-			if (verify)
-				RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output", verifyOption);
+			RunApp(toolPath, "example/ExampleApi.fsd", "example/output", "--newline", "lf", verifyOption);
+			RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output", "--newline", "lf", "--verify");
 
-			RunApp(toolPath, "example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", verifyOption);
-			if (verify)
-				RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", verifyOption);
+			RunApp(toolPath, "example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", verifyOption);
+			RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", "--verify");
 		}
 	});
 }

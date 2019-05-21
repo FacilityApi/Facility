@@ -185,6 +185,8 @@ method getWidgetWeight
 [tag(name: widgets)]
 method getWidgetImage
 {
+	/// The widget ID.
+	id: string;
 }:
 {
 	/// The content of the widget image.
@@ -203,6 +205,9 @@ method getWidgetImage
 [tag(name: widgets)]
 method setWidgetImage
 {
+	/// The widget ID.
+	id: string;
+
 	/// The content of the widget image.
 	[http(from: body)]
 	content: bytes;
