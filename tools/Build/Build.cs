@@ -57,7 +57,7 @@ internal static class Build
 
 			string verifyOption = verify ? "--verify" : null;
 
-			RunApp(toolPath, "___", "___", verifyOption);
+			RunApp(toolPath, "___", "___", "--newline", "lf", verifyOption);
 		}
 	});
 }
