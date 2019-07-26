@@ -26,7 +26,10 @@ internal static class Build
 				SourceCodeUrl = "https://github.com/FacilityApi/RepoName/tree/master/src",
 			},
 			DotNetTools = dotNetTools,
-			ProjectUsesSourceLink = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
+			SourceLinkSettings = new SourceLinkSettings
+			{
+				ShouldTestPackage = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
+			},
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
