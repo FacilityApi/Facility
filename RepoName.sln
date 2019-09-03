@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.cmd = build.cmd
 		build.sh = build.sh
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		README.md = README.md
@@ -19,21 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{9D6DC519-8908-4D3A-B16B-118D682BD170}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{2649507F-E23F-4FE4-902F-6B2F9FB63232}"
-	ProjectSection(SolutionItems) = preProject
-		tools\Directory.Build.props = tools\Directory.Build.props
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B3240F85-9541-49CA-8380-DD2377CBBF6D}"
-	ProjectSection(SolutionItems) = preProject
-		tests\Directory.Build.props = tests\Directory.Build.props
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7137A74B-D593-4356-8D4A-005014CA76B3}"
-	ProjectSection(SolutionItems) = preProject
-		src\Directory.Build.props = src\Directory.Build.props
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,11 +34,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{2649507F-E23F-4FE4-902F-6B2F9FB63232} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{B3240F85-9541-49CA-8380-DD2377CBBF6D} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{7137A74B-D593-4356-8D4A-005014CA76B3} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {647F7A73-0365-411F-941D-6DDA8A4CFA1A}
