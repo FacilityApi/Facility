@@ -5,7 +5,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Description>A .NET Core Global Tool that generates FSD for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD CodeGen</PackageTags>
-    <PackAsTool>True</PackAsTool>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
   <ItemGroup>
