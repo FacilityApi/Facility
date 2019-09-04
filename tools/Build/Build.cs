@@ -24,6 +24,7 @@ internal static class Build
 				GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
 				GitBranchName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH"),
 				SourceCodeUrl = "https://github.com/FacilityApi/Facility/tree/master/src",
+				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
 			DotNetTools = dotNetTools,
 			SourceLinkSettings = new SourceLinkSettings
