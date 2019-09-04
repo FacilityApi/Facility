@@ -54,6 +54,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{0727DA0F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocTarget", "tools\XmlDocTarget\XmlDocTarget.csproj", "{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
