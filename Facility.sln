@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build.cmd = build.cmd
 		build.sh = build.sh
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		README.md = README.md
@@ -35,21 +36,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{A887
 	ProjectSection(SolutionItems) = preProject
 		example\ExampleApi.fsd = example\ExampleApi.fsd
 		example\ExampleApi.fsd.md = example\ExampleApi.fsd.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8EB93F1D-F0D4-4197-85A8-61A6020BE068}"
-	ProjectSection(SolutionItems) = preProject
-		src\Directory.Build.props = src\Directory.Build.props
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{25031D3C-D2D4-449D-AAB2-26332E384CF6}"
-	ProjectSection(SolutionItems) = preProject
-		tests\Directory.Build.props = tests\Directory.Build.props
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{0727DA0F-E64B-47E1-9A55-8845842B82C2}"
-	ProjectSection(SolutionItems) = preProject
-		tools\Directory.Build.props = tools\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}"
@@ -93,9 +79,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A5F306E8-F964-4628-8542-5875AB265242} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
 		{A887B544-D4CE-49BE-8007-A9CFB2284857} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{8EB93F1D-F0D4-4197-85A8-61A6020BE068} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{25031D3C-D2D4-449D-AAB2-26332E384CF6} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{0727DA0F-E64B-47E1-9A55-8845842B82C2} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {647F7A73-0365-411F-941D-6DDA8A4CFA1A}
