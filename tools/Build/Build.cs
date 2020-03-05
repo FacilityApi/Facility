@@ -27,10 +27,6 @@ internal static class Build
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
 			DotNetTools = dotNetTools,
-			SourceLinkSettings = new SourceLinkSettings
-			{
-				ShouldTestPackage = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
-			},
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
