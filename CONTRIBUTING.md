@@ -2,13 +2,13 @@
 
 ## Prerequisites
 
-* Install [Visual Studio 2017](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/) with the [editorconfig extension](https://github.com/editorconfig/editorconfig-vscode).
-* Install [.NET Core 2.x](https://dotnet.microsoft.com/download).
+* Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/).
+* Install [.NET Core 3.x](https://dotnet.microsoft.com/download).
 
 ## Guidelines
 
-* All new code **must** have complete unit tests.
-* All public classes, methods, interfaces, enums, etc. **must** have correct XML documentation comments.
+* All new code should have complete unit tests.
+* All public classes, methods, interfaces, enums, etc. should have correct XML documentation comments.
 * Update [VersionHistory](VersionHistory.md) with a human-readable description of the change.
 
 ## How to Build

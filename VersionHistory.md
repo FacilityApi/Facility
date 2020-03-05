@@ -1,33 +1,25 @@
 # Version History
 
-## Pending
-
-Describe changes here when they're committed to the `master` branch. To publish, update the version number in [Directory.Build.props](src/Directory.Build.props), move the pending changes below to a new [Released](#released) section, and push a git tag using the version number, e.g. `v2.3.4`.
-
-Prefix the description of the change with `[major]`, `[minor]`, or `[patch]` in accordance with [Semantic Versioning](https://semver.org/).
-
-## Released
-
 ### 2.0.2
 
-* [minor] Support tags via attribute: `[tags(name: shiny)]`
-* [minor] Support tag exclusion via command-line: `--exclude-tags shiny`
-* [minor] Report multiple definition errors from command-line tools.
-* [minor] Improve http attribute errors.
-* [major] Drop support for arbitrary HTTP methods (to help detect typos).
-* [major] Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
-* [major] Stop using System.Net.Http.HttpMethod.
-* [minor] Allow arrays in path and query fields.
-* [minor] Allow non-strings in header fields.
-* [minor] Allow bytes and strings in body fields.
-* [minor] Prohibit duplicate file names in output.
-* [minor] Support definitions interleaved within Markdown.
-* [minor] Braces are optional around service members.
-* [major] Change `fsdgenfsd` to .NET Core Global Tool.
-* [minor] Support static `FsdGenerator.GenerateFsd` for C# build scripts.
-* [minor] Use kebab case for multi-word command-line options.
-* [major] Refactor code generator app framework.
-* [minor] Support `[required]` field attribute.
+* **Breaking:** Drop support for arbitrary HTTP methods (to help detect typos).
+* **Breaking:** Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
+* **Breaking:** Stop using System.Net.Http.HttpMethod.
+* **Breaking:** Change `fsdgenfsd` to .NET Core Global Tool.
+* **Breaking:** Refactor code generator app framework.
+* Support tags via attribute: `[tags(name: shiny)]`
+* Support tag exclusion via command-line: `--exclude-tags shiny`
+* Report multiple definition errors from command-line tools.
+* Improve http attribute errors.
+* Allow arrays in path and query fields.
+* Allow non-strings in header fields.
+* Allow bytes and strings in body fields.
+* Prohibit duplicate file names in output.
+* Support definitions interleaved within Markdown.
+* Braces are optional around service members.
+* Support static `FsdGenerator.GenerateFsd` for C# build scripts.
+* Use kebab case for multi-word command-line options.
+* Support `[required]` field attribute.
 
 ### 1.5.0
 
