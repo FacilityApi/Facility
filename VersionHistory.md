@@ -9,7 +9,7 @@
 * **Breaking:** Drop support for arbitrary HTTP methods (to help detect typos).
 * **Breaking:** Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
 * **Breaking:** Stop using System.Net.Http.HttpMethod.
-* **Breaking:** Change `fsdgenfsd` to .NET Core Global Tool.
+* **Breaking:** Change `fsdgenfsd` to .NET Core tool.
 * **Breaking:** Refactor code generator app framework.
 * Support tags via attribute: `[tags(name: shiny)]`
 * Support tag exclusion via command-line: `--exclude-tags shiny`
