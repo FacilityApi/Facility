@@ -11,17 +11,17 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// The name of the generator (for comments).
 		/// </summary>
-		public string GeneratorName { get; set; }
+		public string? GeneratorName { get; set; }
 
 		/// <summary>
 		/// The text to use for each indent (null for tab).
 		/// </summary>
-		public string IndentText { get; set; }
+		public string? IndentText { get; set; }
 
 		/// <summary>
 		/// The text to use for each new line (null for default).
 		/// </summary>
-		public string NewLine { get; set; }
+		public string? NewLine { get; set; }
 
 		/// <summary>
 		/// Generates output for the specified service.
@@ -61,20 +61,19 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		protected CodeGenFile CreateFile(string name, Action<CodeWriter> writeTo)
 		{
-			using (var stringWriter = new StringWriter())
-			{
-				if (NewLine != null)
-					stringWriter.NewLine = NewLine;
+			using var stringWriter = new StringWriter();
 
-				var code = new CodeWriter(stringWriter);
+			if (NewLine != null)
+				stringWriter.NewLine = NewLine;
 
-				if (IndentText != null)
-					code.IndentText = IndentText;
+			var code = new CodeWriter(stringWriter);
 
-				writeTo(code);
+			if (IndentText != null)
+				code.IndentText = IndentText;
 
-				return new CodeGenFile(name, stringWriter.ToString());
-			}
+			writeTo(code);
+
+			return new CodeGenFile(name, stringWriter.ToString());
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a method.
 		/// </summary>
-		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo> requestFields = null, IEnumerable<ServiceFieldInfo> responseFields = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, params ServicePart[] parts)
+		public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo>? requestFields = null, IEnumerable<ServiceFieldInfo>? responseFields = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
 			: base(name, attributes, summary, remarks, parts)
 		{
 			RequestFields = requestFields.ToReadOnlyList();

@@ -46,16 +46,16 @@ internal static class Build
 
 		void codeGen(bool verify)
 		{
-			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
-			string versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
+			var configuration = dotNetBuildSettings.BuildOptions!.ConfigurationOption!.Value;
+			var versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
 			RunDotNet("pack", Path.Combine("src", codegen, $"{codegen}.csproj"), "-c", configuration, "--no-build",
 				"--output", Path.GetFullPath(Path.Combine("tools", "bin")), "--version-suffix", versionSuffix);
 
-			string packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
-			string packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
-			string toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
+			var packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
+			var packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
+			var toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
 
-			string verifyOption = verify ? "--verify" : null;
+			var verifyOption = verify ? "--verify" : null;
 
 			RunApp(toolPath, "example/ExampleApi.fsd", "example/output", "--newline", "lf", verifyOption);
 			RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output", "--newline", "lf", "--verify");

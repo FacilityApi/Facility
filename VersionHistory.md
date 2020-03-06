@@ -1,5 +1,9 @@
 # Version History
 
+### 2.1.0
+
+* Support nullable references.
+
 ### 2.0.2
 
 * **Breaking:** Drop support for arbitrary HTTP methods (to help detect typos).

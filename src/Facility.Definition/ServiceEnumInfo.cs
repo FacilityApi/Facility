@@ -10,7 +10,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an enumerated type.
 		/// </summary>
-		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, params ServicePart[] parts)
+		public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo>? values = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
 			: base(name, attributes, summary, remarks, parts)
 		{
 			Values = values.ToReadOnlyList();

@@ -27,7 +27,7 @@ namespace Facility.Definition.Fsd
 			{
 				if (!string.IsNullOrWhiteSpace(GeneratorName))
 				{
-					code.WriteLine("// " + CodeGenUtility.GetCodeGenComment(GeneratorName));
+					code.WriteLine("// " + CodeGenUtility.GetCodeGenComment(GeneratorName!));
 					code.WriteLine();
 				}
 
@@ -93,7 +93,7 @@ namespace Facility.Definition.Fsd
 					}
 				}
 
-				foreach (string remark in remarks)
+				foreach (var remark in remarks)
 					code.WriteLine(remark);
 			});
 			return new CodeGenOutput(output);
@@ -125,7 +125,7 @@ namespace Facility.Definition.Fsd
 
 		private void WriteAttribute(CodeWriter code, ServiceAttributeInfo attribute)
 		{
-			string parameters = string.Join(", ", attribute.Parameters.Select(RenderAttributeParameter));
+			var parameters = string.Join(", ", attribute.Parameters.Select(RenderAttributeParameter));
 			if (parameters.Length != 0)
 				parameters = $"({parameters})";
 			code.WriteLine($"[{attribute.Name}{parameters}]");
@@ -146,7 +146,7 @@ namespace Facility.Definition.Fsd
 
 		private string RenderAttributeValueEscape(Match match)
 		{
-			char ch = match.Value[0];
+			var ch = match.Value[0];
 			switch (ch)
 			{
 			case '\\':

@@ -16,9 +16,9 @@ namespace Facility.CodeGen.Console
 
 		public static bool ReadVerifyFlag(this ArgsReader args) => args.ReadFlag("verify");
 
-		public static string ReadIndentOption(this ArgsReader args)
+		public static string? ReadIndentOption(this ArgsReader args)
 		{
-			string value = args.ReadOption("indent");
+			var value = args.ReadOption("indent");
 			if (value == null)
 				return null;
 
@@ -31,9 +31,9 @@ namespace Facility.CodeGen.Console
 			throw new ArgsReaderException($"Invalid indent '{value}'. (Should be 'tab' or the number of spaces.)");
 		}
 
-		public static string ReadNewLineOption(this ArgsReader args)
+		public static string? ReadNewLineOption(this ArgsReader args)
 		{
-			string value = args.ReadOption("newline");
+			var value = args.ReadOption("newline");
 			if (value == null)
 				return null;
 
@@ -55,7 +55,7 @@ namespace Facility.CodeGen.Console
 			var values = new List<string>();
 			while (true)
 			{
-				string value = args.ReadOption("exclude-tag");
+				var value = args.ReadOption("exclude-tag");
 				if (value == null)
 					break;
 				values.Add(value);

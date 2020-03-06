@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error set.
 		/// </summary>
-		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, params ServicePart[] parts)
+		public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, IEnumerable<ServiceAttributeInfo>? attributes, string? summary, IEnumerable<string>? remarks, params ServicePart[] parts)
 			: base(name, attributes, summary, remarks, parts)
 		{
 			Errors = errors.ToReadOnlyList();

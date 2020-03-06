@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position of the element.
 		/// </summary>
-		public ServiceDefinitionPosition Position => m_parts.FirstOrDefault()?.Position;
+		public ServiceDefinitionPosition? Position => m_parts.FirstOrDefault()?.Position;
 
 		/// <summary>
 		/// True if the element has no validation errors.
@@ -80,7 +80,7 @@ namespace Facility.Definition
 
 		private protected void ValidateName()
 		{
-			string name = ((IServiceHasName) this).Name;
+			var name = ((IServiceHasName) this).Name;
 			if (!ServiceDefinitionUtility.IsValidName(name))
 				AddValidationError(new ServiceDefinitionError($"Invalid name '{name}'.", Position));
 		}

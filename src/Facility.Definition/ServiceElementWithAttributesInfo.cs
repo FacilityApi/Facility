@@ -21,7 +21,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The obsolete message, if any.
 		/// </summary>
-		public string ObsoleteMessage { get; }
+		public string? ObsoleteMessage { get; }
 
 		/// <summary>
 		/// The names of the tags of the element, if any.
@@ -43,7 +43,7 @@ namespace Facility.Definition
 		/// </summary>
 		public sealed override IEnumerable<ServiceElementInfo> GetChildren() => Attributes.AsEnumerable<ServiceElementInfo>().Concat(GetExtraChildrenCore());
 
-		private protected ServiceElementWithAttributesInfo(IEnumerable<ServiceAttributeInfo> attributes, IReadOnlyList<ServicePart> parts)
+		private protected ServiceElementWithAttributesInfo(IEnumerable<ServiceAttributeInfo>? attributes, IReadOnlyList<ServicePart> parts)
 			: base(parts)
 		{
 			Attributes = attributes.ToReadOnlyList();
@@ -69,7 +69,7 @@ namespace Facility.Definition
 			var tagAttributes = GetAttributes("tag");
 			foreach (var tagAttribute in tagAttributes)
 			{
-				string tagName = null;
+				string? tagName = null;
 				foreach (var tagParameter in tagAttribute.Parameters)
 				{
 					if (tagParameter.Name == "name")

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace Facility.Definition
 		/// </summary>
 		public static bool IsValidName(string name) => name != null && s_validNameRegex.IsMatch(name);
 
-		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
+		internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
 
 		static readonly Regex s_validNameRegex = new Regex(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
 	}

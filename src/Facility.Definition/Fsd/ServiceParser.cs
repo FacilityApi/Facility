@@ -14,7 +14,7 @@ namespace Facility.Definition.Fsd
 		public ServiceInfo ParseDefinition(ServiceDefinitionText text)
 		{
 			if (TryParseDefinition(text, out var service, out var errors))
-				return service;
+				return service!;
 			else
 				throw new ServiceDefinitionException(errors);
 		}
@@ -24,12 +24,12 @@ namespace Facility.Definition.Fsd
 		/// </summary>
 		/// <returns>True if parsing succeeds and the service is valid, i.e. there are no errors.</returns>
 		/// <remarks>Even if parsing fails, an invalid service may be returned.</remarks>
-		public bool TryParseDefinition(ServiceDefinitionText text, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors) =>
+		public bool TryParseDefinition(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors) =>
 			TryParseDefinitionCore(text, out service, out errors);
 
 		/// <summary>
 		/// Implements TryParseDefinition.
 		/// </summary>
-		protected abstract bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo service, out IReadOnlyList<ServiceDefinitionError> errors);
+		protected abstract bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors);
 	}
 }

@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service.
 		/// </summary>
-		public ServiceInfo(string name, IEnumerable<ServiceMemberInfo> members, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, IEnumerable<string> remarks = null, params ServicePart[] parts)
+		public ServiceInfo(string name, IEnumerable<ServiceMemberInfo> members, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
 			: base(name, attributes, summary, remarks, parts)
 		{
 			Members = members.ToReadOnlyList();
@@ -65,12 +65,12 @@ namespace Facility.Definition
 		/// <summary>
 		/// Finds the member of the specified name.
 		/// </summary>
-		public ServiceMemberInfo FindMember(string name) => m_membersByName.TryGetValue(name, out var member) ? member : null;
+		public ServiceMemberInfo? FindMember(string name) => m_membersByName.TryGetValue(name, out var member) ? member : null;
 
 		/// <summary>
 		/// Gets the field type for a field.
 		/// </summary>
-		public ServiceTypeInfo GetFieldType(ServiceFieldInfo field) =>
+		public ServiceTypeInfo? GetFieldType(ServiceFieldInfo field) =>
 			m_typesByName.TryGetValue(field.TypeName, out var type) ? type : ServiceTypeInfo.TryParse(field.TypeName, FindMember);
 
 		/// <summary>

@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an exception.
 		/// </summary>
-		public ServiceDefinitionException(IEnumerable<ServiceDefinitionError> errors, Exception innerException = null)
+		public ServiceDefinitionException(IEnumerable<ServiceDefinitionError> errors, Exception? innerException = null)
 			: base("", innerException)
 		{
 			if (errors == null)

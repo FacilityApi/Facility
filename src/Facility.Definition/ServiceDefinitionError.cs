@@ -10,7 +10,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service definition error.
 		/// </summary>
-		public ServiceDefinitionError(string message, ServiceDefinitionPosition position = null)
+		public ServiceDefinitionError(string message, ServiceDefinitionPosition? position = null)
 		{
 			Message = message ?? throw new ArgumentNullException(nameof(message));
 			Position = position;
@@ -24,7 +24,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The position where the error took place, if any.
 		/// </summary>
-		public ServiceDefinitionPosition Position { get; }
+		public ServiceDefinitionPosition? Position { get; }
 
 		/// <summary>
 		/// Returns a string with the position and the error message.

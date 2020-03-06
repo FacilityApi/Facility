@@ -54,7 +54,7 @@ namespace Facility.Definition.CodeGen
 
 			generator.ApplySettings(settings);
 
-			bool shouldClean = settings.ShouldClean;
+			var shouldClean = settings.ShouldClean;
 			if (shouldClean && !generator.HasPatternsToClean)
 				throw new ArgumentException("Generator does not support ShouldClean setting.");
 
@@ -74,7 +74,7 @@ namespace Facility.Definition.CodeGen
 
 			if (settings.ExcludeTags != null)
 			{
-				foreach (string excludeTag in settings.ExcludeTags)
+				foreach (var excludeTag in settings.ExcludeTags)
 					service = service.ExcludeTag(excludeTag);
 			}
 
@@ -82,8 +82,8 @@ namespace Facility.Definition.CodeGen
 
 			var filesToWrite = new List<CodeGenFile>();
 			var namesToDelete = new List<string>();
-			bool outputIsFile = false;
-			bool writeToConsole = false;
+			var outputIsFile = false;
+			var writeToConsole = false;
 
 			if (generator.SupportsSingleOutput &&
 				!settings.OutputPath.EndsWith("/", StringComparison.Ordinal) &&
@@ -95,11 +95,11 @@ namespace Facility.Definition.CodeGen
 				writeToConsole = settings.OutputPath == "-";
 			}
 
-			bool notQuiet = !settings.IsQuiet && !outputIsFile;
+			var notQuiet = !settings.IsQuiet && !outputIsFile;
 
 			foreach (var file in output.Files)
 			{
-				string existingFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, file.Name);
+				var existingFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, file.Name);
 				if (File.Exists(existingFilePath))
 				{
 					// ignore CR when comparing files
@@ -123,7 +123,7 @@ namespace Facility.Definition.CodeGen
 				var directoryInfo = new DirectoryInfo(settings.OutputPath);
 				if (directoryInfo.Exists)
 				{
-					foreach (string nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
+					foreach (var nameMatchingPattern in FindNamesMatchingPatterns(directoryInfo, output.PatternsToClean))
 					{
 						if (output.Files.All(x => x.Name != nameMatchingPattern))
 						{
@@ -142,9 +142,9 @@ namespace Facility.Definition.CodeGen
 
 				foreach (var fileToWrite in filesToWrite)
 				{
-					string outputFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, fileToWrite.Name);
+					var outputFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, fileToWrite.Name);
 
-					string outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
+					var outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
 					if (outputFileDirectoryPath != null && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
 						Directory.CreateDirectory(outputFileDirectoryPath);
 
@@ -154,7 +154,7 @@ namespace Facility.Definition.CodeGen
 						File.WriteAllText(outputFilePath, fileToWrite.Text);
 				}
 
-				foreach (string nameToDelete in namesToDelete)
+				foreach (var nameToDelete in namesToDelete)
 					File.Delete(Path.Combine(settings.OutputPath, nameToDelete));
 			}
 
@@ -165,7 +165,7 @@ namespace Facility.Definition.CodeGen
 		{
 			foreach (var patternToClean in patternsToClean)
 			{
-				foreach (string name in FindNamesMatchingPattern(directoryInfo, patternToClean))
+				foreach (var name in FindNamesMatchingPattern(directoryInfo, patternToClean))
 					yield return name;
 			}
 		}
@@ -188,7 +188,7 @@ namespace Facility.Definition.CodeGen
 			{
 				foreach (var subdirectoryInfo in directoryInfo.GetDirectories(parts[0]))
 				{
-					foreach (string name in FindNamesMatchingPattern(subdirectoryInfo, new CodeGenPattern(parts[1], patternToClean.RequiredSubstring)))
+					foreach (var name in FindNamesMatchingPattern(subdirectoryInfo, new CodeGenPattern(parts[1], patternToClean.RequiredSubstring)))
 						yield return subdirectoryInfo.Name + '/' + name;
 				}
 			}

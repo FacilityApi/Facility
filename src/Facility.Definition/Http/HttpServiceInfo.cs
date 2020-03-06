@@ -35,7 +35,7 @@ namespace Facility.Definition.Http
 		/// <summary>
 		/// The URL of the HTTP service.
 		/// </summary>
-		public string Url { get; }
+		public string? Url { get; }
 
 		/// <summary>
 		/// The HTTP mapping for the methods.
@@ -80,7 +80,7 @@ namespace Facility.Definition.Http
 			ErrorSets = serviceInfo.ErrorSets.Select(x => new HttpErrorSetInfo(x)).ToList();
 
 			var methodsByRoute = Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
-			for (int index = 1; index < methodsByRoute.Count; index++)
+			for (var index = 1; index < methodsByRoute.Count; index++)
 			{
 				var left = methodsByRoute[index - 1];
 				var right = methodsByRoute[index];

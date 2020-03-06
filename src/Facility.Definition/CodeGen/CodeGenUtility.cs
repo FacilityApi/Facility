@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -16,21 +17,18 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Capitalizes the specified string.
 		/// </summary>
-		public static string Capitalize(string value) => string.IsNullOrEmpty(value) ? value : value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
+		public static string Capitalize(string value) => value.Length == 0 ? value : value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
 
 		/// <summary>
 		/// Uncapitalizes the specified string.
 		/// </summary>
-		public static string Uncapitalize(string value) => string.IsNullOrEmpty(value) ? value : value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
+		public static string Uncapitalize(string value) => value.Length == 0 ? value : value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
 
 		/// <summary>
 		/// Converts the string to camel case.
 		/// </summary>
 		public static string ToCamelCase(string value)
 		{
-			if (value == null)
-				return null;
-
 			var words = GetWords(value);
 			return string.Concat(words.Take(1).Select(x => x.ToLowerInvariant()).Concat(words.Skip(1).Select(x => Capitalize(x.Length == 2 ? x : x.ToLowerInvariant()))));
 		}
@@ -40,9 +38,6 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public static string ToPascalCase(string value)
 		{
-			if (value == null)
-				return null;
-
 			var words = GetWords(value);
 			return string.Concat(words.Select(x => Capitalize(x.Length == 2 ? x : x.ToLowerInvariant())));
 		}
@@ -52,14 +47,11 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public static string ToSnakeCase(string value, char separator = '_')
 		{
-			if (value == null)
-				return null;
-
 			var words = GetWords(value);
 			return string.Join(separator.ToString(), words.Select(x => x.ToLowerInvariant()));
 		}
 
-		private static string[] GetWords(string value) => s_word.Matches(value).Cast<Match>().Select(x => x.ToString()).ToArray();
+		private static string[] GetWords(string value) => s_word.Matches(value ?? throw new ArgumentNullException(nameof(value))).Cast<Match>().Select(x => x.ToString()).ToArray();
 
 		private static readonly Regex s_word = new Regex("[A-Z]([A-Z]*(?![a-z])|[a-z]*)|[a-z]+|[0-9]+", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
 	}

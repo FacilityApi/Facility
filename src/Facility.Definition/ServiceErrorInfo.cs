@@ -11,7 +11,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an error.
 		/// </summary>
-		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, params ServicePart[] parts)
+		public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo>? attributes, string? summary, params ServicePart[] parts)
 			: base(attributes, parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -65,6 +65,6 @@ namespace Facility.Definition
 		}
 
 		private (int LineNumber, int ColumnNumber) m_lineColumn;
-		private Func<(int LineNumber, int ColumnNumber)> m_getLineColumn;
+		private Func<(int LineNumber, int ColumnNumber)>? m_getLineColumn;
 	}
 }

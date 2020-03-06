@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a field.
 		/// </summary>
-		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, params ServicePart[] parts)
+		public ServiceFieldInfo(string name, string typeName, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, params ServicePart[] parts)
 			: base(attributes, parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));

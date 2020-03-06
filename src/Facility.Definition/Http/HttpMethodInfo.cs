@@ -44,7 +44,7 @@ namespace Facility.Definition.Http
 		/// <summary>
 		/// The field of the request DTO that corresponds to the entire request body.
 		/// </summary>
-		public HttpBodyFieldInfo RequestBodyField { get; }
+		public HttpBodyFieldInfo? RequestBodyField { get; }
 
 		/// <summary>
 		/// The fields of the request DTO that correspond to HTTP headers.
@@ -103,12 +103,12 @@ namespace Facility.Definition.Http
 			var requestPathFields = new List<HttpPathFieldInfo>();
 			var requestQueryFields = new List<HttpQueryFieldInfo>();
 			var requestNormalFields = new List<HttpNormalFieldInfo>();
-			HttpBodyFieldInfo requestBodyField = null;
+			HttpBodyFieldInfo? requestBodyField = null;
 			var requestHeaderFields = new List<HttpHeaderFieldInfo>();
 
 			foreach (var requestField in methodInfo.RequestFields)
 			{
-				string from = requestField.TryGetHttpAttribute()?.TryGetParameterValue("from");
+				var from = requestField.TryGetHttpAttribute()?.TryGetParameterValue("from");
 				if (from == "path")
 				{
 					if (!IsValidSimpleField(requestField, serviceInfo))
@@ -186,7 +186,7 @@ namespace Facility.Definition.Http
 
 			foreach (var responseField in methodInfo.ResponseFields)
 			{
-				string from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
+				var from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
 				if (from == "path" || from == "query")
 				{
 					AddValidationError(new ServiceDefinitionError("Response fields must not be path or query fields.", responseField.Position));
@@ -226,7 +226,7 @@ namespace Facility.Definition.Http
 		/// </summary>
 		public override IEnumerable<HttpElementInfo> GetChildren() => PathFields.AsEnumerable<HttpElementInfo>()
 			.Concat(QueryFields).Concat(RequestNormalFields).Concat(new[] { RequestBodyField }.Where(x => x != null))
-			.Concat(RequestHeaderFields).Concat(ResponseHeaderFields).Concat(ValidResponses);
+			.Concat(RequestHeaderFields).Concat(ResponseHeaderFields).Concat(ValidResponses)!;
 
 		private string GetHttpMethodFromParameter(ServiceAttributeParameterInfo parameter)
 		{
@@ -234,7 +234,7 @@ namespace Facility.Definition.Http
 			if (!s_httpMethods.Contains(httpMethod))
 			{
 				AddValidationError(new ServiceDefinitionError($"Unsupported HTTP method '{httpMethod}'.", parameter.GetPart(ServicePartKind.Value)?.Position));
-				return null;
+				return "POST";
 			}
 
 			return httpMethod;
@@ -248,7 +248,7 @@ namespace Facility.Definition.Http
 				return false;
 
 			if (fieldTypeKind == ServiceTypeKind.Array)
-				fieldTypeKind = fieldType.ValueType.Kind;
+				fieldTypeKind = fieldType!.ValueType!.Kind;
 
 			return fieldTypeKind == ServiceTypeKind.String ||
 				fieldTypeKind == ServiceTypeKind.Boolean ||
@@ -285,7 +285,7 @@ namespace Facility.Definition.Http
 			{
 				// use the status code on the field or the default: OK or NoContent
 				HttpStatusCode bodyStatusCode;
-				bool isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField)?.Kind == ServiceTypeKind.Boolean;
+				var isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField)?.Kind == ServiceTypeKind.Boolean;
 				if (responseBodyField.StatusCode != null)
 					bodyStatusCode = responseBodyField.StatusCode.Value;
 				else
@@ -332,11 +332,11 @@ namespace Facility.Definition.Http
 
 				var leftParts = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 				var rightParts = right.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-				int partIndex = 0;
+				var partIndex = 0;
 				while (true)
 				{
-					string leftPart = partIndex < leftParts.Length ? leftParts[partIndex] : null;
-					string rightPart = partIndex < rightParts.Length ? rightParts[partIndex] : null;
+					var leftPart = partIndex < leftParts.Length ? leftParts[partIndex] : null;
+					var rightPart = partIndex < rightParts.Length ? rightParts[partIndex] : null;
 					if (leftPart == null && rightPart == null)
 						break;
 					if (leftPart == null)
@@ -344,14 +344,14 @@ namespace Facility.Definition.Http
 					if (rightPart == null)
 						return 1;
 
-					bool leftPlaceholder = leftPart[0] == '{';
-					bool rightPlaceholder = rightPart[0] == '{';
+					var leftPlaceholder = leftPart[0] == '{';
+					var rightPlaceholder = rightPart[0] == '{';
 					if (!leftPlaceholder || !rightPlaceholder)
 					{
 						if (leftPlaceholder || rightPlaceholder)
 							return leftPlaceholder ? 1 : -1;
 
-						int partCompare = string.CompareOrdinal(leftPart, rightPart);
+						var partCompare = string.CompareOrdinal(leftPart, rightPart);
 						if (partCompare != 0)
 							return partCompare;
 					}
@@ -359,8 +359,8 @@ namespace Facility.Definition.Http
 					partIndex++;
 				}
 
-				int leftRank = s_httpMethods.IndexOf(left.Method);
-				int rightRank = s_httpMethods.IndexOf(right.Method);
+				var leftRank = s_httpMethods.IndexOf(left.Method);
+				var rightRank = s_httpMethods.IndexOf(right.Method);
 				if (leftRank >= 0 && rightRank >= 0)
 					return leftRank.CompareTo(rightRank);
 				if (leftRank >= 0)

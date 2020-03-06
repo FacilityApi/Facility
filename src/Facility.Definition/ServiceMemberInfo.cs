@@ -23,7 +23,7 @@ namespace Facility.Definition
 		/// </summary>
 		public IReadOnlyList<string> Remarks { get; internal set; }
 
-		private protected ServiceMemberInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, IReadOnlyList<ServicePart> parts)
+		private protected ServiceMemberInfo(string name, IEnumerable<ServiceAttributeInfo>? attributes, string? summary, IEnumerable<string>? remarks, IReadOnlyList<ServicePart> parts)
 			: base(attributes, parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));

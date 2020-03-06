@@ -51,17 +51,17 @@ namespace Facility.Definition
 		/// <summary>
 		/// The DTO (when Kind is Dto).
 		/// </summary>
-		public ServiceDtoInfo Dto { get; }
+		public ServiceDtoInfo? Dto { get; }
 
 		/// <summary>
 		/// The enumerated type (when Kind is Enum).
 		/// </summary>
-		public ServiceEnumInfo Enum { get; }
+		public ServiceEnumInfo? Enum { get; }
 
 		/// <summary>
 		/// The value type (when Kind is Result, Array, or Map).
 		/// </summary>
-		public ServiceTypeInfo ValueType { get; }
+		public ServiceTypeInfo? ValueType { get; }
 
 		/// <summary>
 		/// The string form of the service type.
@@ -71,9 +71,9 @@ namespace Facility.Definition
 			switch (Kind)
 			{
 			case ServiceTypeKind.Dto:
-				return Dto.Name;
+				return Dto!.Name;
 			case ServiceTypeKind.Enum:
-				return Enum.Name;
+				return Enum!.Name;
 			case ServiceTypeKind.Result:
 				return $"result<{ValueType}>";
 			case ServiceTypeKind.Array:
@@ -85,7 +85,7 @@ namespace Facility.Definition
 			}
 		}
 
-		internal static ServiceTypeInfo TryParse(string text, Func<string, ServiceMemberInfo> findMember)
+		internal static ServiceTypeInfo? TryParse(string text, Func<string, ServiceMemberInfo?> findMember)
 		{
 			if (text == null)
 				throw new ArgumentNullException(nameof(text));
@@ -94,21 +94,21 @@ namespace Facility.Definition
 			if (primitive.Name != null)
 				return CreatePrimitive(primitive.Kind);
 
-			string resultValueType = TryPrefixSuffix(text, "result<", ">");
+			var resultValueType = TryPrefixSuffix(text, "result<", ">");
 			if (resultValueType != null)
 			{
 				var valueType = TryParse(resultValueType, findMember);
 				return valueType == null ? null : CreateResult(valueType);
 			}
 
-			string arrayValueType = TryPrefixSuffix(text, "", "[]");
+			var arrayValueType = TryPrefixSuffix(text, "", "[]");
 			if (arrayValueType != null)
 			{
 				var valueType = TryParse(arrayValueType, findMember);
 				return valueType == null ? null : CreateArray(valueType);
 			}
 
-			string mapValueType = TryPrefixSuffix(text, "map<", ">");
+			var mapValueType = TryPrefixSuffix(text, "map<", ">");
 			if (mapValueType != null)
 			{
 				var valueType = TryParse(mapValueType, findMember);
@@ -128,7 +128,7 @@ namespace Facility.Definition
 			return null;
 		}
 
-		private ServiceTypeInfo(ServiceTypeKind kind, ServiceDtoInfo dto = null, ServiceEnumInfo @enum = null, ServiceTypeInfo valueType = null)
+		private ServiceTypeInfo(ServiceTypeKind kind, ServiceDtoInfo? dto = null, ServiceEnumInfo? @enum = null, ServiceTypeInfo? valueType = null)
 		{
 			Kind = kind;
 			Dto = dto;
@@ -136,7 +136,7 @@ namespace Facility.Definition
 			ValueType = valueType;
 		}
 
-		private static string TryPrefixSuffix(string text, string prefix, string suffix)
+		private static string? TryPrefixSuffix(string text, string prefix, string suffix)
 		{
 			return text.StartsWith(prefix, StringComparison.Ordinal) && text.EndsWith(suffix, StringComparison.Ordinal) ?
 				text.Substring(prefix.Length, text.Length - prefix.Length - suffix.Length) : null;

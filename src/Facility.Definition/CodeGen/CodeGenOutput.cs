@@ -12,7 +12,7 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Creates a single-output instance.
 		/// </summary>
-		public CodeGenOutput(CodeGenFile file)
+		public CodeGenOutput(CodeGenFile? file)
 			: this(files: file == null ? null : new[] { file }, patternsToClean: null)
 		{
 		}
@@ -20,7 +20,7 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Creates a multi-output instance.
 		/// </summary>
-		public CodeGenOutput(IReadOnlyList<CodeGenFile> files, IReadOnlyList<CodeGenPattern> patternsToClean)
+		public CodeGenOutput(IReadOnlyList<CodeGenFile>? files, IReadOnlyList<CodeGenPattern>? patternsToClean)
 		{
 			Files = files ?? new CodeGenFile[0];
 			PatternsToClean = patternsToClean ?? new CodeGenPattern[0];

@@ -10,27 +10,27 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// The path to the input file ("-" for stdin).
 		/// </summary>
-		public string InputPath { get; set; }
+		public string? InputPath { get; set; }
 
 		/// <summary>
 		/// The path to the output directory or file ("-" for stdout).
 		/// </summary>
-		public string OutputPath { get; set; }
+		public string? OutputPath { get; set; }
 
 		/// <summary>
 		/// Excludes service elements with the specified tags.
 		/// </summary>
-		public IReadOnlyList<string> ExcludeTags { get; set; }
+		public IReadOnlyList<string>? ExcludeTags { get; set; }
 
 		/// <summary>
 		/// The indent used in the output.
 		/// </summary>
-		public string IndentText { get; set; }
+		public string? IndentText { get; set; }
 
 		/// <summary>
 		/// The newline used in the output.
 		/// </summary>
-		public string NewLine { get; set; }
+		public string? NewLine { get; set; }
 
 		/// <summary>
 		/// Deletes previously generated files that are no longer used.

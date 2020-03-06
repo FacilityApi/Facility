@@ -8,7 +8,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an instance.
 		/// </summary>
-		public ServicePart(ServicePartKind kind, ServiceDefinitionPosition position, ServiceDefinitionPosition endPosition = null)
+		public ServicePart(ServicePartKind kind, ServiceDefinitionPosition position, ServiceDefinitionPosition? endPosition = null)
 		{
 			Kind = kind;
 			Position = position;

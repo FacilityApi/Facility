@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a service attribute.
 		/// </summary>
-		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo> parameters = null, params ServicePart[] parts)
+		public ServiceAttributeInfo(string name, IEnumerable<ServiceAttributeParameterInfo>? parameters = null, params ServicePart[] parts)
 			: base(parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -35,12 +35,12 @@ namespace Facility.Definition
 		/// <summary>
 		/// Returns the attribute parameter with the specified name.
 		/// </summary>
-		public ServiceAttributeParameterInfo TryGetParameter(string name) => Parameters.FirstOrDefault(x => x.Name == name);
+		public ServiceAttributeParameterInfo? TryGetParameter(string name) => Parameters.FirstOrDefault(x => x.Name == name);
 
 		/// <summary>
 		/// Returns the value of the attribute parameter with the specified name.
 		/// </summary>
-		public string TryGetParameterValue(string name) => TryGetParameter(name)?.Value;
+		public string? TryGetParameterValue(string name) => TryGetParameter(name)?.Value;
 
 		/// <summary>
 		/// The children of the service element, if any.

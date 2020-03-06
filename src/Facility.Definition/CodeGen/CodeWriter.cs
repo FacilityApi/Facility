@@ -46,7 +46,7 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public IDisposable Indent()
 		{
-			bool wasWriteLineSkipped = m_wasWriteLineSkipped;
+			var wasWriteLineSkipped = m_wasWriteLineSkipped;
 			m_wasWriteLineSkipped = false;
 			m_indentDepth += 1;
 
@@ -74,7 +74,7 @@ namespace Facility.Definition.CodeGen
 		{
 			if (before != null)
 				WriteLine(before);
-			IDisposable indent = Indent();
+			var indent = Indent();
 			return new Scope(() =>
 			{
 				indent.Dispose();
@@ -125,7 +125,7 @@ namespace Facility.Definition.CodeGen
 		{
 			if (m_isNewLine)
 			{
-				for (int i = 0; i < m_indentDepth; i++)
+				for (var i = 0; i < m_indentDepth; i++)
 					TextWriter.Write(IndentText);
 				m_isNewLine = false;
 			}
@@ -147,7 +147,7 @@ namespace Facility.Definition.CodeGen
 				}
 			}
 
-			Action m_action;
+			Action? m_action;
 		}
 
 		private int m_indentDepth;
