@@ -47,17 +47,11 @@ internal static class Build
 		void codeGen(bool verify)
 		{
 			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
-			string versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
-			RunDotNet("pack", Path.Combine("src", codegen, $"{codegen}.csproj"), "-c", configuration, "--no-build",
-				"--output", Path.GetFullPath(Path.Combine("tools", "bin")), "--version-suffix", versionSuffix);
-
-			string packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
-			string packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
-			string toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
+			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
 
 			string verifyOption = verify ? "--verify" : null;
 
-			RunApp(toolPath, "___", "___", "--newline", "lf", verifyOption);
+			RunDotNet(toolPath, "___", "___", "--newline", "lf", verifyOption);
 		}
 	});
 }
