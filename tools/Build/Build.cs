@@ -47,21 +47,15 @@ internal static class Build
 		void codeGen(bool verify)
 		{
 			var configuration = dotNetBuildSettings.BuildOptions!.ConfigurationOption!.Value;
-			var versionSuffix = $"cg{DateTime.UtcNow:yyyyMMddHHmmss}";
-			RunDotNet("pack", Path.Combine("src", codegen, $"{codegen}.csproj"), "-c", configuration, "--no-build",
-				"--output", Path.GetFullPath(Path.Combine("tools", "bin")), "--version-suffix", versionSuffix);
-
-			var packagePath = FindFiles($"tools/bin/{codegen}.*-{versionSuffix}.nupkg").Single();
-			var packageVersion = Regex.Match(packagePath, @"[/\\][^/\\]*\.([0-9]+\.[0-9]+\.[0-9]+(-.+)?)\.nupkg$").Groups[1].Value;
-			var toolPath = dotNetTools.GetToolPath($"{codegen}/{packageVersion}");
+			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
 
 			var verifyOption = verify ? "--verify" : null;
 
-			RunApp(toolPath, "example/ExampleApi.fsd", "example/output", "--newline", "lf", verifyOption);
-			RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output", "--newline", "lf", "--verify");
+			RunDotNet(toolPath, "example/ExampleApi.fsd", "example/output", "--newline", "lf", verifyOption);
+			RunDotNet(toolPath, "example/ExampleApi.fsd.md", "example/output", "--newline", "lf", "--verify");
 
-			RunApp(toolPath, "example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", verifyOption);
-			RunApp(toolPath, "example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", "--verify");
+			RunDotNet(toolPath, "example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", verifyOption);
+			RunDotNet(toolPath, "example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--newline", "lf", "--verify");
 		}
 	});
 }
