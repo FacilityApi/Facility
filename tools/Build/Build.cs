@@ -1,9 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Faithlife.Build;
-using static Faithlife.Build.AppRunner;
 using static Faithlife.Build.BuildUtility;
 using static Faithlife.Build.DotNetRunner;
 
@@ -46,10 +44,10 @@ internal static class Build
 
 		void codeGen(bool verify)
 		{
-			string configuration = dotNetBuildSettings.BuildOptions.ConfigurationOption.Value;
+			var configuration = dotNetBuildSettings.BuildOptions!.ConfigurationOption!.Value;
 			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
 
-			string verifyOption = verify ? "--verify" : null;
+			var verifyOption = verify ? "--verify" : null;
 
 			RunDotNet(toolPath, "___", "___", "--newline", "lf", verifyOption);
 		}
