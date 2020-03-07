@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using Faithlife.Build;
 using static Faithlife.Build.BuildUtility;
@@ -10,8 +9,6 @@ internal static class Build
 	public static int Main(string[] args) => BuildRunner.Execute(args, build =>
 	{
 		var codegen = "fsdgenfsd";
-
-		var dotNetTools = new DotNetTools(Path.Combine("tools", "bin")).AddSource(Path.Combine("tools", "bin"));
 
 		var dotNetBuildSettings = new DotNetBuildSettings
 		{
@@ -24,7 +21,6 @@ internal static class Build
 				SourceCodeUrl = "https://github.com/FacilityApi/Facility/tree/master/src",
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
-			DotNetTools = dotNetTools,
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
