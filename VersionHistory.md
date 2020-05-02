@@ -3,6 +3,7 @@
 ### 2.1.0
 
 * Support nullable references.
+* Only ignore newlines when verifying codegen.
 
 ### 2.0.2
 

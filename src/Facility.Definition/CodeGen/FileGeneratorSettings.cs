@@ -46,5 +46,10 @@ namespace Facility.Definition.CodeGen
 		/// Executes without making changes to the file system.
 		/// </summary>
 		public bool IsDryRun { get; set; }
+
+		/// <summary>
+		/// Does not overwrite files that only differ by newline.
+		/// </summary>
+		public bool IgnoreNewLines { get; set; }
 	}
 }

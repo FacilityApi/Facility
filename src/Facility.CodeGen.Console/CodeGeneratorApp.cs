@@ -35,7 +35,7 @@ namespace Facility.CodeGen.Console
 				}
 
 				var settings = CreateSettings(argsReader);
-				bool isVerify = argsReader.ReadVerifyFlag();
+				var isVerify = argsReader.ReadVerifyFlag();
 
 				settings.IndentText = generator.RespectsIndentText ? argsReader.ReadIndentOption() : null;
 				settings.NewLine = generator.RespectsNewLine ? argsReader.ReadNewLineOption() : null;
@@ -43,6 +43,7 @@ namespace Facility.CodeGen.Console
 				settings.IsQuiet = argsReader.ReadQuietFlag();
 				settings.IsDryRun = isVerify || argsReader.ReadDryRunFlag();
 				settings.ExcludeTags = argsReader.ReadExcludeTagOptions();
+				settings.IgnoreNewLines = isVerify;
 
 				settings.InputPath = argsReader.ReadArgument();
 				if (settings.InputPath == null)
@@ -54,7 +55,7 @@ namespace Facility.CodeGen.Console
 
 				argsReader.VerifyComplete();
 
-				int filesChanged = FileGenerator.GenerateFiles(generator, settings);
+				var filesChanged = FileGenerator.GenerateFiles(generator, settings);
 
 				if (isVerify)
 					return filesChanged == 0 ? 0 : 1;

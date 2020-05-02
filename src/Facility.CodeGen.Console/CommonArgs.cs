@@ -25,7 +25,7 @@ namespace Facility.CodeGen.Console
 			if (value == "tab")
 				return "\t";
 
-			if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out int spaceCount) && spaceCount >= 1 && spaceCount <= 8)
+			if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var spaceCount) && spaceCount >= 1 && spaceCount <= 8)
 				return new string(' ', spaceCount);
 
 			throw new ArgsReaderException($"Invalid indent '{value}'. (Should be 'tab' or the number of spaces.)");
