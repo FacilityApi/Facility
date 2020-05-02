@@ -11,6 +11,7 @@ public abstract class FileGeneratorSettings
 | name | description |
 | --- | --- |
 | [ExcludeTags](FileGeneratorSettings/ExcludeTags.md) { get; set; } | Excludes service elements with the specified tags. |
+| [IgnoreNewLines](FileGeneratorSettings/IgnoreNewLines.md) { get; set; } | Does not overwrite files that only differ by newline. |
 | [IndentText](FileGeneratorSettings/IndentText.md) { get; set; } | The indent used in the output. |
 | [InputPath](FileGeneratorSettings/InputPath.md) { get; set; } | The path to the input file ("-" for stdin). |
 | [IsDryRun](FileGeneratorSettings/IsDryRun.md) { get; set; } | Executes without making changes to the file system. |
