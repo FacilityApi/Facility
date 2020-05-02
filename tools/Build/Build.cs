@@ -40,7 +40,7 @@ internal static class Build
 
 		void codeGen(bool verify)
 		{
-			var configuration = dotNetBuildSettings.BuildOptions!.ConfigurationOption!.Value;
+			var configuration = dotNetBuildSettings!.BuildOptions!.ConfigurationOption!.Value;
 			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp*/{codegen}.dll").FirstOrDefault();
 
 			var verifyOption = verify ? "--verify" : null;
