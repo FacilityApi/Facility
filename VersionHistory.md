@@ -1,5 +1,9 @@
 # Version History
 
+### 2.2.0
+
+* Support shorthand for required attribute, e.g. `string!`.
+
 ### 2.1.0
 
 * Support nullable references.
