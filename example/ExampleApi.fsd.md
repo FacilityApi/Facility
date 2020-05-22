@@ -24,8 +24,7 @@ method getWidgets
 	query: string;
 
 	/// The widget IDs.
-	[required]
-	ids: string[];
+	ids: string[]!;
 
 	/// The limit of returned results.
 	limit: int32;

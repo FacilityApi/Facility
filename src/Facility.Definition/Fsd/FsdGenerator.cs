@@ -173,8 +173,14 @@ namespace Facility.Definition.Fsd
 			foreach (var field in fields)
 			{
 				code.WriteLineSkipOnce();
-				WriteSummaryAndAttributes(code, field);
-				code.WriteLine($"{field.Name}: {field.TypeName};");
+				WriteSummary(code, field.Summary);
+
+				var attributes = field.Attributes;
+				if (field.IsRequired)
+					attributes = attributes.Where(x => x.Name != "required").ToList();
+				WriteAttributes(code, attributes);
+
+				code.WriteLine($"{field.Name}: {field.TypeName}{(field.IsRequired ? "!" : "")};");
 			}
 		}
 

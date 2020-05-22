@@ -55,6 +55,10 @@ namespace Facility.Definition.Fsd
 			select new ServiceAttributeInfo(name.Value, parameters,
 				context.GetPart(ServicePartKind.Name, name));
 
+		private static IParser<ServiceAttributeInfo> RequiredParser { get; } =
+			from bang in PunctuationParser("!")
+			select new ServiceAttributeInfo("required");
+
 		private static IParser<ServiceEnumValueInfo> EnumValueParser(Context context) =>
 			from comments1 in CommentOrWhiteSpaceParser.Many()
 			from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
@@ -111,9 +115,10 @@ namespace Facility.Definition.Fsd
 			from name in NameParser.Named("field name")
 			from colon in PunctuationParser(":")
 			from typeName in TypeParser.Named("field type name")
+			from required in RequiredParser.AtMostOnce()
 			from semicolon in PunctuationParser(";")
 			select new ServiceFieldInfo(name.Value, typeName.Value,
-				attributes.SelectMany(x => x),
+				attributes.SelectMany(x => x).Concat(required),
 				BuildSummary(comments1, comments2),
 				context.GetPart(ServicePartKind.Name, name),
 				context.GetPart(ServicePartKind.TypeName, typeName));
