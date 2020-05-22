@@ -131,6 +131,7 @@ method editWidget
 	fields: string;
 
 	/// The operations.
+	[required]
 	ops: object[];
 
 	/// The new weight.
