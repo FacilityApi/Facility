@@ -18,7 +18,7 @@ internal static class Build
 				GitLogin = new GitLoginInfo("FacilityApiBot", Environment.GetEnvironmentVariable("BUILD_BOT_PASSWORD") ?? ""),
 				GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
 				GitBranchName = Environment.GetEnvironmentVariable("APPVEYOR_REPO_BRANCH"),
-				SourceCodeUrl = "https://github.com/FacilityApi/RepoName/tree/master/src",
+				SourceCodeUrl = "https://github.com/FacilityApi/RepoTemplate/tree/master/src",
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
 		};

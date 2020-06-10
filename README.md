@@ -1,4 +1,4 @@
-# RepoName
+# RepoTemplate
 
 * Documentation: https://facilityapi.github.io/
 * License: [MIT](LICENSE)
