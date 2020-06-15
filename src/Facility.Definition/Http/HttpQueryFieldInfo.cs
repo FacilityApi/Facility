@@ -6,13 +6,8 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// Information about a field that corresponds to a request query parameter.
 	/// </summary>
-	public sealed class HttpQueryFieldInfo : HttpElementInfo
+	public sealed class HttpQueryFieldInfo : HttpFieldInfo
 	{
-		/// <summary>
-		/// The service field.
-		/// </summary>
-		public ServiceFieldInfo ServiceField { get; }
-
 		/// <summary>
 		/// The name of the query parameter.
 		/// </summary>
@@ -24,8 +19,8 @@ namespace Facility.Definition.Http
 		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 
 		internal HttpQueryFieldInfo(ServiceFieldInfo fieldInfo)
+			: base(fieldInfo)
 		{
-			ServiceField = fieldInfo;
 			Name = fieldInfo.Name;
 
 			foreach (var parameter in GetHttpParameters(fieldInfo))

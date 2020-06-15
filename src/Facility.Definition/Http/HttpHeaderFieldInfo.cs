@@ -6,13 +6,8 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// Information about a field that corresponds to a request or response HTTP header.
 	/// </summary>
-	public sealed class HttpHeaderFieldInfo : HttpElementInfo
+	public sealed class HttpHeaderFieldInfo : HttpFieldInfo
 	{
-		/// <summary>
-		/// The service field.
-		/// </summary>
-		public ServiceFieldInfo ServiceField { get; }
-
 		/// <summary>
 		/// The name of the HTTP header.
 		/// </summary>
@@ -24,8 +19,8 @@ namespace Facility.Definition.Http
 		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 
 		internal HttpHeaderFieldInfo(ServiceFieldInfo fieldInfo)
+			: base(fieldInfo)
 		{
-			ServiceField = fieldInfo;
 			Name = fieldInfo.Name;
 
 			foreach (var parameter in GetHttpParameters(fieldInfo))

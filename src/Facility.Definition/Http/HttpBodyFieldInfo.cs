@@ -7,13 +7,8 @@ namespace Facility.Definition.Http
 	/// <summary>
 	/// Information about a DTO field used as a request or response body.
 	/// </summary>
-	public sealed class HttpBodyFieldInfo : HttpElementInfo
+	public sealed class HttpBodyFieldInfo : HttpFieldInfo
 	{
-		/// <summary>
-		/// The service field.
-		/// </summary>
-		public ServiceFieldInfo ServiceField { get; }
-
 		/// <summary>
 		/// The specified status code, if any.
 		/// </summary>
@@ -25,9 +20,8 @@ namespace Facility.Definition.Http
 		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 
 		internal HttpBodyFieldInfo(ServiceFieldInfo fieldInfo)
+			: base(fieldInfo)
 		{
-			ServiceField = fieldInfo;
-
 			foreach (var parameter in GetHttpParameters(fieldInfo))
 			{
 				if (parameter.Name == "code")
