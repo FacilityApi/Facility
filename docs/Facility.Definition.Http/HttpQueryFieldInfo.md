@@ -3,7 +3,7 @@
 Information about a field that corresponds to a request query parameter.
 
 ```csharp
-public sealed class HttpQueryFieldInfo : HttpElementInfo
+public sealed class HttpQueryFieldInfo : HttpFieldInfo
 ```
 
 ## Public Members
@@ -11,12 +11,11 @@ public sealed class HttpQueryFieldInfo : HttpElementInfo
 | name | description |
 | --- | --- |
 | [Name](HttpQueryFieldInfo/Name.md) { get; } | The name of the query parameter. |
-| [ServiceField](HttpQueryFieldInfo/ServiceField.md) { get; } | The service field. |
 | override [GetChildren](HttpQueryFieldInfo/GetChildren.md)() | The children of the element, if any. |
 
 ## See Also
 
-* class [HttpElementInfo](HttpElementInfo.md)
+* class [HttpFieldInfo](HttpFieldInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpQueryFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpQueryFieldInfo.cs)
 

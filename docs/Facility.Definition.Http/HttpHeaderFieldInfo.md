@@ -3,7 +3,7 @@
 Information about a field that corresponds to a request or response HTTP header.
 
 ```csharp
-public sealed class HttpHeaderFieldInfo : HttpElementInfo
+public sealed class HttpHeaderFieldInfo : HttpFieldInfo
 ```
 
 ## Public Members
@@ -11,12 +11,11 @@ public sealed class HttpHeaderFieldInfo : HttpElementInfo
 | name | description |
 | --- | --- |
 | [Name](HttpHeaderFieldInfo/Name.md) { get; } | The name of the HTTP header. |
-| [ServiceField](HttpHeaderFieldInfo/ServiceField.md) { get; } | The service field. |
 | override [GetChildren](HttpHeaderFieldInfo/GetChildren.md)() | The children of the element, if any. |
 
 ## See Also
 
-* class [HttpElementInfo](HttpElementInfo.md)
+* class [HttpFieldInfo](HttpFieldInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpHeaderFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpHeaderFieldInfo.cs)
 

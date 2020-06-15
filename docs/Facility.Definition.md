@@ -59,6 +59,7 @@
 | abstract class [HttpElementInfo](Facility.Definition.Http/HttpElementInfo.md) | Base class for HTTP service elements. |
 | class [HttpErrorInfo](Facility.Definition.Http/HttpErrorInfo.md) | The HTTP mapping of an error. |
 | class [HttpErrorSetInfo](Facility.Definition.Http/HttpErrorSetInfo.md) | The HTTP mapping of an error set. |
+| abstract class [HttpFieldInfo](Facility.Definition.Http/HttpFieldInfo.md) | Information about a field. |
 | class [HttpHeaderFieldInfo](Facility.Definition.Http/HttpHeaderFieldInfo.md) | Information about a field that corresponds to a request or response HTTP header. |
 | class [HttpMethodInfo](Facility.Definition.Http/HttpMethodInfo.md) | The HTTP mapping for a service method. |
 | class [HttpNormalFieldInfo](Facility.Definition.Http/HttpNormalFieldInfo.md) | Information about a normal request or response field. |

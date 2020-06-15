@@ -3,7 +3,7 @@
 Information about a field that corresponds to a request path parameter.
 
 ```csharp
-public sealed class HttpPathFieldInfo : HttpElementInfo
+public sealed class HttpPathFieldInfo : HttpFieldInfo
 ```
 
 ## Public Members
@@ -11,12 +11,11 @@ public sealed class HttpPathFieldInfo : HttpElementInfo
 | name | description |
 | --- | --- |
 | [Name](HttpPathFieldInfo/Name.md) { get; } | The name of the path parameter. |
-| [ServiceField](HttpPathFieldInfo/ServiceField.md) { get; } | The service field. |
 | override [GetChildren](HttpPathFieldInfo/GetChildren.md)() | The children of the element, if any. |
 
 ## See Also
 
-* class [HttpElementInfo](HttpElementInfo.md)
+* class [HttpFieldInfo](HttpFieldInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpPathFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpPathFieldInfo.cs)
 
