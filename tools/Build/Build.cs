@@ -21,6 +21,7 @@ internal static class Build
 				SourceCodeUrl = "https://github.com/FacilityApi/Facility/tree/master/src",
 				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
 			},
+			Verbosity = DotNetBuildVerbosity.Minimal,
 		};
 
 		build.AddDotNetTargets(dotNetBuildSettings);
