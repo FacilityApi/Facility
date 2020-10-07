@@ -1,4 +1,4 @@
-﻿namespace Facility.Definition
+namespace Facility.Definition
 {
 	/// <summary>
 	/// A kind of field type.
