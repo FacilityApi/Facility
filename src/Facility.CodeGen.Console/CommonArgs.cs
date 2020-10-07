@@ -34,20 +34,14 @@ namespace Facility.CodeGen.Console
 		public static string? ReadNewLineOption(this ArgsReader args)
 		{
 			var value = args.ReadOption("newline");
-			if (value == null)
-				return null;
-
-			switch (value)
+			return value switch
 			{
-			case "auto":
-				return null;
-			case "lf":
-				return "\n";
-			case "crlf":
-				return "\r\n";
-			default:
-				throw new ArgsReaderException($"Invalid new line '{value}'. (Should be 'auto', 'lf', or 'crlf'.)");
-			}
+				null => null,
+				"auto" => null,
+				"lf" => "\n",
+				"crlf" => "\r\n",
+				_ => throw new ArgsReaderException($"Invalid new line '{value}'. (Should be 'auto', 'lf', or 'crlf'.)"),
+			};
 		}
 
 		public static IReadOnlyList<string> ReadExcludeTagOptions(this ArgsReader args)

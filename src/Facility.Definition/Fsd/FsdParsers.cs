@@ -188,23 +188,16 @@ namespace Facility.Definition.Fsd
 
 		private static string DecodeBackslash(string text)
 		{
-			switch (text[1])
+			return text[1] switch
 			{
-			case 'b':
-				return "\b";
-			case 'f':
-				return "\f";
-			case 'n':
-				return "\n";
-			case 'r':
-				return "\r";
-			case 't':
-				return "\t";
-			case 'u':
-				return new string((char) ushort.Parse(text.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1);
-			default:
-				return text.Substring(1);
-			}
+				'b' => "\b",
+				'f' => "\f",
+				'n' => "\n",
+				'r' => "\r",
+				't' => "\t",
+				'u' => new string((char) ushort.Parse(text.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),
+				_ => text.Substring(1),
+			};
 		}
 
 		private static string BuildSummary(IEnumerable<string> comments1, IEnumerable<string> comments2)

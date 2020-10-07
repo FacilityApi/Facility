@@ -147,25 +147,17 @@ namespace Facility.Definition.Fsd
 		private string RenderAttributeValueEscape(Match match)
 		{
 			var ch = match.Value[0];
-			switch (ch)
+			return ch switch
 			{
-			case '\\':
-				return @"\\";
-			case '"':
-				return @"\""";
-			case '\b':
-				return @"\b";
-			case '\f':
-				return @"\f";
-			case '\n':
-				return @"\n";
-			case '\r':
-				return @"\r";
-			case '\t':
-				return @"\t";
-			default:
-				return $@"\u{(int) ch:x4}";
-			}
+				'\\' => @"\\",
+				'"' => @"\""",
+				'\b' => @"\b",
+				'\f' => @"\f",
+				'\n' => @"\n",
+				'\r' => @"\r",
+				'\t' => @"\t",
+				_ => $@"\u{(int) ch:x4}",
+			};
 		}
 
 		private void WriteFields(CodeWriter code, IEnumerable<ServiceFieldInfo> fields)

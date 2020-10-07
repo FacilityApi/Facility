@@ -68,21 +68,15 @@ namespace Facility.Definition
 		/// </summary>
 		public override string ToString()
 		{
-			switch (Kind)
+			return Kind switch
 			{
-			case ServiceTypeKind.Dto:
-				return Dto!.Name;
-			case ServiceTypeKind.Enum:
-				return Enum!.Name;
-			case ServiceTypeKind.Result:
-				return $"result<{ValueType}>";
-			case ServiceTypeKind.Array:
-				return $"{ValueType}[]";
-			case ServiceTypeKind.Map:
-				return $"map<{ValueType}>";
-			default:
-				return s_primitives.Where(x => x.Kind == Kind).Select(x => x.Name).Single();
-			}
+				ServiceTypeKind.Dto => Dto!.Name,
+				ServiceTypeKind.Enum => Enum!.Name,
+				ServiceTypeKind.Result => $"result<{ValueType}>",
+				ServiceTypeKind.Array => $"{ValueType}[]",
+				ServiceTypeKind.Map => $"map<{ValueType}>",
+				_ => s_primitives.Where(x => x.Kind == Kind).Select(x => x.Name).Single(),
+			};
 		}
 
 		internal static ServiceTypeInfo? TryParse(string text, Func<string, ServiceMemberInfo?> findMember)
