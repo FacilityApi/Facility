@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.2.2
+
+* Add .NET Core App 3.1 support to `fsdgenfsd`.
+* A few nullable reference improvements.
+
 ## 2.2.1
 
 * Introduce common `HttpFieldInfo` base class.
