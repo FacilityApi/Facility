@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Facility.Definition
@@ -11,6 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// The attributes of the service element.
 		/// </summary>
+		[SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Legacy.")]
 		public IReadOnlyList<ServiceAttributeInfo> Attributes { get; }
 
 		/// <summary>

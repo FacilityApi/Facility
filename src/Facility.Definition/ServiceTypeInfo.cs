@@ -142,7 +142,7 @@ namespace Facility.Definition
 				text.Substring(prefix.Length, text.Length - prefix.Length - suffix.Length) : null;
 		}
 
-		static readonly (ServiceTypeKind Kind, string Name)[] s_primitives =
+		private static readonly (ServiceTypeKind Kind, string Name)[] s_primitives =
 		{
 			(ServiceTypeKind.String, "string"),
 			(ServiceTypeKind.Boolean, "boolean"),

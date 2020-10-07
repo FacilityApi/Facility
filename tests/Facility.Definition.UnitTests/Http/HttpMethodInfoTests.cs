@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using Facility.Definition.Fsd;
@@ -474,7 +475,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase(HttpStatusCode.NotModified)]
 		public void BooleanNoContentResponseBodyField(HttpStatusCode statusCode)
 		{
-			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: boolean; } }".Replace("CODE", ((int) statusCode).ToString())).Methods.Single();
+			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: boolean; } }".Replace("CODE", ((int) statusCode).ToString(CultureInfo.InvariantCulture))).Methods.Single();
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(statusCode);
@@ -486,7 +487,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase(HttpStatusCode.NotModified)]
 		public void NonBooleanNoContentResponseBodyField(HttpStatusCode statusCode)
 		{
-			string statusCodeString = ((int) statusCode).ToString();
+			string statusCodeString = ((int) statusCode).ToString(CultureInfo.InvariantCulture);
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: error; } }".Replace("CODE", statusCodeString))
 				.ToString().Should().Be("TestApi.fsd(1,65): A body field with HTTP status code CODE must be Boolean.".Replace("CODE", statusCodeString));
 		}

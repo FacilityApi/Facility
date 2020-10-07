@@ -22,8 +22,8 @@ namespace Facility.Definition.CodeGen
 		/// </summary>
 		public CodeGenOutput(IReadOnlyList<CodeGenFile>? files, IReadOnlyList<CodeGenPattern>? patternsToClean)
 		{
-			Files = files ?? new CodeGenFile[0];
-			PatternsToClean = patternsToClean ?? new CodeGenPattern[0];
+			Files = files ?? Array.Empty<CodeGenFile>();
+			PatternsToClean = patternsToClean ?? Array.Empty<CodeGenPattern>();
 
 			var duplicate = Files.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(x => x.Skip(1).Any());
 			if (duplicate != null)

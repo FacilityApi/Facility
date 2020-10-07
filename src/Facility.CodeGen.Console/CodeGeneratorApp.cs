@@ -96,7 +96,7 @@ namespace Facility.CodeGen.Console
 		/// <summary>
 		/// Any extra usage lines for help.
 		/// </summary>
-		protected virtual IReadOnlyList<string> ExtraUsage => new string[0];
+		protected virtual IReadOnlyList<string> ExtraUsage => Array.Empty<string>();
 
 		/// <summary>
 		/// Creates the code generator.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Facility.Definition.Http
 		private protected void AddValidationError(ServiceDefinitionError error) => m_validationErrors.Add(error);
 
 		private protected IReadOnlyList<ServiceAttributeParameterInfo> GetHttpParameters(ServiceElementWithAttributesInfo element) =>
-			element.TryGetHttpAttribute()?.Parameters ?? new ServiceAttributeParameterInfo[0];
+			element.TryGetHttpAttribute()?.Parameters ?? Array.Empty<ServiceAttributeParameterInfo>();
 
 		private protected void AddInvalidHttpParameterError(ServiceAttributeParameterInfo parameter) =>
 			AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError("http", parameter));

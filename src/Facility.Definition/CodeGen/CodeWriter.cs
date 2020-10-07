@@ -147,7 +147,7 @@ namespace Facility.Definition.CodeGen
 				}
 			}
 
-			Action? m_action;
+			private Action? m_action;
 		}
 
 		private int m_indentDepth;

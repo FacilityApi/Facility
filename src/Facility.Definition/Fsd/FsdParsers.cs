@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Facility.Definition.Fsd
 			parser.PrecededBy(CommentOrWhiteSpaceParser.Many()).TrimEnd();
 
 		private static IParser<Positioned<string>> PunctuationParser(string token) =>
-			Parser.String(token).Positioned().CommentedToken().Named("'" + token + "'");
+			Parser.String(token, StringComparison.Ordinal).Positioned().CommentedToken().Named("'" + token + "'");
 
 		private static IParser<Positioned<string>> NameParser { get; } =
 			Parser.Regex(@"[a-zA-Z_][0-9a-zA-Z_]*").Select(x => x.ToString()).Positioned().CommentedToken();
@@ -233,8 +234,8 @@ namespace Facility.Definition.Fsd
 				return new ServiceDefinitionPosition(m_source.Name, lineColumn.LineNumber, lineColumn.ColumnNumber);
 			}
 
-			readonly ServiceDefinitionText m_source;
-			readonly IReadOnlyDictionary<string, FsdRemarksSection> m_remarksSectionsByName;
+			private readonly ServiceDefinitionText m_source;
+			private readonly IReadOnlyDictionary<string, FsdRemarksSection> m_remarksSectionsByName;
 		}
 	}
 }
