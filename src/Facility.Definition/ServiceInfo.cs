@@ -91,7 +91,7 @@ namespace Facility.Definition
 		{
 			service = new ServiceInfo(
 				name: Name,
-				members: Members.Where(shouldNotExclude).Select(excludeTag),
+				members: Members.Where(ShouldNotExclude).Select(DoExcludeTag),
 				attributes: Attributes,
 				summary: Summary,
 				remarks: Remarks,
@@ -103,16 +103,16 @@ namespace Facility.Definition
 
 			return errors.Count == 0;
 
-			bool shouldNotExclude(ServiceElementWithAttributesInfo element) => !element.TagNames.Contains(tagName);
+			bool ShouldNotExclude(ServiceElementWithAttributesInfo element) => !element.TagNames.Contains(tagName);
 
-			ServiceMemberInfo excludeTag(ServiceMemberInfo member)
+			ServiceMemberInfo DoExcludeTag(ServiceMemberInfo member)
 			{
 				if (member is ServiceMethodInfo method)
 				{
 					return new ServiceMethodInfo(
 						name: method.Name,
-						requestFields: method.RequestFields.Where(shouldNotExclude),
-						responseFields: method.ResponseFields.Where(shouldNotExclude),
+						requestFields: method.RequestFields.Where(ShouldNotExclude),
+						responseFields: method.ResponseFields.Where(ShouldNotExclude),
 						attributes: method.Attributes,
 						summary: method.Summary,
 						remarks: method.Remarks,
@@ -122,7 +122,7 @@ namespace Facility.Definition
 				{
 					return new ServiceDtoInfo(
 						name: dto.Name,
-						fields: dto.Fields.Where(shouldNotExclude),
+						fields: dto.Fields.Where(ShouldNotExclude),
 						attributes: dto.Attributes,
 						summary: dto.Summary,
 						remarks: dto.Remarks,
@@ -132,7 +132,7 @@ namespace Facility.Definition
 				{
 					return new ServiceEnumInfo(
 						name: @enum.Name,
-						values: @enum.Values.Where(shouldNotExclude),
+						values: @enum.Values.Where(ShouldNotExclude),
 						attributes: @enum.Attributes,
 						summary: @enum.Summary,
 						remarks: @enum.Remarks,
@@ -142,7 +142,7 @@ namespace Facility.Definition
 				{
 					return new ServiceErrorSetInfo(
 						name: errorSet.Name,
-						errors: errorSet.Errors.Where(shouldNotExclude),
+						errors: errorSet.Errors.Where(ShouldNotExclude),
 						attributes: errorSet.Attributes,
 						summary: errorSet.Summary,
 						remarks: errorSet.Remarks,

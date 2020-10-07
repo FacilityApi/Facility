@@ -12,7 +12,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates an enumerated type value.
 		/// </summary>
-		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, params ServicePart[] parts)
+		public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string? summary, params ServicePart[] parts)
 			: base(attributes, parts)
 		{
 			Name = name ?? throw new ArgumentNullException(nameof(name));

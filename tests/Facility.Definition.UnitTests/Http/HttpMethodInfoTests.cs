@@ -308,7 +308,7 @@ namespace Facility.Definition.UnitTests.Http
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
-			response.NormalFields.Single().ServiceField.Name.Should().Be("id");
+			response.NormalFields!.Single().ServiceField.Name.Should().Be("id");
 			response.BodyField.Should().BeNull();
 		}
 

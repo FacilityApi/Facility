@@ -20,7 +20,7 @@ namespace Facility.CodeGen.Console
 		public int Run(IReadOnlyList<string> args)
 		{
 			var generator = CreateGenerator();
-			generator.GeneratorName = Assembly.GetEntryAssembly().GetName().Name;
+			generator.GeneratorName = Assembly.GetEntryAssembly()!.GetName().Name;
 
 			try
 			{

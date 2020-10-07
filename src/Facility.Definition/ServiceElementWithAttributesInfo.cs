@@ -38,7 +38,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Returns the first attribute with the specified name, if any.
 		/// </summary>
-		public ServiceAttributeInfo TryGetAttribute(string name) => Attributes.FirstOrDefault(x => x.Name == name);
+		public ServiceAttributeInfo? TryGetAttribute(string name) => Attributes.FirstOrDefault(x => x.Name == name);
 
 		/// <summary>
 		/// The children of the service element, if any.

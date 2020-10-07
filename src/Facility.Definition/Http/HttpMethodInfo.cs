@@ -262,15 +262,14 @@ namespace Facility.Definition.Http
 		private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 		{
 			var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
-			return fieldInfo != null && (
-				fieldTypeKind == ServiceTypeKind.Object ||
+			return fieldTypeKind == ServiceTypeKind.Object ||
 				fieldTypeKind == ServiceTypeKind.Error ||
 				fieldTypeKind == ServiceTypeKind.Dto ||
 				fieldTypeKind == ServiceTypeKind.Result ||
 				fieldTypeKind == ServiceTypeKind.Array ||
 				fieldTypeKind == ServiceTypeKind.Map ||
 				fieldTypeKind == ServiceTypeKind.Bytes ||
-				fieldTypeKind == ServiceTypeKind.String);
+				fieldTypeKind == ServiceTypeKind.String;
 		}
 
 		private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
@@ -323,7 +322,7 @@ namespace Facility.Definition.Http
 
 		private class NestedByRouteComparer : IComparer<HttpMethodInfo>
 		{
-			public int Compare(HttpMethodInfo left, HttpMethodInfo right)
+			public int Compare(HttpMethodInfo? left, HttpMethodInfo? right)
 			{
 				if (left == null)
 					return right == null ? 0 : -1;

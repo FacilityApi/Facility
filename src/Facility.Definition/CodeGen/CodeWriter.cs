@@ -29,12 +29,12 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// The text written on the line before a block (default "{", null for none).
 		/// </summary>
-		public string BlockBeforeText { get; set; }
+		public string? BlockBeforeText { get; set; }
 
 		/// <summary>
 		/// The text written on the line after a block (default "}", null for none).
 		/// </summary>
-		public string BlockAfterText { get; set; }
+		public string? BlockAfterText { get; set; }
 
 		/// <summary>
 		/// The text writer.
@@ -65,12 +65,12 @@ namespace Facility.Definition.CodeGen
 		/// <summary>
 		/// Writes a line of text before and after the indented scope.
 		/// </summary>
-		public IDisposable Block(string before) => Block(before, BlockAfterText);
+		public IDisposable Block(string? before) => Block(before, BlockAfterText);
 
 		/// <summary>
 		/// Writes a line of text before and after the indented scope.
 		/// </summary>
-		public IDisposable Block(string before, string after)
+		public IDisposable Block(string? before, string? after)
 		{
 			if (before != null)
 				WriteLine(before);

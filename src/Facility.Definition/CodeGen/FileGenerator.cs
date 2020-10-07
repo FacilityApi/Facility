@@ -103,8 +103,8 @@ namespace Facility.Definition.CodeGen
 				if (File.Exists(existingFilePath))
 				{
 					// ignore CR when comparing files
-					string normalize(string text) => settings.IgnoreNewLines ? text.Replace("\r", "") : text;
-					if (normalize(file.Text) != normalize(File.ReadAllText(existingFilePath)))
+					string Normalize(string text) => settings.IgnoreNewLines ? text.Replace("\r", "") : text;
+					if (Normalize(file.Text) != Normalize(File.ReadAllText(existingFilePath)))
 					{
 						filesToWrite.Add(file);
 						if (notQuiet)

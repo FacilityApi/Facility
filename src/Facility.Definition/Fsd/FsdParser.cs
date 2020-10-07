@@ -47,14 +47,14 @@ namespace Facility.Definition.Fsd
 				foreach (var remarksSection in interleavedRemarksSections)
 				{
 					var remarksLineNumber = remarksSection.Position.LineNumber;
-					if (remarksLineNumber > service.GetPart(ServicePartKind.Name).Position.LineNumber &&
-						remarksLineNumber < service.GetPart(ServicePartKind.End).Position.LineNumber)
+					if (remarksLineNumber > service.GetPart(ServicePartKind.Name)!.Position.LineNumber &&
+						remarksLineNumber < service.GetPart(ServicePartKind.End)!.Position.LineNumber)
 					{
 						ServiceMemberInfo targetMember = service;
 						var targetLineNumber = 0;
 						foreach (var member in service.Members)
 						{
-							var memberLineNumber = member.GetPart(ServicePartKind.Name).Position.LineNumber;
+							var memberLineNumber = member.GetPart(ServicePartKind.Name)!.Position.LineNumber;
 							if (remarksLineNumber > memberLineNumber && memberLineNumber > targetLineNumber)
 							{
 								targetMember = member;
@@ -81,9 +81,9 @@ namespace Facility.Definition.Fsd
 					.ThenByDescending(x => x.LineColumn.ColumnNumber)
 					.First();
 
-				int getExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
+				int GetExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
 				errorList.Add(new ServiceDefinitionError(
-					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(getExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
+					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 					new ServiceDefinitionPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
 			}
 
@@ -103,7 +103,7 @@ namespace Facility.Definition.Fsd
 				var line = reader.ReadLine();
 				if (line == null)
 				{
-					addRemarksSection();
+					AddRemarksSection();
 					break;
 				}
 
@@ -123,7 +123,7 @@ namespace Facility.Definition.Fsd
 				{
 					if (s_interleavedMarkdown.IsMatch(line))
 					{
-						addRemarksSection();
+						AddRemarksSection();
 						inFsdCode = true;
 					}
 					else
@@ -135,7 +135,7 @@ namespace Facility.Definition.Fsd
 				}
 			}
 
-			void addRemarksSection()
+			void AddRemarksSection()
 			{
 				while (remarksLines.Count != 0 && string.IsNullOrWhiteSpace(remarksLines[0]))
 					remarksLines.RemoveAt(0);

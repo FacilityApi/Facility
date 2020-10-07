@@ -11,7 +11,7 @@ namespace Facility.Definition.UnitTests.CodeGen
 		public void DuplicateFileName()
 		{
 			var files = new[] { new CodeGenFile("a.txt", ""), new CodeGenFile("A.txt", "") };
-			Action action = () => new CodeGenOutput(files, null);
+			Action action = () => _ = new CodeGenOutput(files, null);
 			action.Should().Throw<ArgumentException>();
 		}
 	}

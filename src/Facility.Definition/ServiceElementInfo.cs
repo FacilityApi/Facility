@@ -38,7 +38,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Gets the specified part of the element, if any.
 		/// </summary>
-		public ServicePart GetPart(ServicePartKind kind) => m_parts.FirstOrDefault(x => x.Kind == kind);
+		public ServicePart? GetPart(ServicePartKind kind) => m_parts.FirstOrDefault(x => x.Kind == kind);
 
 		/// <summary>
 		/// Returns the children of the service element, if any.
