@@ -1,14 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj" />
     <ProjectReference Include="..\..\src\Facility.Definition\Facility.Definition.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="XmlDocMarkdown.Core" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

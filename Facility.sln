@@ -7,15 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		build.cmd = build.cmd
 		build.sh = build.sh
-		CONTRIBUTING.md = CONTRIBUTING.md
+		.github\workflows\build.yaml = .github\workflows\build.yaml
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		README.md = README.md
-		VersionHistory.md = VersionHistory.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Definition", "src\Facility.Definition\Facility.Definition.csproj", "{803FAFD4-5B25-4486-9BB4-6151D250944C}"
@@ -39,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{A887
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocTarget", "tools\XmlDocTarget\XmlDocTarget.csproj", "{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocGen", "tools\XmlDocGen\XmlDocGen.csproj", "{636E5B36-4AA8-47D8-884C-AE4D80B49A14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,10 +66,10 @@ Global
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7C190FD-6874-4309-BE33-8D80DC1A1D9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

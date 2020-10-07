@@ -1,19 +1,19 @@
-# Version History
+# Release Notes
 
-### 2.2.1
+## 2.2.1
 
 * Introduce common `HttpFieldInfo` base class.
 
-### 2.2.0
+## 2.2.0
 
 * Support shorthand for required attribute, e.g. `string!`.
 
-### 2.1.0
+## 2.1.0
 
 * Support nullable references.
 * Only ignore newlines when verifying codegen.
 
-### 2.0.2
+## 2.0.2
 
 * **Breaking:** Drop support for arbitrary HTTP methods (to help detect typos).
 * **Breaking:** Upgrade to .NET Standard 2.0 and .NET 4.7. Upgrade NuGet dependencies.
@@ -34,6 +34,6 @@
 * Use kebab case for multi-word command-line options.
 * Support `[required]` field attribute.
 
-### 1.5.0
+## 1.5.0
 
 * Start tracking version history.

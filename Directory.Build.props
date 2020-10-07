@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);1591;1998;NU5105</NoWarn>
     <DebugType>embedded</DebugType>
     <GitHubOrganization>FacilityApi</GitHubOrganization>
     <RepositoryName>Facility</RepositoryName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/$(GitHubOrganization)/$(RepositoryName)</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/$(GitHubOrganization)/$(RepositoryName)/blob/master/VersionHistory.md#released</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/$(GitHubOrganization)/$(RepositoryName)/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/$(GitHubOrganization)/$(RepositoryName).git</RepositoryUrl>
     <Authors>Ed Ball</Authors>
     <Copyright>Copyright $(Authors)</Copyright>
@@ -27,8 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Faithlife.Analyzers" Version="1.0.7" PrivateAssets="All" />
+    <PackageReference Include="Faithlife.Analyzers" Version="1.0.7" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />
   </ItemGroup>
 
 </Project>
