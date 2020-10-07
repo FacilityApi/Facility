@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <Description>A .NET Core tool that generates FSD for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
