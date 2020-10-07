@@ -1,6 +1,4 @@
 # RepoTemplate
 
-* Documentation: https://facilityapi.github.io/
-* License: [MIT](LICENSE)
-* [Version History](VersionHistory.md)
-* [Contributing Guidelines](CONTRIBUTING.md)
+* [Documentation](https://facilityapi.github.io/)
+* [Release Notes](ReleaseNotes.md)
