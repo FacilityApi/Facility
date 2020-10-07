@@ -317,7 +317,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void NormalResponseFieldNoContent(bool isExplicit)
 		{
 			ParseInvalidHttpApi("service TestApi { [http(code: 204)] method do {}: { [...] id: string; } }".Replace("[...]",
-				isExplicit ? "[http(from: normal)]" : ""))
+					isExplicit ? "[http(from: normal)]" : ""))
 				.ToString().Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 204 does not support normal fields.");
 		}
 
@@ -326,7 +326,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void NormalResponseFieldNotModified(bool isExplicit)
 		{
 			ParseInvalidHttpApi("service TestApi { [http(code: 304)] method do {}: { [...] id: string; } }".Replace("[...]",
-				isExplicit ? "[http(from: normal)]" : ""))
+					isExplicit ? "[http(from: normal)]" : ""))
 				.ToString().Should().Be($"TestApi.fsd(1,{(isExplicit ? 74 : 54)}): HTTP status code 304 does not support normal fields.");
 		}
 
@@ -637,7 +637,7 @@ namespace Facility.Definition.UnitTests.Http
 			var service = HttpServiceInfo.Create(new FsdParser().ParseDefinition(new ServiceDefinitionText("", fsdText)));
 			var left = service.Methods.Single(x => x.ServiceMethod.Name == "left");
 			var right = service.Methods.Single(x => x.ServiceMethod.Name == "right");
-			int actual = HttpMethodInfo.ByRouteComparer.Compare(left, right);
+			var actual = HttpMethodInfo.ByRouteComparer.Compare(left, right);
 			if (expected < 0)
 				actual.Should().BeLessThan(0);
 			else

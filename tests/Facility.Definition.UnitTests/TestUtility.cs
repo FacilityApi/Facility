@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Facility.Definition.Fsd;
-using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
 {
