@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.3.0
+
+* Support custom parser in code generator app.
+
 ## 2.2.2
 
 * Add .NET Core App 3.1 support to `fsdgenfsd`.

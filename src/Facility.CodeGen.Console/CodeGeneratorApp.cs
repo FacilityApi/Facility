@@ -4,6 +4,7 @@ using System.Reflection;
 using ArgsReading;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
+using Facility.Definition.Fsd;
 
 namespace Facility.CodeGen.Console
 {
@@ -55,7 +56,7 @@ namespace Facility.CodeGen.Console
 
 				argsReader.VerifyComplete();
 
-				var filesChanged = FileGenerator.GenerateFiles(generator, settings);
+				var filesChanged = FileGenerator.GenerateFiles(CreateParser(), generator, settings);
 
 				if (isVerify)
 					return filesChanged == 0 ? 0 : 1;
@@ -109,6 +110,11 @@ namespace Facility.CodeGen.Console
 		/// <param name="args">Used to support extra arguments.</param>
 		/// <returns>The file generator settings.</returns>
 		protected abstract FileGeneratorSettings CreateSettings(ArgsReader args);
+
+		/// <summary>
+		/// Creates the service parser.
+		/// </summary>
+		protected virtual ServiceParser CreateParser() => new FsdParser();
 
 		private void WriteUsage(CodeGenerator generator)
 		{
