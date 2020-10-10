@@ -20,6 +20,7 @@ public abstract class CodeGeneratorApp
 | abstract [Description](CodeGeneratorApp/Description.md) { get; } | The app description lines for help. |
 | virtual [ExtraUsage](CodeGeneratorApp/ExtraUsage.md) { get; } | Any extra usage lines for help. |
 | abstract [CreateGenerator](CodeGeneratorApp/CreateGenerator.md)() | Creates the code generator. |
+| virtual [CreateParser](CodeGeneratorApp/CreateParser.md)() | Creates the service parser. |
 | abstract [CreateSettings](CodeGeneratorApp/CreateSettings.md)(…) | Creates the file generator settings. |
 
 ## See Also
