@@ -1,7 +1,8 @@
 # Facility
 
 Tools and libraries for working with the [Facility API Framework](https://facilityapi.github.io/).
-[![AppVeyor](https://img.shields.io/appveyor/ci/ejball/facility.svg)](https://ci.appveyor.com/project/ejball/facility)
+
+[![Build](https://github.com/FacilityApi/Facility/workflows/Build/badge.svg)](https://github.com/FacilityApi/Facility/actions?query=workflow%3ABuild)
 
 Project | Description | NuGet
 --- | --- | ---
