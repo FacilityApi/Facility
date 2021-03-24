@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.4.0
+
+* Introduce and throw `CodeGeneratorException`.
+* Rename overridden method parameter.
+* Add .NET 5 support to `fsdgenfsd`.
+
 ## 2.3.0
 
 * Support custom parser in code generator app.

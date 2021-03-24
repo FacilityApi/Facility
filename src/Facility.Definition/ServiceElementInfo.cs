@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Facility.Definition
@@ -33,6 +34,7 @@ namespace Facility.Definition
 		/// <summary>
 		/// Gets the parts of the element, if any.
 		/// </summary>
+		[SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Legacy.")]
 		public IReadOnlyList<ServicePart> GetParts() => m_parts;
 
 		/// <summary>

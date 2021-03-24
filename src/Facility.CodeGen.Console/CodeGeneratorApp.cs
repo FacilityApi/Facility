@@ -77,6 +77,11 @@ namespace Facility.CodeGen.Console
 				WriteUsage(generator);
 				return 2;
 			}
+			catch (CodeGeneratorException exception)
+			{
+				System.Console.Error.WriteLine(exception.Message);
+				return 2;
+			}
 			catch (ApplicationException exception)
 			{
 				System.Console.Error.WriteLine(exception.Message);

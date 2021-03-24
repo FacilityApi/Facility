@@ -66,7 +66,7 @@ namespace Facility.Definition.CodeGen
 			else
 			{
 				if (!File.Exists(settings.InputPath))
-					throw new ApplicationException("Input file does not exist: " + settings.InputPath);
+					throw new CodeGeneratorException("Input file does not exist: " + settings.InputPath);
 				input = new ServiceDefinitionText(Path.GetFileName(settings.InputPath), File.ReadAllText(settings.InputPath));
 			}
 

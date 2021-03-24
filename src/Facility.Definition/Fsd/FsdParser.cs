@@ -15,24 +15,24 @@ namespace Facility.Definition.Fsd
 		/// <summary>
 		/// Implements TryParseDefinition.
 		/// </summary>
-		protected override bool TryParseDefinitionCore(ServiceDefinitionText source, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
+		protected override bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
 		{
 			var errorList = new List<ServiceDefinitionError>();
 			var definitionLines = new List<string>();
 			var remarksSectionsByName = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
 			var interleavedRemarksSections = new List<FsdRemarksSection>();
 
-			if (!s_interleavedMarkdown.IsMatch(source.Text))
-				ReadRemarksAfterDefinition(source, definitionLines, remarksSectionsByName, errorList);
+			if (!s_interleavedMarkdown.IsMatch(text.Text))
+				ReadRemarksAfterDefinition(text, definitionLines, remarksSectionsByName, errorList);
 			else
-				ReadInterleavedRemarks(source, definitionLines, interleavedRemarksSections);
+				ReadInterleavedRemarks(text, definitionLines, interleavedRemarksSections);
 
-			source = new ServiceDefinitionText(source.Name, string.Join("\n", definitionLines));
+			text = new ServiceDefinitionText(text.Name, string.Join("\n", definitionLines));
 			service = null;
 
 			try
 			{
-				service = FsdParsers.ParseDefinition(source, remarksSectionsByName);
+				service = FsdParsers.ParseDefinition(text, remarksSectionsByName);
 				errorList.AddRange(service.GetValidationErrors());
 
 				// check for unused remarks sections
@@ -84,7 +84,7 @@ namespace Facility.Definition.Fsd
 				int GetExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
 				errorList.Add(new ServiceDefinitionError(
 					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
-					new ServiceDefinitionPosition(source.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
+					new ServiceDefinitionPosition(text.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
 			}
 
 			errors = errorList;
