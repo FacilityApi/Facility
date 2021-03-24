@@ -36,7 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{A887
 		example\ExampleApi.fsd.md = example\ExampleApi.fsd.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{9D6DC519-8908-4D3A-B16B-118D682BD170}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmlDocGen", "tools\XmlDocGen\XmlDocGen.csproj", "{636E5B36-4AA8-47D8-884C-AE4D80B49A14}"
 EndProject
@@ -62,10 +62,10 @@ Global
 		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5BE69C0-DC75-48BB-A180-8C89CB3E6215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D6DC519-8908-4D3A-B16B-118D682BD170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D6DC519-8908-4D3A-B16B-118D682BD170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D6DC519-8908-4D3A-B16B-118D682BD170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D6DC519-8908-4D3A-B16B-118D682BD170}.Release|Any CPU.Build.0 = Release|Any CPU
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{636E5B36-4AA8-47D8-884C-AE4D80B49A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
