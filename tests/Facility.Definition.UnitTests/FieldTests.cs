@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(kind);
 			type.Dto.Should().BeNull();
 			type.Enum.Should().BeNull();
@@ -66,10 +66,10 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Enum);
 			type.Dto.Should().BeNull();
-			type.Enum.Name.Should().Be("MyEnum");
+			type.Enum!.Name.Should().Be("MyEnum");
 			type.ValueType.Should().BeNull();
 
 			TestUtility.GenerateFsd(service).Should().Equal(
@@ -100,9 +100,9 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Dto);
-			type.Dto.Name.Should().Be("MyDto");
+			type.Dto!.Name.Should().Be("MyDto");
 			type.Enum.Should().BeNull();
 			type.ValueType.Should().BeNull();
 
@@ -134,9 +134,9 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Dto);
-			type.Dto.Name.Should().Be("MyDto");
+			type.Dto!.Name.Should().Be("MyDto");
 			type.Enum.Should().BeNull();
 			type.ValueType.Should().BeNull();
 
@@ -177,10 +177,10 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Result);
-			type.ValueType.Kind.Should().Be(ServiceTypeKind.Dto);
-			type.ValueType.Dto.Name.Should().Be("One");
+			type.ValueType!.Kind.Should().Be(ServiceTypeKind.Dto);
+			type.ValueType.Dto!.Name.Should().Be("One");
 		}
 
 		[Test]
@@ -212,9 +212,9 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Array);
-			type.ValueType.Kind.Should().Be(kind);
+			type.ValueType!.Kind.Should().Be(kind);
 		}
 
 		[TestCase("string", ServiceTypeKind.String)]
@@ -240,9 +240,9 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Map);
-			type.ValueType.Kind.Should().Be(kind);
+			type.ValueType!.Kind.Should().Be(kind);
 		}
 
 		[TestCase("string", ServiceTypeKind.String)]
@@ -268,9 +268,9 @@ namespace Facility.Definition.UnitTests
 			field.Name.Should().Be("x");
 			field.Attributes.Count.Should().Be(0);
 			field.Summary.Should().Be("");
-			var type = service.GetFieldType(field);
+			var type = service.GetFieldType(field)!;
 			type.Kind.Should().Be(ServiceTypeKind.Result);
-			type.ValueType.Kind.Should().Be(kind);
+			type.ValueType!.Kind.Should().Be(kind);
 		}
 
 		[Test]
@@ -279,16 +279,16 @@ namespace Facility.Definition.UnitTests
 			var service = TestUtility.ParseTestApi("service TestApi { data One { x: string; } }");
 			var field = service.Dtos.Single().Fields.Single();
 
-			field.Position.LineNumber.Should().Be(1);
+			field.Position!.LineNumber.Should().Be(1);
 			field.Position.ColumnNumber.Should().Be(30);
 
-			var namePart = field.GetPart(ServicePartKind.Name);
+			var namePart = field.GetPart(ServicePartKind.Name)!;
 			namePart.Position.LineNumber.Should().Be(1);
 			namePart.Position.ColumnNumber.Should().Be(30);
 			namePart.EndPosition.LineNumber.Should().Be(1);
 			namePart.EndPosition.ColumnNumber.Should().Be(31);
 
-			var typePart = field.GetPart(ServicePartKind.TypeName);
+			var typePart = field.GetPart(ServicePartKind.TypeName)!;
 			typePart.Position.LineNumber.Should().Be(1);
 			typePart.Position.ColumnNumber.Should().Be(33);
 			typePart.EndPosition.LineNumber.Should().Be(1);

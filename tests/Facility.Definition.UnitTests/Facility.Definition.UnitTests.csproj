@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <NoWarn>$(NoWarn);8602</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -26,7 +26,7 @@ namespace Facility.Definition.UnitTests.Http
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
-			response.NormalFields.Count.Should().Be(0);
+			response.NormalFields.Should().BeEmpty();
 			response.BodyField.Should().BeNull();
 		}
 
@@ -247,7 +247,7 @@ namespace Facility.Definition.UnitTests.Http
 		public void BodyRequestField(string type)
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type)).Methods.Single();
-			method.RequestBodyField.ServiceField.Name.Should().Be("id");
+			method.RequestBodyField!.ServiceField.Name.Should().Be("id");
 		}
 
 		[TestCase("boolean")]
@@ -353,7 +353,7 @@ namespace Facility.Definition.UnitTests.Http
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
 			response.NormalFields.Should().BeNull();
-			response.BodyField.ServiceField.Name.Should().Be("id");
+			response.BodyField!.ServiceField.Name.Should().Be("id");
 			response.BodyField.StatusCode.Should().BeNull();
 		}
 
@@ -376,7 +376,7 @@ namespace Facility.Definition.UnitTests.Http
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(HttpStatusCode.Accepted);
 			response.NormalFields.Should().BeNull();
-			response.BodyField.ServiceField.Name.Should().Be("body");
+			response.BodyField!.ServiceField.Name.Should().Be("body");
 			response.BodyField.StatusCode.Should().Be(HttpStatusCode.Accepted);
 		}
 
@@ -389,10 +389,10 @@ namespace Facility.Definition.UnitTests.Http
 			responses.Count.Should().Be(2);
 			responses[0].StatusCode.Should().Be(HttpStatusCode.OK);
 			responses[0].NormalFields.Should().BeNull();
-			responses[0].BodyField.ServiceField.Name.Should().Be("body");
-			responses[0].BodyField.StatusCode.Should().BeNull();
+			responses[0].BodyField!.ServiceField.Name.Should().Be("body");
+			responses[0].BodyField!.StatusCode.Should().BeNull();
 			responses[1].StatusCode.Should().Be(HttpStatusCode.Accepted);
-			responses[1].NormalFields.Count.Should().Be(0);
+			responses[1].NormalFields.Should().BeEmpty();
 			responses[1].BodyField.Should().BeNull();
 		}
 
@@ -412,12 +412,12 @@ namespace Facility.Definition.UnitTests.Http
 			responses.Count.Should().Be(2);
 			responses[0].StatusCode.Should().Be(HttpStatusCode.OK);
 			responses[0].NormalFields.Should().BeNull();
-			responses[0].BodyField.ServiceField.Name.Should().Be("body1");
-			responses[0].BodyField.StatusCode.Should().BeNull();
+			responses[0].BodyField!.ServiceField.Name.Should().Be("body1");
+			responses[0].BodyField!.StatusCode.Should().BeNull();
 			responses[1].StatusCode.Should().Be(HttpStatusCode.Created);
 			responses[1].NormalFields.Should().BeNull();
-			responses[1].BodyField.ServiceField.Name.Should().Be("body2");
-			responses[1].BodyField.StatusCode.Should().Be(HttpStatusCode.Created);
+			responses[1].BodyField!.ServiceField.Name.Should().Be("body2");
+			responses[1].BodyField!.StatusCode.Should().Be(HttpStatusCode.Created);
 		}
 
 		[Test]
@@ -429,14 +429,14 @@ namespace Facility.Definition.UnitTests.Http
 			responses.Count.Should().Be(3);
 			responses[0].StatusCode.Should().Be(HttpStatusCode.OK);
 			responses[0].NormalFields.Should().BeNull();
-			responses[0].BodyField.ServiceField.Name.Should().Be("body1");
-			responses[0].BodyField.StatusCode.Should().BeNull();
+			responses[0].BodyField!.ServiceField.Name.Should().Be("body1");
+			responses[0].BodyField!.StatusCode.Should().BeNull();
 			responses[1].StatusCode.Should().Be(HttpStatusCode.Created);
 			responses[1].NormalFields.Should().BeNull();
-			responses[1].BodyField.ServiceField.Name.Should().Be("body2");
-			responses[1].BodyField.StatusCode.Should().Be(HttpStatusCode.Created);
+			responses[1].BodyField!.ServiceField.Name.Should().Be("body2");
+			responses[1].BodyField!.StatusCode.Should().Be(HttpStatusCode.Created);
 			responses[2].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-			responses[2].NormalFields.Count.Should().Be(0);
+			responses[2].NormalFields!.Count.Should().Be(0);
 			responses[2].BodyField.Should().BeNull();
 		}
 
@@ -449,14 +449,14 @@ namespace Facility.Definition.UnitTests.Http
 			responses.Count.Should().Be(3);
 			responses[0].StatusCode.Should().Be(HttpStatusCode.OK);
 			responses[0].NormalFields.Should().BeNull();
-			responses[0].BodyField.ServiceField.Name.Should().Be("body1");
-			responses[0].BodyField.StatusCode.Should().Be(HttpStatusCode.OK);
+			responses[0].BodyField!.ServiceField.Name.Should().Be("body1");
+			responses[0].BodyField!.StatusCode.Should().Be(HttpStatusCode.OK);
 			responses[1].StatusCode.Should().Be(HttpStatusCode.Created);
 			responses[1].NormalFields.Should().BeNull();
-			responses[1].BodyField.ServiceField.Name.Should().Be("body2");
-			responses[1].BodyField.StatusCode.Should().Be(HttpStatusCode.Created);
+			responses[1].BodyField!.ServiceField.Name.Should().Be("body2");
+			responses[1].BodyField!.StatusCode.Should().Be(HttpStatusCode.Created);
 			responses[2].StatusCode.Should().Be(HttpStatusCode.NoContent);
-			responses[2].NormalFields.Count.Should().Be(0);
+			responses[2].NormalFields.Should().BeEmpty();
 			responses[2].BodyField.Should().BeNull();
 		}
 
@@ -467,7 +467,7 @@ namespace Facility.Definition.UnitTests.Http
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-			response.BodyField.ServiceField.Name.Should().Be("body");
+			response.BodyField!.ServiceField.Name.Should().Be("body");
 			response.BodyField.StatusCode.Should().BeNull();
 		}
 
@@ -479,7 +479,7 @@ namespace Facility.Definition.UnitTests.Http
 
 			var response = method.ValidResponses.Single();
 			response.StatusCode.Should().Be(statusCode);
-			response.BodyField.ServiceField.Name.Should().Be("body");
+			response.BodyField!.ServiceField.Name.Should().Be("body");
 			response.BodyField.StatusCode.Should().Be(statusCode);
 		}
 

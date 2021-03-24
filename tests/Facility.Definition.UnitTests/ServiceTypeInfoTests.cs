@@ -17,7 +17,7 @@ namespace Facility.Definition.UnitTests
 		public void PrimitiveTypes(string name, ServiceTypeKind kind)
 		{
 			var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: new[] { new ServiceFieldInfo("myField", name) }) });
-			var type = service.GetFieldType(service.Dtos[0].Fields[0]);
+			var type = service.GetFieldType(service.Dtos[0].Fields[0])!;
 			type.Kind.Should().Be(kind);
 			type.Dto.Should().BeNull();
 			type.Enum.Should().BeNull();
@@ -30,7 +30,7 @@ namespace Facility.Definition.UnitTests
 		{
 			var service = new ServiceInfo(name: "MyApi",
 				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyDto") }), new ServiceDtoInfo("MyDto") });
-			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
+			var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 			type.Kind.Should().Be(ServiceTypeKind.Dto);
 			type.Dto.Should().Be(service.Dtos[0]);
 			type.Enum.Should().BeNull();
@@ -43,7 +43,7 @@ namespace Facility.Definition.UnitTests
 		{
 			var service = new ServiceInfo(name: "MyApi",
 				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyEnum") }), new ServiceEnumInfo("MyEnum") });
-			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
+			var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 			type.Kind.Should().Be(ServiceTypeKind.Enum);
 			type.Dto.Should().BeNull();
 			type.Enum.Should().Be(service.Enums[0]);
@@ -58,11 +58,11 @@ namespace Facility.Definition.UnitTests
 		{
 			var service = new ServiceInfo(name: "MyApi",
 				members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", name) }), new ServiceDtoInfo("MyDto") });
-			var type = service.GetFieldType(service.Methods[0].RequestFields[0]);
+			var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 			type.Kind.Should().Be(kind);
 			type.Dto.Should().BeNull();
 			type.Enum.Should().BeNull();
-			type.ValueType.Dto.Should().Be(service.Dtos[0]);
+			type.ValueType!.Dto.Should().Be(service.Dtos[0]);
 			type.ToString().Should().Be(name);
 		}
 	}

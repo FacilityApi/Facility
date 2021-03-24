@@ -205,19 +205,19 @@ namespace Facility.Definition.UnitTests
 		{
 			var service = TestUtility.ParseTestApi("service TestApi\r\n{\r\n}\r\n");
 
-			var keywordPart = service.GetPart(ServicePartKind.Keyword);
+			var keywordPart = service.GetPart(ServicePartKind.Keyword)!;
 			keywordPart.Position.LineNumber.Should().Be(1);
 			keywordPart.Position.ColumnNumber.Should().Be(1);
 			keywordPart.EndPosition.LineNumber.Should().Be(1);
 			keywordPart.EndPosition.ColumnNumber.Should().Be(8);
 
-			var namePart = service.GetPart(ServicePartKind.Name);
+			var namePart = service.GetPart(ServicePartKind.Name)!;
 			namePart.Position.LineNumber.Should().Be(1);
 			namePart.Position.ColumnNumber.Should().Be(9);
 			namePart.EndPosition.LineNumber.Should().Be(1);
 			namePart.EndPosition.ColumnNumber.Should().Be(16);
 
-			var endPart = service.GetPart(ServicePartKind.End);
+			var endPart = service.GetPart(ServicePartKind.End)!;
 			endPart.Position.LineNumber.Should().Be(3);
 			endPart.Position.ColumnNumber.Should().Be(1);
 			endPart.EndPosition.LineNumber.Should().Be(3);
