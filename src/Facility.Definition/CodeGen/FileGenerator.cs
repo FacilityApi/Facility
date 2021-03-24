@@ -146,7 +146,7 @@ namespace Facility.Definition.CodeGen
 					var outputFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, fileToWrite.Name);
 
 					var outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
-					if (outputFileDirectoryPath != null && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
+					if (outputFileDirectoryPath != null && outputFileDirectoryPath.Length != 0 && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
 						Directory.CreateDirectory(outputFileDirectoryPath);
 
 					if (writeToConsole)
