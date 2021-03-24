@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -54,8 +55,7 @@ namespace Facility.Definition.Fsd
 							if (method.Remarks.Count != 0)
 								remarks.AddRange(new[] { "", $"# {method.Name}", "" }.Concat(method.Remarks));
 						}
-
-						if (member is ServiceDtoInfo dto)
+						else if (member is ServiceDtoInfo dto)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, dto);
@@ -66,8 +66,7 @@ namespace Facility.Definition.Fsd
 							if (dto.Remarks.Count != 0)
 								remarks.AddRange(new[] { "", $"# {dto.Name}", "" }.Concat(dto.Remarks));
 						}
-
-						if (member is ServiceEnumInfo enumInfo)
+						else if (member is ServiceEnumInfo enumInfo)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, enumInfo);
@@ -78,8 +77,7 @@ namespace Facility.Definition.Fsd
 							if (enumInfo.Remarks.Count != 0)
 								remarks.AddRange(new[] { "", $"# {enumInfo.Name}", "" }.Concat(enumInfo.Remarks));
 						}
-
-						if (member is ServiceErrorSetInfo errorSet)
+						else if (member is ServiceErrorSetInfo errorSet)
 						{
 							code.WriteLineSkipOnce();
 							WriteSummaryAndAttributes(code, errorSet);
@@ -89,6 +87,10 @@ namespace Facility.Definition.Fsd
 
 							if (errorSet.Remarks.Count != 0)
 								remarks.AddRange(new[] { "", $"# {errorSet.Name}", "" }.Concat(errorSet.Remarks));
+						}
+						else
+						{
+							throw new InvalidOperationException("Unexpected member type.");
 						}
 					}
 				}
@@ -131,10 +133,8 @@ namespace Facility.Definition.Fsd
 			code.WriteLine($"[{attribute.Name}{parameters}]");
 		}
 
-		private string RenderAttributeParameter(ServiceAttributeParameterInfo parameter)
-		{
-			return $"{parameter.Name}: {RenderAttributeParameterValue(parameter)}";
-		}
+		private string RenderAttributeParameter(ServiceAttributeParameterInfo parameter) =>
+			$"{parameter.Name}: {RenderAttributeParameterValue(parameter)}";
 
 		private string RenderAttributeParameterValue(ServiceAttributeParameterInfo parameter)
 		{
@@ -144,10 +144,8 @@ namespace Facility.Definition.Fsd
 			return "\"" + s_escapeAttributeValueRegex.Replace(parameter.Value, RenderAttributeValueEscape) + "\"";
 		}
 
-		private string RenderAttributeValueEscape(Match match)
-		{
-			var ch = match.Value[0];
-			return ch switch
+		private string RenderAttributeValueEscape(Match match) =>
+			match.Value[0] switch
 			{
 				'\\' => @"\\",
 				'"' => @"\""",
@@ -156,9 +154,8 @@ namespace Facility.Definition.Fsd
 				'\n' => @"\n",
 				'\r' => @"\r",
 				'\t' => @"\t",
-				_ => $@"\u{(int) ch:x4}",
+				var ch => $@"\u{(int) ch:x4}",
 			};
-		}
 
 		private void WriteFields(CodeWriter code, IEnumerable<ServiceFieldInfo> fields)
 		{
@@ -196,7 +193,7 @@ namespace Facility.Definition.Fsd
 			}
 		}
 
-		private static readonly Regex s_unquotedAttributeValueRegex = new Regex(@"^[0-9a-zA-Z.+_-]+$");
-		private static readonly Regex s_escapeAttributeValueRegex = new Regex(@"[\\""\u0000-\u001F]");
+		private static readonly Regex s_unquotedAttributeValueRegex = new(@"^[0-9a-zA-Z.+_-]+$");
+		private static readonly Regex s_escapeAttributeValueRegex = new(@"[\\""\u0000-\u001F]");
 	}
 }

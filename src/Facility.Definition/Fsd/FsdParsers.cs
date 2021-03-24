@@ -179,16 +179,13 @@ namespace Facility.Definition.Fsd
 			from end in Parser.Success(true).End().Named("end")
 			select service;
 
-		private static string TryParseAttributeParameterValue(Match match)
-		{
-			return match.Groups[1].Success ?
-				string.Concat(match.Groups[2].Captures.OfType<Capture>().Select(x => x.ToString()).Select(x => x[0] == '\\' ? DecodeBackslash(x) : x)) :
-				match.Groups[3].ToString();
-		}
+		private static string TryParseAttributeParameterValue(Match match) =>
+			match.Groups[1].Success
+				? string.Concat(match.Groups[2].Captures.OfType<Capture>().Select(x => x.ToString()).Select(x => x[0] == '\\' ? DecodeBackslash(x) : x))
+				: match.Groups[3].ToString();
 
-		private static string DecodeBackslash(string text)
-		{
-			return text[1] switch
+		private static string DecodeBackslash(string text) =>
+			text[1] switch
 			{
 				'b' => "\b",
 				'f' => "\f",
@@ -198,11 +195,16 @@ namespace Facility.Definition.Fsd
 				'u' => new string((char) ushort.Parse(text.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),
 				_ => text.Substring(1),
 			};
-		}
 
 		private static string BuildSummary(IEnumerable<string> comments1, IEnumerable<string> comments2)
 		{
-			return string.Join(" ", comments1.Concat(comments2).Where(x => x.Trim().Length != 0).Reverse().TakeWhile(x => x.Length > 2 && x[0] == '/' && x[1] == ' ').Reverse().Select(x => x.Substring(2).Trim()));
+			return string.Join(" ",
+				comments1.Concat(comments2)
+					.Where(x => x.Trim().Length != 0)
+					.Reverse()
+					.TakeWhile(x => x.Length > 2 && x[0] == '/' && x[1] == ' ')
+					.Reverse()
+					.Select(x => x.Substring(2).Trim()));
 		}
 
 		private sealed class Context
@@ -213,7 +215,7 @@ namespace Facility.Definition.Fsd
 				m_remarksSectionsByName = remarksSectionsByName;
 			}
 
-			public ServicePart GetPart<T>(ServicePartKind kind, Positioned<T> positioned) => new ServicePart(kind, GetPosition(positioned.Position), GetPosition(positioned.Position.WithNextIndex(positioned.Length)));
+			public ServicePart GetPart<T>(ServicePartKind kind, Positioned<T> positioned) => new(kind, GetPosition(positioned.Position), GetPosition(positioned.Position.WithNextIndex(positioned.Length)));
 
 			public FsdRemarksSection GetRemarksSection(string name)
 			{

@@ -21,27 +21,27 @@ namespace Facility.Definition
 		/// <summary>
 		/// Create a DTO type.
 		/// </summary>
-		public static ServiceTypeInfo CreateDto(ServiceDtoInfo dto) => new ServiceTypeInfo(ServiceTypeKind.Dto, dto: dto);
+		public static ServiceTypeInfo CreateDto(ServiceDtoInfo dto) => new(ServiceTypeKind.Dto, dto: dto);
 
 		/// <summary>
 		/// Create an enumerated type.
 		/// </summary>
-		public static ServiceTypeInfo CreateEnum(ServiceEnumInfo @enum) => new ServiceTypeInfo(ServiceTypeKind.Enum, @enum: @enum);
+		public static ServiceTypeInfo CreateEnum(ServiceEnumInfo @enum) => new(ServiceTypeKind.Enum, @enum: @enum);
 
 		/// <summary>
 		/// Create a service result type.
 		/// </summary>
-		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType) => new ServiceTypeInfo(ServiceTypeKind.Result, valueType: valueType);
+		public static ServiceTypeInfo CreateResult(ServiceTypeInfo valueType) => new(ServiceTypeKind.Result, valueType: valueType);
 
 		/// <summary>
 		/// Create an array type.
 		/// </summary>
-		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType) => new ServiceTypeInfo(ServiceTypeKind.Array, valueType: valueType);
+		public static ServiceTypeInfo CreateArray(ServiceTypeInfo valueType) => new(ServiceTypeKind.Array, valueType: valueType);
 
 		/// <summary>
 		/// Create a map type.
 		/// </summary>
-		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType) => new ServiceTypeInfo(ServiceTypeKind.Map, valueType: valueType);
+		public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType) => new(ServiceTypeKind.Map, valueType: valueType);
 
 		/// <summary>
 		/// The kind of type.

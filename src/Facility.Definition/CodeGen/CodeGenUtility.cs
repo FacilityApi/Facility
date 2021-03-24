@@ -53,6 +53,6 @@ namespace Facility.Definition.CodeGen
 
 		private static string[] GetWords(string value) => s_word.Matches(value ?? throw new ArgumentNullException(nameof(value))).Cast<Match>().Select(x => x.ToString()).ToArray();
 
-		private static readonly Regex s_word = new Regex("[A-Z]([A-Z]*(?![a-z])|[a-z]*)|[a-z]+|[0-9]+", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
+		private static readonly Regex s_word = new("[A-Z]([A-Z]*(?![a-z])|[a-z]*)|[a-z]+|[0-9]+", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
 	}
 }

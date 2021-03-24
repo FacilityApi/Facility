@@ -13,10 +13,10 @@ namespace Facility.Definition.Fsd
 		/// <exception cref="ServiceDefinitionException">Thrown if parsing fails or the service would be invalid.</exception>
 		public ServiceInfo ParseDefinition(ServiceDefinitionText text)
 		{
-			if (TryParseDefinition(text, out var service, out var errors))
-				return service!;
-			else
+			if (!TryParseDefinition(text, out var service, out var errors))
 				throw new ServiceDefinitionException(errors);
+
+			return service!;
 		}
 
 		/// <summary>

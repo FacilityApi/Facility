@@ -62,10 +62,9 @@ namespace Facility.Definition.Fsd
 							}
 						}
 
-						if (targetMember.Remarks.Count == 0)
-							targetMember.Remarks = remarksSection.Lines;
-						else
-							targetMember.Remarks = targetMember.Remarks.Concat(new[] { "" }).Concat(remarksSection.Lines).ToList();
+						targetMember.Remarks = targetMember.Remarks.Count == 0
+							? remarksSection.Lines
+							: targetMember.Remarks.Concat(new[] { "" }).Concat(remarksSection.Lines).ToList();
 					}
 				}
 			}
@@ -203,7 +202,7 @@ namespace Facility.Definition.Fsd
 			}
 		}
 
-		private static readonly Regex s_interleavedMarkdown = new Regex(@"^```fsd\b", RegexOptions.Multiline);
-		private static readonly Regex s_markdownHeading = new Regex(@"^#\s+");
+		private static readonly Regex s_interleavedMarkdown = new(@"^```fsd\b", RegexOptions.Multiline);
+		private static readonly Regex s_markdownHeading = new(@"^#\s+");
 	}
 }

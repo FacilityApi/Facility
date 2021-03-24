@@ -371,7 +371,7 @@ namespace Facility.Definition.Http
 			}
 		}
 
-		private static readonly List<string> s_httpMethods = new List<string> { "GET", "POST", "PUT", "PATCH", "DELETE" };
-		private static readonly Regex s_regexPathParameterRegex = new Regex(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
+		private static readonly List<string> s_httpMethods = new() { "GET", "POST", "PUT", "PATCH", "DELETE" };
+		private static readonly Regex s_regexPathParameterRegex = new(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
 	}
 }
