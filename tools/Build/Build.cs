@@ -4,47 +4,51 @@ using Faithlife.Build;
 using static Faithlife.Build.BuildUtility;
 using static Faithlife.Build.DotNetRunner;
 
-internal static class Build
+return BuildRunner.Execute(args, build =>
 {
-	public static int Main(string[] args) => BuildRunner.Execute(args, build =>
+	var codegen = "fsdgen___";
+
+	var gitLogin = new GitLoginInfo("FacilityApiBot", Environment.GetEnvironmentVariable("BUILD_BOT_PASSWORD") ?? "");
+
+	var dotNetBuildSettings = new DotNetBuildSettings
 	{
-		var codegen = "fsdgen___";
-
-		var dotNetBuildSettings = new DotNetBuildSettings
+		NuGetApiKey = Environment.GetEnvironmentVariable("NUGET_API_KEY"),
+		DocsSettings = new DotNetDocsSettings
 		{
-			NuGetApiKey = Environment.GetEnvironmentVariable("NUGET_API_KEY"),
-			DocsSettings = new DotNetDocsSettings
-			{
-				GitLogin = new GitLoginInfo("FacilityApiBot", Environment.GetEnvironmentVariable("BUILD_BOT_PASSWORD") ?? ""),
-				GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
-				SourceCodeUrl = "https://github.com/FacilityApi/RepoTemplate/tree/master/src",
-				ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
-			},
-		};
-
-		build.AddDotNetTargets(dotNetBuildSettings);
-
-		build.Target("codegen")
-			.DependsOn("build")
-			.Describe("Generates code from the FSD")
-			.Does(() => CodeGen(verify: false));
-
-		build.Target("verify-codegen")
-			.DependsOn("build")
-			.Describe("Ensures the generated code is up-to-date")
-			.Does(() => CodeGen(verify: true));
-
-		build.Target("test")
-			.DependsOn("verify-codegen");
-
-		void CodeGen(bool verify)
+			GitLogin = gitLogin,
+			GitAuthor = new GitAuthorInfo("FacilityApiBot", "facilityapi@gmail.com"),
+			SourceCodeUrl = "https://github.com/FacilityApi/RepoTemplate/tree/master/src",
+			ProjectHasDocs = name => !name.StartsWith("fsdgen", StringComparison.Ordinal),
+		},
+		PackageSettings = new DotNetPackageSettings
 		{
-			var configuration = dotNetBuildSettings!.BuildOptions!.ConfigurationOption!.Value;
-			var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/netcoreapp3.1/{codegen}.dll").FirstOrDefault();
+			GitLogin = gitLogin,
+			PushTagOnPublish = x => $"nuget.{x.Version}",
+		},
+	};
 
-			var verifyOption = verify ? "--verify" : null;
+	build.AddDotNetTargets(dotNetBuildSettings);
 
-			RunDotNet(toolPath, "___", "___", "--newline", "lf", verifyOption);
-		}
-	});
-}
+	build.Target("codegen")
+		.DependsOn("build")
+		.Describe("Generates code from the FSD")
+		.Does(() => CodeGen(verify: false));
+
+	build.Target("verify-codegen")
+		.DependsOn("build")
+		.Describe("Ensures the generated code is up-to-date")
+		.Does(() => CodeGen(verify: true));
+
+	build.Target("test")
+		.DependsOn("verify-codegen");
+
+	void CodeGen(bool verify)
+	{
+		var configuration = dotNetBuildSettings.GetConfiguration();
+		var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/net5.0/{codegen}.dll").FirstOrDefault();
+
+		var verifyOption = verify ? "--verify" : null;
+
+		RunDotNet(toolPath, "___", "___", "--newline", "lf", verifyOption);
+	}
+});
