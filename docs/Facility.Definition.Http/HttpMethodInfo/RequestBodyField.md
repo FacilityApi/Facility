@@ -3,7 +3,7 @@
 The field of the request DTO that corresponds to the entire request body.
 
 ```csharp
-public HttpBodyFieldInfo RequestBodyField { get; }
+public HttpBodyFieldInfo? RequestBodyField { get; }
 ```
 
 ## See Also

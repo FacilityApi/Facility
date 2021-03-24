@@ -3,7 +3,7 @@
 The fields from the response DTO that correspond to the response body.
 
 ```csharp
-public IReadOnlyList<HttpNormalFieldInfo> NormalFields { get; }
+public IReadOnlyList<HttpNormalFieldInfo>? NormalFields { get; }
 ```
 
 ## See Also

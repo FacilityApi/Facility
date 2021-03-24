@@ -3,7 +3,7 @@
 Creates a single-output instance.
 
 ```csharp
-public CodeGenOutput(CodeGenFile file)
+public CodeGenOutput(CodeGenFile? file)
 ```
 
 ## See Also
@@ -19,8 +19,8 @@ public CodeGenOutput(CodeGenFile file)
 Creates a multi-output instance.
 
 ```csharp
-public CodeGenOutput(IReadOnlyList<CodeGenFile> files, 
-    IReadOnlyList<CodeGenPattern> patternsToClean)
+public CodeGenOutput(IReadOnlyList<CodeGenFile>? files, 
+    IReadOnlyList<CodeGenPattern>? patternsToClean)
 ```
 
 ## See Also

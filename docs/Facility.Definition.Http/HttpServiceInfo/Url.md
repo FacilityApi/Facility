@@ -3,7 +3,7 @@
 The URL of the HTTP service.
 
 ```csharp
-public string Url { get; }
+public string? Url { get; }
 ```
 
 ## See Also

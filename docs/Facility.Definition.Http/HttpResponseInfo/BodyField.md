@@ -3,7 +3,7 @@
 The field that corresponds to the entire response body.
 
 ```csharp
-public HttpBodyFieldInfo BodyField { get; }
+public HttpBodyFieldInfo? BodyField { get; }
 ```
 
 ## See Also

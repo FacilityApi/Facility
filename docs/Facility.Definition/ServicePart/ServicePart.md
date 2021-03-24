@@ -4,7 +4,7 @@ Creates an instance.
 
 ```csharp
 public ServicePart(ServicePartKind kind, ServiceDefinitionPosition position, 
-    ServiceDefinitionPosition endPosition = null)
+    ServiceDefinitionPosition? endPosition = null)
 ```
 
 ## See Also

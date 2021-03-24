@@ -4,7 +4,7 @@ Creates an exception.
 
 ```csharp
 public ServiceDefinitionException(IEnumerable<ServiceDefinitionError> errors, 
-    Exception innerException = null)
+    Exception? innerException = null)
 ```
 
 ## See Also

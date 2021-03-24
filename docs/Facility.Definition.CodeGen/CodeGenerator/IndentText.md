@@ -3,7 +3,7 @@
 The text to use for each indent (null for tab).
 
 ```csharp
-public string IndentText { get; set; }
+public string? IndentText { get; set; }
 ```
 
 ## See Also

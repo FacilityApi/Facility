@@ -4,7 +4,7 @@ Creates an error set.
 
 ```csharp
 public ServiceErrorSetInfo(string name, IEnumerable<ServiceErrorInfo> errors, 
-    IEnumerable<ServiceAttributeInfo> attributes, string summary, IEnumerable<string> remarks, 
+    IEnumerable<ServiceAttributeInfo>? attributes, string? summary, IEnumerable<string>? remarks, 
     params ServicePart[] parts)
 ```
 

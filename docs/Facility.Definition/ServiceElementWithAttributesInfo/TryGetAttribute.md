@@ -3,7 +3,7 @@
 Returns the first attribute with the specified name, if any.
 
 ```csharp
-public ServiceAttributeInfo TryGetAttribute(string name)
+public ServiceAttributeInfo? TryGetAttribute(string name)
 ```
 
 ## See Also

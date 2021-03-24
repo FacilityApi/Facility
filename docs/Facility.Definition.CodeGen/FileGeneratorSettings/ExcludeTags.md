@@ -3,7 +3,7 @@
 Excludes service elements with the specified tags.
 
 ```csharp
-public IReadOnlyList<string> ExcludeTags { get; set; }
+public IReadOnlyList<string>? ExcludeTags { get; set; }
 ```
 
 ## See Also

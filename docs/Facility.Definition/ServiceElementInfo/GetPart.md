@@ -3,7 +3,7 @@
 Gets the specified part of the element, if any.
 
 ```csharp
-public ServicePart GetPart(ServicePartKind kind)
+public ServicePart? GetPart(ServicePartKind kind)
 ```
 
 ## See Also

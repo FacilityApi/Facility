@@ -3,7 +3,7 @@
 The indent used in the output.
 
 ```csharp
-public string IndentText { get; set; }
+public string? IndentText { get; set; }
 ```
 
 ## See Also

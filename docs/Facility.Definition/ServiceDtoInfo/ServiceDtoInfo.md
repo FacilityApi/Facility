@@ -3,9 +3,9 @@
 Creates a DTO.
 
 ```csharp
-public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo> fields = null, 
-    IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, 
-    IEnumerable<string> remarks = null, params ServicePart[] parts)
+public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo>? fields = null, 
+    IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, 
+    IEnumerable<string>? remarks = null, params ServicePart[] parts)
 ```
 
 ## See Also

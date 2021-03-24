@@ -3,7 +3,7 @@
 The path to the input file ("-" for stdin).
 
 ```csharp
-public string InputPath { get; set; }
+public string? InputPath { get; set; }
 ```
 
 ## See Also

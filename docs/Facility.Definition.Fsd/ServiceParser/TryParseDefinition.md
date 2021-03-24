@@ -3,7 +3,7 @@
 Parses the text into a service definition.
 
 ```csharp
-public bool TryParseDefinition(ServiceDefinitionText text, out ServiceInfo service, 
+public bool TryParseDefinition(ServiceDefinitionText text, out ServiceInfo? service, 
     out IReadOnlyList<ServiceDefinitionError> errors)
 ```
 

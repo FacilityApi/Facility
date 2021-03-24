@@ -3,7 +3,7 @@
 The position of the element.
 
 ```csharp
-public ServiceDefinitionPosition Position { get; }
+public ServiceDefinitionPosition? Position { get; }
 ```
 
 ## See Also

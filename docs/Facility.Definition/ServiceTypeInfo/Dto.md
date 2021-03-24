@@ -3,7 +3,7 @@
 The DTO (when Kind is Dto).
 
 ```csharp
-public ServiceDtoInfo Dto { get; }
+public ServiceDtoInfo? Dto { get; }
 ```
 
 ## See Also

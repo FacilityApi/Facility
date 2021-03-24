@@ -3,9 +3,9 @@
 Creates an enumerated type.
 
 ```csharp
-public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo> values = null, 
-    IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, 
-    IEnumerable<string> remarks = null, params ServicePart[] parts)
+public ServiceEnumInfo(string name, IEnumerable<ServiceEnumValueInfo>? values = null, 
+    IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, 
+    IEnumerable<string>? remarks = null, params ServicePart[] parts)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 The text to use for each new line (null for default).
 
 ```csharp
-public string NewLine { get; set; }
+public string? NewLine { get; set; }
 ```
 
 ## See Also

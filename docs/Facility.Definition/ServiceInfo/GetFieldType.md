@@ -3,7 +3,7 @@
 Gets the field type for a field.
 
 ```csharp
-public ServiceTypeInfo GetFieldType(ServiceFieldInfo field)
+public ServiceTypeInfo? GetFieldType(ServiceFieldInfo field)
 ```
 
 ## See Also

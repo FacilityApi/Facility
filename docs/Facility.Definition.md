@@ -34,6 +34,7 @@
 | public type | description |
 | --- | --- |
 | abstract class [CodeGenerator](Facility.Definition.CodeGen/CodeGenerator.md) | Base class for code generators. |
+| class [CodeGeneratorException](Facility.Definition.CodeGen/CodeGeneratorException.md) | An exception thrown by a code generator. |
 | class [CodeGenFile](Facility.Definition.CodeGen/CodeGenFile.md) | A code-generated file. |
 | class [CodeGenOutput](Facility.Definition.CodeGen/CodeGenOutput.md) | The output of a code generator. |
 | class [CodeGenPattern](Facility.Definition.CodeGen/CodeGenPattern.md) | A pattern for generated output. |

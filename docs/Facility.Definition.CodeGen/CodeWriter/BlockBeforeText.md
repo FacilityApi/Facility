@@ -3,7 +3,7 @@
 The text written on the line before a block (default "{", null for none).
 
 ```csharp
-public string BlockBeforeText { get; set; }
+public string? BlockBeforeText { get; set; }
 ```
 
 ## See Also

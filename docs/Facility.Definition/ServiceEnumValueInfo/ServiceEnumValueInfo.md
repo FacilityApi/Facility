@@ -4,7 +4,7 @@ Creates an enumerated type value.
 
 ```csharp
 public ServiceEnumValueInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, 
-    string summary, params ServicePart[] parts)
+    string? summary, params ServicePart[] parts)
 ```
 
 ## See Also

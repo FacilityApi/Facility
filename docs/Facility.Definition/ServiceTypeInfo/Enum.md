@@ -3,7 +3,7 @@
 The enumerated type (when Kind is Enum).
 
 ```csharp
-public ServiceEnumInfo Enum { get; }
+public ServiceEnumInfo? Enum { get; }
 ```
 
 ## See Also

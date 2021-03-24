@@ -3,8 +3,8 @@
 Implements TryParseDefinition.
 
 ```csharp
-protected abstract bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo service, 
-    out IReadOnlyList<ServiceDefinitionError> errors)
+protected abstract bool TryParseDefinitionCore(ServiceDefinitionText text, 
+    out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
 ```
 
 ## See Also

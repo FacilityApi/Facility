@@ -4,7 +4,7 @@ Creates a field.
 
 ```csharp
 public ServiceFieldInfo(string name, string typeName, 
-    IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, 
+    IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, 
     params ServicePart[] parts)
 ```
 

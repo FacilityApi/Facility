@@ -4,7 +4,7 @@ Creates a service attribute.
 
 ```csharp
 public ServiceAttributeInfo(string name, 
-    IEnumerable<ServiceAttributeParameterInfo> parameters = null, params ServicePart[] parts)
+    IEnumerable<ServiceAttributeParameterInfo>? parameters = null, params ServicePart[] parts)
 ```
 
 ## See Also

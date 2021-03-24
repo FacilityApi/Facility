@@ -3,7 +3,7 @@
 Finds the member of the specified name.
 
 ```csharp
-public ServiceMemberInfo FindMember(string name)
+public ServiceMemberInfo? FindMember(string name)
 ```
 
 ## See Also

@@ -3,7 +3,7 @@
 The path to the output directory or file ("-" for stdout).
 
 ```csharp
-public string OutputPath { get; set; }
+public string? OutputPath { get; set; }
 ```
 
 ## See Also

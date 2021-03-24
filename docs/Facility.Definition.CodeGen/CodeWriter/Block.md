@@ -18,7 +18,7 @@ public IDisposable Block()
 Writes a line of text before and after the indented scope.
 
 ```csharp
-public IDisposable Block(string before)
+public IDisposable Block(string? before)
 ```
 
 ## See Also
@@ -33,7 +33,7 @@ public IDisposable Block(string before)
 Writes a line of text before and after the indented scope.
 
 ```csharp
-public IDisposable Block(string before, string after)
+public IDisposable Block(string? before, string? after)
 ```
 
 ## See Also

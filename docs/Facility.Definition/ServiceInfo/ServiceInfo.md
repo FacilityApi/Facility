@@ -4,8 +4,8 @@ Creates a service.
 
 ```csharp
 public ServiceInfo(string name, IEnumerable<ServiceMemberInfo> members, 
-    IEnumerable<ServiceAttributeInfo> attributes = null, string summary = null, 
-    IEnumerable<string> remarks = null, params ServicePart[] parts)
+    IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, 
+    IEnumerable<string>? remarks = null, params ServicePart[] parts)
 ```
 
 ## See Also

@@ -3,7 +3,8 @@
 Creates a position.
 
 ```csharp
-public ServiceDefinitionPosition(string name, Func<ValueTuple<int, int>> getLineColumn)
+public ServiceDefinitionPosition(string name, 
+    Func<(int LineNumber, int ColumnNumber)> getLineColumn)
 ```
 
 ## See Also

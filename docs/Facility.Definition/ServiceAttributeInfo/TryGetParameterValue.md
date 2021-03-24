@@ -3,7 +3,7 @@
 Returns the value of the attribute parameter with the specified name.
 
 ```csharp
-public string TryGetParameterValue(string name)
+public string? TryGetParameterValue(string name)
 ```
 
 ## See Also

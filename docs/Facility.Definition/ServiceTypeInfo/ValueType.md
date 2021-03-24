@@ -3,7 +3,7 @@
 The value type (when Kind is Result, Array, or Map).
 
 ```csharp
-public ServiceTypeInfo ValueType { get; }
+public ServiceTypeInfo? ValueType { get; }
 ```
 
 ## See Also

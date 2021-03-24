@@ -3,7 +3,7 @@
 Returns true if the name is a valid service element name.
 
 ```csharp
-public static bool IsValidName(string name)
+public static bool IsValidName(string? name)
 ```
 
 ## See Also

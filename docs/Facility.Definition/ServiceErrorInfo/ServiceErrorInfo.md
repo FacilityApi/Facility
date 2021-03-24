@@ -3,8 +3,8 @@
 Creates an error.
 
 ```csharp
-public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo> attributes, string summary, 
-    params ServicePart[] parts)
+public ServiceErrorInfo(string name, IEnumerable<ServiceAttributeInfo>? attributes, 
+    string? summary, params ServicePart[] parts)
 ```
 
 ## See Also

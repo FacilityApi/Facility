@@ -3,7 +3,7 @@
 The obsolete message, if any.
 
 ```csharp
-public string ObsoleteMessage { get; }
+public string? ObsoleteMessage { get; }
 ```
 
 ## See Also

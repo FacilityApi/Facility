@@ -3,7 +3,7 @@
 The name of the generator (for comments).
 
 ```csharp
-public string GeneratorName { get; set; }
+public string? GeneratorName { get; set; }
 ```
 
 ## See Also

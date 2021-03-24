@@ -3,7 +3,7 @@
 The position where the error took place, if any.
 
 ```csharp
-public ServiceDefinitionPosition Position { get; }
+public ServiceDefinitionPosition? Position { get; }
 ```
 
 ## See Also

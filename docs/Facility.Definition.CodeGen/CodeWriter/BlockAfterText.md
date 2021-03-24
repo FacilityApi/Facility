@@ -3,7 +3,7 @@
 The text written on the line after a block (default "}", null for none).
 
 ```csharp
-public string BlockAfterText { get; set; }
+public string? BlockAfterText { get; set; }
 ```
 
 ## See Also
