@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-    <Description>A .NET Core tool that generates FSD for a Facility Service Definition.</Description>
+    <Description>A tool that generates FSD for a Facility Service Definition.</Description>
     <PackageTags>Facility FSD CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
