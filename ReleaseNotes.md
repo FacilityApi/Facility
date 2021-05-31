@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.4.2
+
+* Update dependencies.
+
 ## 2.4.1
 
 * Fix exception when console app output path has no directory information.
