@@ -12,6 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\build.yaml = .github\workflows\build.yaml
 		Directory.Build.props = Directory.Build.props
 		dotnet-tools.json = dotnet-tools.json
+		example\ExampleApi.fsd = example\ExampleApi.fsd
+		example\ExampleApi.fsd.md = example\ExampleApi.fsd.md
+		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		README.md = README.md
@@ -25,17 +28,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fsdgenfsd", "src\fsdgenfsd\fsdgenfsd.csproj", "{9A118AAD-1CBF-47E7-B08E-7A3CB72A191B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facility.Definition.UnitTests", "tests\Facility.Definition.UnitTests\Facility.Definition.UnitTests.csproj", "{61444245-9A0C-46AE-BA11-54CC6B1F3CB4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fsd", "fsd", "{A5F306E8-F964-4628-8542-5875AB265242}"
-	ProjectSection(SolutionItems) = preProject
-		fsd\FacilityCore.fsd = fsd\FacilityCore.fsd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{A887B544-D4CE-49BE-8007-A9CFB2284857}"
-	ProjectSection(SolutionItems) = preProject
-		example\ExampleApi.fsd = example\ExampleApi.fsd
-		example\ExampleApi.fsd.md = example\ExampleApi.fsd.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "tools\Build\Build.csproj", "{9D6DC519-8908-4D3A-B16B-118D682BD170}"
 EndProject
@@ -74,10 +66,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{A5F306E8-F964-4628-8542-5875AB265242} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
-		{A887B544-D4CE-49BE-8007-A9CFB2284857} = {A219E328-B15A-41FF-BAA5-5F46679EF9C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {647F7A73-0365-411F-941D-6DDA8A4CFA1A}
