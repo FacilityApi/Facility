@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.4.3
+
+* Remove unused package reference to `Newtonsoft.Json`.
+
 ## 2.4.2
 
 * Update dependencies.
