@@ -15,6 +15,11 @@ namespace Facility.Definition.Http
 		public HttpStatusCode? StatusCode { get; }
 
 		/// <summary>
+		/// The specified content type, if any.
+		/// </summary>
+		public string? ContentType { get; }
+
+		/// <summary>
 		/// The children of the element, if any.
 		/// </summary>
 		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
@@ -26,6 +31,8 @@ namespace Facility.Definition.Http
 			{
 				if (parameter.Name == "code")
 					StatusCode = TryParseStatusCodeInteger(parameter);
+				else if (parameter.Name == "type")
+					ContentType = parameter.Value;
 				else if (parameter.Name != "from")
 					AddInvalidHttpParameterError(parameter);
 			}

@@ -284,7 +284,7 @@ method kitchen
 	[http(from: header)]
 	prices: decimal[];
 
-	[http(from: body)]
+	[http(from: body, type: "text/sink")]
 	text: string;
 }
 ```

@@ -248,6 +248,7 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			var method = ParseHttpApi("service TestApi { data Dto {} enum Enum { x } method do { [http(from: body)] id: xyzzy; }: {} }".Replace("xyzzy", type)).Methods.Single();
 			method.RequestBodyField!.ServiceField.Name.Should().Be("id");
+			method.RequestBodyField!.ContentType.Should().BeNull();
 		}
 
 		[TestCase("boolean")]
@@ -267,6 +268,14 @@ namespace Facility.Definition.UnitTests.Http
 		{
 			ParseInvalidHttpApi("service TestApi { method do { [http(from: body, code: 200)] id: Thing; }: {} data Thing { id: string; } }")
 				.ToString().Should().Be("TestApi.fsd(1,61): Request fields do not support status codes.");
+		}
+
+		[Test]
+		public void BodyRequestFieldWithContentType()
+		{
+			var method = ParseHttpApi("service TestApi { method do { [http(from: body, type: \"text/shiny\")] id: string; }: {} }").Methods.Single();
+			method.RequestBodyField!.ServiceField.Name.Should().Be("id");
+			method.RequestBodyField!.ContentType.Should().Be("text/shiny");
 		}
 
 		[Test]
@@ -378,6 +387,18 @@ namespace Facility.Definition.UnitTests.Http
 			response.NormalFields.Should().BeNull();
 			response.BodyField!.ServiceField.Name.Should().Be("body");
 			response.BodyField.StatusCode.Should().Be(HttpStatusCode.Accepted);
+			response.BodyField.ContentType.Should().BeNull();
+		}
+
+		[Test]
+		public void BodyResponseFieldWithContentType()
+		{
+			var method = ParseHttpApi("service TestApi { method do {}: { [http(from: body, type: \"application/binary\")] body: bytes; } }").Methods.Single();
+
+			var response = method.ValidResponses.Single();
+			response.NormalFields.Should().BeNull();
+			response.BodyField!.ServiceField.Name.Should().Be("body");
+			response.BodyField.ContentType.Should().Be("application/binary");
 		}
 
 		[Test]
