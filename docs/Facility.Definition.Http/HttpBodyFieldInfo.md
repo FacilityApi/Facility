@@ -10,6 +10,7 @@ public sealed class HttpBodyFieldInfo : HttpFieldInfo
 
 | name | description |
 | --- | --- |
+| [ContentType](HttpBodyFieldInfo/ContentType.md) { get; } | The specified content type, if any. |
 | [StatusCode](HttpBodyFieldInfo/StatusCode.md) { get; } | The specified status code, if any. |
 | override [GetChildren](HttpBodyFieldInfo/GetChildren.md)() | The children of the element, if any. |
 
