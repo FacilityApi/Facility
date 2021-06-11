@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.5.0
+
+* Support content type on body fields via `type` property of `http` attribute.
+
 ## 2.4.3
 
 * Remove unused package reference to `Newtonsoft.Json`.
