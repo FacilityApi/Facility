@@ -223,5 +223,101 @@ namespace Facility.Definition.UnitTests
 			endPart.EndPosition.LineNumber.Should().Be(3);
 			endPart.EndPosition.ColumnNumber.Should().Be(2);
 		}
+
+		[Test]
+		public void DuplicateValidation()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate]
+    [validate]
+    one: One;
+  }: {}
+}");
+			exception.Errors.Count.Should().Be(1);
+		}
+
+		[Test]
+		public void StringValidateInvalidParameter()
+		{
+			var exception = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: ""^\d+"")]
+    one: string;
+  }: {}
+}");
+			exception[0].Message.Should().Be("Unexpected 'validate' parameter 'value'.");
+			exception[1].Message.Should().Be("Missing 'validate' parameter 'length' or 'pattern'.");
+		}
+
+		[Test]
+		public void InvalidStringValidateLengthArgument()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(length: ""^\d+"")]
+    one: string;
+  }: {}
+}");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'length' value '^\d+' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
+		public void InvalidStringValidatePatternArgument()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(pattern: 0..1)]
+    one: string;
+  }: {}
+}");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'pattern' value '0..1' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
+		public void InvalidNumericValidateParameter()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(pattern: ""d+.{2}"")]
+    one: double;
+  }: {}
+}");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): Unexpected 'validate' parameter 'pattern'.");
+		}
+
+		[Test]
+		public void InvalidCollectionValidateParameter()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate(pattern: ""d+.{2}"")]
+    one: One[];
+  }: {}
+}");
+			exception.Message.Should().Be(@"TestApi.fsd(10,15): Unexpected 'validate' parameter 'pattern'.");
+		}
 	}
 }
