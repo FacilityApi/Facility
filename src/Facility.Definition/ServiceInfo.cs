@@ -169,7 +169,8 @@ namespace Facility.Definition
 		{
 			var validateAttributes = field.GetAttributes("validate");
 
-			if (!validateAttributes.Any()) return;
+			if (validateAttributes.Count == 0)
+				return;
 
 			if (validateAttributes.Count > 1)
 				field.AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(validateAttributes[1]));
