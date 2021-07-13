@@ -256,7 +256,7 @@ service TestApi {
   }: {}
 }");
 			exception[0].Message.Should().Be("Unexpected 'validate' parameter 'value'.");
-			exception[1].Message.Should().Be("Missing 'validate' parameter 'length' or 'pattern'.");
+			exception[1].Message.Should().Be("Missing 'validate' parameters: [length, regex].");
 		}
 
 		[Test]

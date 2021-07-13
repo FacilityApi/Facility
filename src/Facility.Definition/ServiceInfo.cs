@@ -197,7 +197,7 @@ namespace Facility.Definition
 					var regexParameter = validateAttribute.TryGetParameter("regex");
 
 					if (lengthParameter == null && regexParameter == null)
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "length' or 'regex"));
+						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "length", "regex"));
 					if (lengthParameter != null && !s_rangeArgumentRegex.IsMatch(lengthParameter.Value))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, lengthParameter));
 					if (regexParameter != null && !s_regexArgumentRegex.IsMatch(regexParameter.Value))
@@ -215,7 +215,7 @@ namespace Facility.Definition
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
 					if (validateAttribute.Parameters.All(x => x.Name != "value"))
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "value"));
+						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "value"));
 
 					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
@@ -231,7 +231,7 @@ namespace Facility.Definition
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
 					if (validateAttribute.Parameters.All(x => x.Name != "count"))
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "count"));
+						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "count"));
 
 					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
