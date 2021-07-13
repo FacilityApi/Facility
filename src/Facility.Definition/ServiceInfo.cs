@@ -32,17 +32,18 @@ namespace Facility.Definition
 			{
 				var type = ServiceTypeInfo.TryParse(fieldGroup.Key, FindMember);
 				if (type == null)
+                {
+                    AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
+                }
+                else
 				{
-					AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
-					return;
-				}
+					m_typesByName.Add(fieldGroup.Key, type);
 
-				m_typesByName.Add(fieldGroup.Key, type);
-
-				// Ensuring correct usage of [validate] requires knowledge of type relationships, so it must be done here
-				foreach (var field in fieldGroup.Where(x => x.Attributes.Any(a => a.Name == "validate")))
-				{
-					EnsureProperValidateUsage(type, field);
+					// Ensuring correct usage of [validate] requires knowledge of type relationships, so it must be done here
+					foreach (var field in fieldGroup)
+					{
+						EnsureProperValidateUsage(type, field);
+					}
 				}
 			}
 		}
@@ -180,24 +181,27 @@ namespace Facility.Definition
 			switch (type.Kind)
 			{
 				case ServiceTypeKind.Enum:
+				{
 					foreach (var validateAttributeParameter in validateAttribute.Parameters)
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
+
 					break;
+				}
 
 				case ServiceTypeKind.String:
 				{
-					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "length" && x.Name != "pattern"))
+					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "length" && x.Name != "regex"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
 					var lengthParameter = validateAttribute.TryGetParameter("length");
-					var patternParameter = validateAttribute.TryGetParameter("pattern");
+					var regexParameter = validateAttribute.TryGetParameter("regex");
 
-					if (lengthParameter == null && patternParameter == null)
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "length' or 'pattern"));
-					if (lengthParameter != null && !s_rangeRegex.IsMatch(lengthParameter.Value))
+					if (lengthParameter == null && regexParameter == null)
+						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "length' or 'regex"));
+					if (lengthParameter != null && !s_rangeArgumentRegex.IsMatch(lengthParameter.Value))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, lengthParameter));
-					if (patternParameter != null && !s_patternRegex.IsMatch(patternParameter.Value))
-						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, patternParameter));
+					if (regexParameter != null && !s_regexArgumentRegex.IsMatch(regexParameter.Value))
+						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, regexParameter));
 
 					break;
 				}
@@ -213,8 +217,9 @@ namespace Facility.Definition
 					if (validateAttribute.Parameters.All(x => x.Name != "value"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "value"));
 
-					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeRegex.IsMatch(x.Value)))
+					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
+
 					break;
 				}
 
@@ -228,7 +233,7 @@ namespace Facility.Definition
 					if (validateAttribute.Parameters.All(x => x.Name != "count"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParameterError(validateAttribute, "count"));
 
-					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeRegex.IsMatch(x.Value)))
+					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
 						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
 
 					break;
@@ -239,12 +244,14 @@ namespace Facility.Definition
 					break;
 			}
 		}
+
 		private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Members;
 
 		private readonly Dictionary<string, ServiceMemberInfo> m_membersByName;
 		private readonly Dictionary<string, ServiceTypeInfo> m_typesByName;
 
-		private static readonly Regex s_patternRegex = new(@"^"".+""$");
-		private static readonly Regex s_rangeRegex = new(@"(?:\d+\.\d+)?\.\.(?:\d+\.\d+)?");
+		private const string c_numberPattern = @"\d+(\.\d+)?";
+		private static readonly Regex s_regexArgumentRegex = new(@"^"".+""$");
+		private static readonly Regex s_rangeArgumentRegex = new($@"{c_numberPattern}|{c_numberPattern}\.\.|\.\.{c_numberPattern}|{c_numberPattern}\.\.{c_numberPattern}");
 	}
 }

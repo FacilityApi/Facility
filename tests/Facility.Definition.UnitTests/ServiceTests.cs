@@ -280,11 +280,11 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(pattern: 0..1)]
+    [validate(regex: 0..1)]
     one: string;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'pattern' value '0..1' for 'validate' attribute is invalid.");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'regex' value '0..1' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -294,11 +294,11 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(pattern: ""d+.{2}"")]
+    [validate(regex: ""d+.{2}"")]
     one: double;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): Unexpected 'validate' parameter 'pattern'.");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): Unexpected 'validate' parameter 'regex'.");
 		}
 
 		[Test]
@@ -313,11 +313,11 @@ service TestApi {
 
   method do
   {
-    [validate(pattern: ""d+.{2}"")]
+    [validate(regex: ""d+.{2}"")]
     one: One[];
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(10,15): Unexpected 'validate' parameter 'pattern'.");
+			exception.Message.Should().Be(@"TestApi.fsd(10,15): Unexpected 'validate' parameter 'regex'.");
 		}
 	}
 }
