@@ -294,7 +294,7 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(regex: ""d+.{2}"")]
+    [validate(regex: ""\d+.{2}"")]
     one: double;
   }: {}
 }");
@@ -313,7 +313,7 @@ service TestApi {
 
   method do
   {
-    [validate(regex: ""d+.{2}"")]
+    [validate(regex: ""\d+.{2}"")]
     one: One[];
   }: {}
 }");
