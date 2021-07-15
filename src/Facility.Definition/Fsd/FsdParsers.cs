@@ -40,7 +40,7 @@ namespace Facility.Definition.Fsd
 			parser.Bracketed(PunctuationParser(openBracket), PunctuationParser(closeBracket));
 
 		private static IParser<Match> AttributeParameterValueParser { get; } =
-			Parser.Regex(@"""(([^""]+|\\[""\\/bfnrt]|\\u[0-9a-fA-f]{4})*)""|([0-9a-zA-Z.+_-]+)");
+			Parser.Regex(@"""(([^""\\]+|\\[""\\/bfnrt]|\\u[0-9a-fA-f]{4})*)""|/([^/\\]+|\\[^\r\n])*/|([0-9a-zA-Z.+_-]+)");
 
 		private static IParser<ServiceAttributeParameterInfo> AttributeParameterParser(Context context) =>
 			from name in NameParser.Named("parameter name")
