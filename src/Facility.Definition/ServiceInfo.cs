@@ -31,10 +31,10 @@ namespace Facility.Definition
 			{
 				var type = ServiceTypeInfo.TryParse(fieldGroup.Key, FindMember);
 				if (type == null)
-                {
-                    AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
-                }
-                else
+				{
+					AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
+				}
+				else
 				{
 					m_typesByName.Add(fieldGroup.Key, type);
 
