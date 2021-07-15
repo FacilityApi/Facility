@@ -32,6 +32,16 @@ namespace Facility.Definition
 				foreach (var requiredParameter in requiredAttribute.Parameters)
 					AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(requiredAttribute.Name, requiredParameter));
 			}
+
+			var validateAttributes = GetAttributes("validate");
+			if (validateAttributes.Count > 1)
+				AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(validateAttributes[1]));
+
+			var validateAttribute = validateAttributes.Count == 0 ? null : validateAttributes[0];
+			if (validateAttribute != null)
+			{
+				Validation = new ServiceFieldValidation(validateAttribute);
+			}
 		}
 
 		/// <summary>
@@ -53,6 +63,11 @@ namespace Facility.Definition
 		/// True if the field is required.
 		/// </summary>
 		public bool IsRequired { get; }
+
+		/// <summary>
+		/// Validation criterion for the field
+		/// </summary>
+		public ServiceFieldValidation? Validation { get; }
 
 		private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Enumerable.Empty<ServiceElementInfo>();
 	}
