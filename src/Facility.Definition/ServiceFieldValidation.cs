@@ -63,7 +63,11 @@ namespace Facility.Definition
 
 		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo)
 		{
-			if (string.IsNullOrEmpty(parameterInfo.Value)) return null;
+			if (string.IsNullOrEmpty(parameterInfo.Value))
+			{
+				parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+				return null;
+			}
 
 			var fullRangeMatch = s_fullRange.Matches(parameterInfo.Value);
 			if (fullRangeMatch.Count > 0)
