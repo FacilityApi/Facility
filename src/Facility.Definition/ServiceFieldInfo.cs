@@ -65,7 +65,7 @@ namespace Facility.Definition
 		public bool IsRequired { get; }
 
 		/// <summary>
-		/// Validation criterion for the field
+		/// Validation criteria for the field
 		/// </summary>
 		public ServiceFieldValidation? Validation { get; }
 

@@ -19,16 +19,20 @@ namespace Facility.Definition
 				switch (parameterInfo.Name)
 				{
 					case "length":
-						LengthRange = GetRange(parameterInfo);
+						LengthRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "count":
-						CountRange = GetRange(parameterInfo);
+						CountRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "value":
-						ValueRange = GetRange(parameterInfo);
+						ValueRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "regex":
-						RegularExpression = new Regex(parameterInfo.Value);
+						if (s_regex.IsMatch(parameterInfo.Value))
+							RegularExpression = new Regex(parameterInfo.Value);
+						else
+							parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+
 						break;
 					default:
 						parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(parameterInfo.Name, parameterInfo));
@@ -37,13 +41,30 @@ namespace Facility.Definition
 			}
 		}
 
+		/// <summary>
+		/// Allowed range for the collection entry count
+		/// </summary>
 		public ServiceFieldValidationRange? CountRange { get; }
+
+		/// <summary>
+		/// Allowed range for the numeric value
+		/// </summary>
 		public ServiceFieldValidationRange? ValueRange { get; }
+
+		/// <summary>
+		/// Allowed range for the string length
+		/// </summary>
 		public ServiceFieldValidationRange? LengthRange { get; }
+
+		/// <summary>
+		/// Allowed pattern to which a string must conform
+		/// </summary>
 		public Regex? RegularExpression { get; }
 
-		private ServiceFieldValidationRange? GetRange(ServiceAttributeParameterInfo parameterInfo)
+		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo)
 		{
+			if (string.IsNullOrEmpty(parameterInfo.Value)) return null;
+
 			var fullRangeMatch = s_fullRange.Matches(parameterInfo.Value);
 			if (fullRangeMatch.Count > 0)
 			{
@@ -72,9 +93,12 @@ namespace Facility.Definition
 				return new ServiceFieldValidationRange(number, number);
 			}
 
+			parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+
 			return null;
 		}
 
+		private static readonly Regex s_regex = new(@"/.+/");
 		private static readonly Regex s_number = new(@"\d+(?:\.\d+)?");
 		private static readonly Regex s_unboundedStartRange = new(@"\.\.(\d+(?:\.\d+)?)");
 		private static readonly Regex s_unboundedEndRange = new(@"(\d+(?:\.\d+)?)\.\.");

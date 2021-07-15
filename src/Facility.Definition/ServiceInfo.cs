@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Facility.Definition
 {
@@ -166,17 +165,10 @@ namespace Facility.Definition
 			}
 		}
 
-		private static void EnsureProperValidateUsage(ServiceTypeInfo type, ServiceElementWithAttributesInfo field)
+		private static void EnsureProperValidateUsage(ServiceTypeInfo type, ServiceFieldInfo field)
 		{
-			var validateAttributes = field.GetAttributes("validate");
-
-			if (validateAttributes.Count == 0)
-				return;
-
-			if (validateAttributes.Count > 1)
-				field.AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(validateAttributes[1]));
-
-			var validateAttribute = validateAttributes[0];
+			if (field.Validation == null) return;
+			var validateAttribute = field.TryGetAttribute("validate")!;
 
 			switch (type.Kind)
 			{
@@ -193,15 +185,8 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "length" && x.Name != "regex"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					var lengthParameter = validateAttribute.TryGetParameter("length");
-					var regexParameter = validateAttribute.TryGetParameter("regex");
-
-					if (lengthParameter == null && regexParameter == null)
+					if (field.Validation!.LengthRange == null && field.Validation!.RegularExpression == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "length", "regex"));
-					if (lengthParameter != null && !s_rangeArgumentRegex.IsMatch(lengthParameter.Value))
-						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, lengthParameter));
-					if (regexParameter != null && !s_regexArgumentRegex.IsMatch(regexParameter.Value))
-						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, regexParameter));
 
 					break;
 				}
@@ -214,11 +199,8 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "value"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					if (validateAttribute.Parameters.All(x => x.Name != "value"))
+					if (field.Validation!.ValueRange == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "value"));
-
-					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
-						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
 
 					break;
 				}
@@ -230,11 +212,8 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "count"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					if (validateAttribute.Parameters.All(x => x.Name != "count"))
+					if (field.Validation!.CountRange == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "count"));
-
-					foreach (var parameter in validateAttribute.Parameters.Where(x => !s_rangeArgumentRegex.IsMatch(x.Value)))
-						field.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(validateAttribute.Name, parameter));
 
 					break;
 				}
@@ -249,9 +228,5 @@ namespace Facility.Definition
 
 		private readonly Dictionary<string, ServiceMemberInfo> m_membersByName;
 		private readonly Dictionary<string, ServiceTypeInfo> m_typesByName;
-
-		private const string c_numberPattern = @"\d+(\.\d+)?";
-		private static readonly Regex s_regexArgumentRegex = new(@"^"".+""$");
-		private static readonly Regex s_rangeArgumentRegex = new($@"{c_numberPattern}|{c_numberPattern}\.\.|\.\.{c_numberPattern}|{c_numberPattern}\.\.{c_numberPattern}");
 	}
 }
