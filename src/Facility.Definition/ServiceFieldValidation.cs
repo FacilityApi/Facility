@@ -103,9 +103,9 @@ namespace Facility.Definition
 		}
 
 		private static readonly Regex s_regex = new(@"/.+/");
-		private static readonly Regex s_number = new(@"\d+(?:\.\d+)?");
-		private static readonly Regex s_unboundedStartRange = new(@"\.\.(\d+(?:\.\d+)?)");
-		private static readonly Regex s_unboundedEndRange = new(@"(\d+(?:\.\d+)?)\.\.");
-		private static readonly Regex s_fullRange = new(@"(\d+(?:\.\d+)?)\.\.(\d+(?:\.\d+)?)");
+		private static readonly Regex s_number = new(@"[0-9]+(?:\.[0-9]+)?");
+		private static readonly Regex s_unboundedStartRange = new(@"\.\.([0-9]+(?:\.[0-9]+)?)");
+		private static readonly Regex s_unboundedEndRange = new(@"([0-9]+(?:\.[0-9]+)?)\.\.");
+		private static readonly Regex s_fullRange = new(@"([0-9]+(?:\.[0-9]+)?)\.\.([0-9]+(?:\.[0-9]+)?)");
 	}
 }
