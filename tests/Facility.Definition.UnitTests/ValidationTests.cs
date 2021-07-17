@@ -1,3 +1,5 @@
+using System;
+
 namespace Facility.Definition.UnitTests
 {
 	using System.Linq;
@@ -101,8 +103,56 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.StartInclusive.Should().Be(new decimal(0));
-			range.EndInclusive.Should().Be(new decimal(1));
+			range.StartInclusive.Should().Be(decimal.Zero);
+			range.EndInclusive.Should().Be(decimal.One);
+		}
+
+		[Test]
+		public void NumericValidateUnboundedStartParameter()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: ..0)]
+    one: double;
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
+			range.StartInclusive.Should().BeNull();
+			range.EndInclusive.Should().Be(decimal.Zero);
+		}
+
+		[Test]
+		public void NumericValidateUnboundedEndParameter()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: 0..)]
+    one: double;
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
+			range.StartInclusive.Should().Be(decimal.Zero);
+			range.EndInclusive.Should().BeNull();
+		}
+
+		[Test]
+		public void NumericValidateSingleValueParameter()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: 1)]
+    one: double;
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
+			range.StartInclusive.Should().Be(decimal.One);
+			range.EndInclusive.Should().Be(decimal.One);
 		}
 
 		[Test]
@@ -117,6 +167,20 @@ service TestApi {
   }: {}
 }");
 			exception.Message.Should().Be(@"TestApi.fsd(5,15): Unexpected 'validate' parameter 'regex'.");
+		}
+
+		[Test]
+		public void PartiallyInvalidNumericValidateParameter()
+		{
+			var exception = TestUtility.ParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: 0..infinity)]
+    one: double;
+  }: {}
+}");
+			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'value' value '0..infinity' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
