@@ -3,7 +3,7 @@ namespace Facility.Definition
 	/// <summary>
 	/// A range for validating numeric values
 	/// </summary>
-	public class ServiceFieldValidationRange
+	public sealed class ServiceFieldValidationRange
 	{
 		/// <summary>
 		/// Creates a range for validation

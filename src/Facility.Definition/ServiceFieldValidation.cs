@@ -7,13 +7,15 @@ namespace Facility.Definition
 	/// <summary>
 	/// A validation criterion of a DTO field.
 	/// </summary>
-	public class ServiceFieldValidation
+	public sealed class ServiceFieldValidation
 	{
 		/// <summary>
 		/// Creates a validation criterion of a DTO field
 		/// </summary>
 		public ServiceFieldValidation(ServiceAttributeInfo attributeInfo)
 		{
+			IsDefinedEnum = attributeInfo.Parameters.Count == 0;
+
 			foreach (var parameterInfo in attributeInfo.Parameters)
 			{
 				switch (parameterInfo.Name)
@@ -60,6 +62,11 @@ namespace Facility.Definition
 		/// Allowed pattern to which a string must conform
 		/// </summary>
 		public Regex? RegularExpression { get; }
+
+		/// <summary>
+		/// Enums should only allow defined values
+		/// </summary>
+		public bool IsDefinedEnum { get; }
 
 		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo)
 		{
