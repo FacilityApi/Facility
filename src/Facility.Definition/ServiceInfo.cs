@@ -185,8 +185,7 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "length" && x.Name != "regex"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name is "length" or "regex");
-					if (requiredAttributeCount < 1)
+					if (field.Validation.LengthRange == null && field.Validation.RegularExpression == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "length", "regex"));
 
 					break;
@@ -200,8 +199,7 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "value"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name == "value");
-					if (requiredAttributeCount < 1)
+					if (field.Validation.ValueRange == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "value"));
 
 					break;
@@ -214,8 +212,7 @@ namespace Facility.Definition
 					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "count"))
 						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name == "value");
-					if (requiredAttributeCount < 1)
+					if (field.Validation.CountRange == null)
 						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "count"));
 
 					break;

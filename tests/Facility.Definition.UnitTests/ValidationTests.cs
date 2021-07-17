@@ -66,7 +66,7 @@ service TestApi {
 		[Test]
 		public void InvalidStringValidateLengthArgument()
 		{
-			var exception = TestUtility.ParseInvalidTestApi(@"
+			var exception = TestUtility.TryParseInvalidTestApi(@"
 service TestApi {
   method do
   {
@@ -74,13 +74,14 @@ service TestApi {
     one: string;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'length' value '^\d+' for 'validate' attribute is invalid.");
+			exception[0].Message.Should().Be(@"Missing 'validate' parameters: [length, regex].");
+			exception[1].Message.Should().Be(@"'length' value '^\d+' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
 		public void InvalidStringValidatePatternArgument()
 		{
-			var exception = TestUtility.ParseInvalidTestApi(@"
+			var exception = TestUtility.TryParseInvalidTestApi(@"
 service TestApi {
   method do
   {
@@ -88,7 +89,8 @@ service TestApi {
     one: string;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'regex' value '0..1' for 'validate' attribute is invalid.");
+			exception[0].Message.Should().Be(@"Missing 'validate' parameters: [length, regex].");
+			exception[1].Message.Should().Be(@"'regex' value '0..1' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -172,7 +174,7 @@ service TestApi {
 		[Test]
 		public void PartiallyInvalidNumericValidateParameter()
 		{
-			var exception = TestUtility.ParseInvalidTestApi(@"
+			var exception = TestUtility.TryParseInvalidTestApi(@"
 service TestApi {
   method do
   {
@@ -180,7 +182,8 @@ service TestApi {
     one: double;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'value' value '0..infinity' for 'validate' attribute is invalid.");
+			exception[0].Message.Should().Be(@"Missing 'validate' parameters: [value].");
+			exception[1].Message.Should().Be(@"'value' value '0..infinity' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
