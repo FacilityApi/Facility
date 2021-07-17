@@ -130,7 +130,7 @@ namespace Facility.Definition
 			return null;
 		}
 
-		private static readonly Regex s_regex = new(@"^"".+/""$");
+		private static readonly Regex s_regex = new(@"^/.+/$");
 		private static readonly Regex s_number = new(@"^[0-9]+(?:\.[0-9]+)?$");
 		private static readonly Regex s_unboundedStartRange = new(@"^\.\.([0-9]+(?:\.[0-9]+)?)$");
 		private static readonly Regex s_unboundedEndRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.$");
