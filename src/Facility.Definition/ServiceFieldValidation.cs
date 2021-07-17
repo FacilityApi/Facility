@@ -76,32 +76,52 @@ namespace Facility.Definition
 				return null;
 			}
 
-			var fullRangeMatch = s_fullRange.Matches(parameterInfo.Value);
+			var fullRangeMatch = s_fullRange.Match(parameterInfo.Value).Groups;
 			if (fullRangeMatch.Count > 0)
 			{
-				var start = Convert.ToDecimal(fullRangeMatch[0], CultureInfo.InvariantCulture);
-				var end = Convert.ToDecimal(fullRangeMatch[1], CultureInfo.InvariantCulture);
+				if (!decimal.TryParse(fullRangeMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var start)
+					|| !decimal.TryParse(fullRangeMatch[2].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var end))
+				{
+					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					return null;
+				}
+
 				return new ServiceFieldValidationRange(start, end);
 			}
 
-			var unboundedStartMatch = s_unboundedStartRange.Matches(parameterInfo.Value);
+			var unboundedStartMatch = s_unboundedStartRange.Match(parameterInfo.Value).Groups;
 			if (unboundedStartMatch.Count > 0)
 			{
-				var start = Convert.ToDecimal(unboundedStartMatch[0], CultureInfo.InvariantCulture);
+				if (!decimal.TryParse(unboundedStartMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var start))
+				{
+					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					return null;
+				}
+
 				return new ServiceFieldValidationRange(start, null);
 			}
 
-			var unboundedEndMatch = s_unboundedEndRange.Matches(parameterInfo.Value);
+			var unboundedEndMatch = s_unboundedEndRange.Match(parameterInfo.Value).Groups;
 			if (unboundedEndMatch.Count > 0)
 			{
-				var end = Convert.ToDecimal(unboundedEndMatch[0], CultureInfo.InvariantCulture);
+				if (!decimal.TryParse(unboundedEndMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var end))
+				{
+					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					return null;
+				}
+
 				return new ServiceFieldValidationRange(null, end);
 			}
 
 			if (s_number.IsMatch(parameterInfo.Value))
 			{
-				var number = Convert.ToDecimal(parameterInfo.Value, CultureInfo.InvariantCulture);
-				return new ServiceFieldValidationRange(number, number);
+				if (!decimal.TryParse(unboundedEndMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+				{
+					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					return null;
+				}
+
+				return new ServiceFieldValidationRange(value, value);
 			}
 
 			parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
