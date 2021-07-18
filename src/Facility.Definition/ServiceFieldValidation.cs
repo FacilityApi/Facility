@@ -12,29 +12,28 @@ namespace Facility.Definition
 		/// <summary>
 		/// Creates a validation criterion of a DTO field
 		/// </summary>
-		/// <para name="attribute">The validation attribute</para>
-		public ServiceFieldValidation(ServiceAttributeInfo attribute)
+		public ServiceFieldValidation(ServiceAttributeInfo attributeInfo)
 		{
-			IsDefinedEnum = attribute.Parameters.Count == 0;
+			IsDefinedEnum = attributeInfo.Parameters.Count == 0;
 
-			foreach (var parameterInfo in attribute.Parameters)
+			foreach (var parameterInfo in attributeInfo.Parameters)
 			{
 				switch (parameterInfo.Name)
 				{
 					case "length":
-						LengthRange = GetRange(attribute, parameterInfo);
+						LengthRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "count":
-						CountRange = GetRange(attribute, parameterInfo);
+						CountRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "value":
-						ValueRange = GetRange(attribute, parameterInfo);
+						ValueRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "regex":
 						if (s_regex.IsMatch(parameterInfo.Value))
 							RegularExpression = new Regex(parameterInfo.Value);
 						else
-							parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameterInfo));
+							parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
 
 						break;
 					default:
