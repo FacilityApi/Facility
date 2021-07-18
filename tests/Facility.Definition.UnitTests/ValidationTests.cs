@@ -1,10 +1,10 @@
-using System;
+using System.Linq;
+using FluentAssertions;
+using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests
 {
-	using System.Linq;
-	using FluentAssertions;
-	using NUnit.Framework;
+
 
 	public sealed class ValidationTests
 	{

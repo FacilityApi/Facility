@@ -38,7 +38,6 @@ namespace Facility.Definition
 				{
 					m_typesByName.Add(fieldGroup.Key, type);
 
-					// Ensuring correct usage of [validate] requires knowledge of type relationships, so it must be done here
 					foreach (var field in fieldGroup)
 					{
 						EnsureProperValidateUsage(type, field);
