@@ -183,7 +183,7 @@ namespace Facility.Definition.Fsd
 			match.Groups[1].Success
 				? string.Concat(match.Groups[2].Captures.OfType<Capture>().Select(x => x.ToString()).Select(x => x[0] == '\\' ? DecodeBackslash(x) : x))
 				: match.Groups[3].Success
-					? match.Groups[3].Value
+					? string.Concat(match.Groups[4].Captures.OfType<Capture>().Select(x => x.ToString()).Select(x => x[0] == '\\' ? x.Substring(1) : x))
 					: match.Groups[5].ToString();
 
 		private static string DecodeBackslash(string text) =>
