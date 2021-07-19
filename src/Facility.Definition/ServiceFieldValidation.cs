@@ -28,11 +28,7 @@ namespace Facility.Definition
 						ValueRange = GetRange(attributeInfo, parameterInfo);
 						break;
 					case "regex":
-						if (s_regex.IsMatch(parameterInfo.Value))
-							RegexPattern = parameterInfo.Value;
-						else
-							parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
-
+						RegexPattern = parameterInfo.Value;
 						break;
 					default:
 						parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(parameterInfo.Name, parameterInfo));
@@ -122,7 +118,6 @@ namespace Facility.Definition
 			return null;
 		}
 
-		private static readonly Regex s_regex = new(@"^/.+/$");
 		private static readonly Regex s_number = new(@"^[0-9]+(?:\.[0-9]+)?$");
 		private static readonly Regex s_unboundedStartRange = new(@"^\.\.([0-9]+(?:\.[0-9]+)?)$");
 		private static readonly Regex s_unboundedEndRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.$");

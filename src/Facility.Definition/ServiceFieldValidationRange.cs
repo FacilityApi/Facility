@@ -3,15 +3,15 @@ using System;
 namespace Facility.Definition
 {
 	/// <summary>
-	/// A range for validating numeric values
+	/// A range for validating numeric values.
 	/// </summary>
 	public sealed class ServiceFieldValidationRange
 	{
 		/// <summary>
 		/// Creates a range for validation.
 		/// </summary>
-		/// <param name="minimum">The inclusive start of the range</param>
-		/// <param name="maximum">The inclusive end of the range</param>
+		/// <param name="minimum">The inclusive start of the range.</param>
+		/// <param name="maximum">The inclusive end of the range.</param>
 		public ServiceFieldValidationRange(decimal? minimum, decimal? maximum)
 		{
 			if (minimum == null && maximum == null)
