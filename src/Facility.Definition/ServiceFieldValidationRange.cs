@@ -8,76 +8,27 @@ namespace Facility.Definition
 	public sealed class ServiceFieldValidationRange
 	{
 		/// <summary>
-		/// Creates a range for validation
+		/// Creates a range for validation.
 		/// </summary>
-		/// <param name="startInclusive">The inclusive start of the range</param>
-		/// <param name="endInclusive">The inclusive end of the range</param>
-		public ServiceFieldValidationRange(decimal? startInclusive, decimal? endInclusive)
+		/// <param name="minimum">The inclusive start of the range</param>
+		/// <param name="maximum">The inclusive end of the range</param>
+		public ServiceFieldValidationRange(decimal? minimum, decimal? maximum)
 		{
-			if (startInclusive == null && endInclusive == null)
-				throw new ArgumentException($"{nameof(startInclusive)} or {nameof(endInclusive)} must be specified");
+			if (minimum == null && maximum == null)
+				throw new ArgumentException($"{nameof(minimum)} or {nameof(maximum)} must be specified");
 
-			StartInclusive = startInclusive;
-			EndInclusive = endInclusive;
+			Minimum = minimum;
+			Maximum = maximum;
 		}
 
 		/// <summary>
-		/// The start of the range
+		/// The minimum allowed value, inclusive.
 		/// </summary>
-		public decimal? StartInclusive { get; }
+		public decimal? Minimum { get; }
 
 		/// <summary>
-		/// The end of the range
+		/// The maximum allowed value, inclusive.
 		/// </summary>
-		public decimal? EndInclusive { get; }
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(decimal value) => !(StartInclusive > value || EndInclusive < value);
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(double value) => Contains(Convert.ToDecimal(value));
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(float value) => Contains(Convert.ToDecimal(value));
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(int value) => Contains(Convert.ToDecimal(value));
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(long value) => Contains(Convert.ToDecimal(value));
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(uint value) => Contains(Convert.ToDecimal(value));
-
-		/// <summary>
-		/// Verifies if a value falls within the range
-		/// </summary>
-		/// <param name="value">The value</param>
-		/// <returns><c>true</c> if the range contains the value</returns>
-		public bool Contains(ulong value) => Contains(Convert.ToDecimal(value));
+		public decimal? Maximum { get; }
 	}
 }

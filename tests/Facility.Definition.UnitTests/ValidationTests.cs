@@ -7,26 +7,6 @@ namespace Facility.Definition.UnitTests
 	public sealed class ValidationTests
 	{
 		[Test]
-		public void DefinedEnumValidation()
-		{
-			var service = TestUtility.ParseTestApi(@"
-service TestApi {
-	enum One
-	{
-		X
-	}
-
-	method do
-	{
-		[validate]
-		one: One;
-		}: {}
-}");
-
-			service.Methods.Single().RequestFields.Single().Validation!.IsDefinedEnum.Should().Be(true);
-		}
-
-		[Test]
 		public void DuplicateValidation()
 		{
 			var errors = TestUtility.TryParseInvalidTestApi(@"
@@ -101,8 +81,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.StartInclusive.Should().Be(decimal.Zero);
-			range.EndInclusive.Should().Be(decimal.One);
+			range.Minimum.Should().Be(decimal.Zero);
+			range.Maximum.Should().Be(decimal.One);
 		}
 
 		[Test]
@@ -117,8 +97,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.StartInclusive.Should().BeNull();
-			range.EndInclusive.Should().Be(decimal.Zero);
+			range.Minimum.Should().BeNull();
+			range.Maximum.Should().Be(decimal.Zero);
 		}
 
 		[Test]
@@ -133,8 +113,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.StartInclusive.Should().Be(decimal.Zero);
-			range.EndInclusive.Should().BeNull();
+			range.Minimum.Should().Be(decimal.Zero);
+			range.Maximum.Should().BeNull();
 		}
 
 		[Test]
@@ -149,8 +129,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.StartInclusive.Should().Be(decimal.One);
-			range.EndInclusive.Should().Be(decimal.One);
+			range.Minimum.Should().Be(decimal.One);
+			range.Maximum.Should().Be(decimal.One);
 		}
 
 		[Test]

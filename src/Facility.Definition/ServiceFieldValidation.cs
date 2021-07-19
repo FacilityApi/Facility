@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -9,12 +10,10 @@ namespace Facility.Definition
 	public sealed class ServiceFieldValidation
 	{
 		/// <summary>
-		/// Creates a validation criterion of a DTO field
+		/// Creates a validation criterion of a DTO field.
 		/// </summary>
-		public ServiceFieldValidation(ServiceAttributeInfo attributeInfo)
+		internal ServiceFieldValidation(ServiceAttributeInfo attributeInfo)
 		{
-			IsDefinedEnum = attributeInfo.Parameters.Count == 0;
-
 			foreach (var parameterInfo in attributeInfo.Parameters)
 			{
 				switch (parameterInfo.Name)
@@ -30,7 +29,7 @@ namespace Facility.Definition
 						break;
 					case "regex":
 						if (s_regex.IsMatch(parameterInfo.Value))
-							RegularExpression = new Regex(parameterInfo.Value);
+							RegexPattern = parameterInfo.Value;
 						else
 							parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
 
@@ -43,29 +42,24 @@ namespace Facility.Definition
 		}
 
 		/// <summary>
-		/// Allowed range for the collection entry count
+		/// Allowed range for the collection entry count.
 		/// </summary>
 		public ServiceFieldValidationRange? CountRange { get; }
 
 		/// <summary>
-		/// Allowed range for the numeric value
+		/// Allowed range for the numeric value.
 		/// </summary>
 		public ServiceFieldValidationRange? ValueRange { get; }
 
 		/// <summary>
-		/// Allowed range for the string length
+		/// Allowed range for the string length.
 		/// </summary>
 		public ServiceFieldValidationRange? LengthRange { get; }
 
 		/// <summary>
-		/// Allowed pattern to which a string must conform
+		/// Allowed pattern to which a string must conform.
 		/// </summary>
-		public Regex? RegularExpression { get; }
-
-		/// <summary>
-		/// Enums should only allow defined values
-		/// </summary>
-		public bool IsDefinedEnum { get; }
+		public string? RegexPattern { get; }
 
 		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo)
 		{

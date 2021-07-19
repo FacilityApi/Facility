@@ -63,7 +63,7 @@ namespace Facility.Definition
 			m_validationErrors = new List<ServiceDefinitionError>();
 		}
 
-		public void AddValidationError(ServiceDefinitionError error)
+		protected internal void AddValidationError(ServiceDefinitionError error)
 		{
 			if (error == null)
 				throw new ArgumentNullException(nameof(error));
