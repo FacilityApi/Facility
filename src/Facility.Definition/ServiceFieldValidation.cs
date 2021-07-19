@@ -19,13 +19,13 @@ namespace Facility.Definition
 				switch (parameterInfo.Name)
 				{
 					case "length":
-						LengthRange = GetRange(attributeInfo, parameterInfo);
+						LengthRange = GetRange<ulong>(attributeInfo, parameterInfo, s => ulong.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
 						break;
 					case "count":
-						CountRange = GetRange(attributeInfo, parameterInfo);
+						CountRange = GetRange<ulong>(attributeInfo, parameterInfo, s => ulong.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
 						break;
 					case "value":
-						ValueRange = GetRange(attributeInfo, parameterInfo);
+						ValueRange = GetRange<long>(attributeInfo, parameterInfo, s => long.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
 						break;
 					case "regex":
 						RegexPattern = parameterInfo.Value;
@@ -40,24 +40,25 @@ namespace Facility.Definition
 		/// <summary>
 		/// Allowed range for the collection entry count.
 		/// </summary>
-		public ServiceFieldValidationRange? CountRange { get; }
+		public ServiceFieldValidationRange<ulong>? CountRange { get; }
 
 		/// <summary>
 		/// Allowed range for the numeric value.
 		/// </summary>
-		public ServiceFieldValidationRange? ValueRange { get; }
+		public ServiceFieldValidationRange<long>? ValueRange { get; }
 
 		/// <summary>
 		/// Allowed range for the string length.
 		/// </summary>
-		public ServiceFieldValidationRange? LengthRange { get; }
+		public ServiceFieldValidationRange<ulong>? LengthRange { get; }
 
 		/// <summary>
 		/// Allowed pattern to which a string must conform.
 		/// </summary>
 		public string? RegexPattern { get; }
 
-		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo)
+		private static ServiceFieldValidationRange<T>? GetRange<T>(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo, Func<string, T?> parse)
+			where T : struct
 		{
 			if (string.IsNullOrEmpty(parameterInfo.Value))
 			{
@@ -68,57 +69,53 @@ namespace Facility.Definition
 			var fullRangeMatch = s_fullRange.Match(parameterInfo.Value).Groups;
 			if (fullRangeMatch.Count > 2)
 			{
-				if (!decimal.TryParse(fullRangeMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var start)
-					|| !decimal.TryParse(fullRangeMatch[2].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var end))
+				var start = parse(fullRangeMatch[1].Value);
+				var end = parse(fullRangeMatch[2].Value);
+				if (start == null || end == null)
 				{
 					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange(start, end);
+				return new ServiceFieldValidationRange<T>(start, end);
 			}
 
 			var unboundedStartMatch = s_unboundedStartRange.Match(parameterInfo.Value).Groups;
 			if (unboundedStartMatch.Count > 1)
 			{
-				if (!decimal.TryParse(unboundedStartMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var end))
+				var end = parse(unboundedStartMatch[1].Value);
+				if (end == null)
 				{
 					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange(null, end);
+				return new ServiceFieldValidationRange<T>(null, end);
 			}
 
 			var unboundedEndMatch = s_unboundedEndRange.Match(parameterInfo.Value).Groups;
 			if (unboundedEndMatch.Count > 1)
 			{
-				if (!decimal.TryParse(unboundedEndMatch[1].Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var start))
+				var start = parse(unboundedEndMatch[1].Value);
+				if (start == null)
 				{
 					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange(start, null);
+				return new ServiceFieldValidationRange<T>(start, null);
 			}
 
-			if (s_number.IsMatch(parameterInfo.Value))
+			var value = parse(parameterInfo.Value);
+			if (value == null)
 			{
-				if (!decimal.TryParse(parameterInfo.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
-				{
-					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
-					return null;
-				}
-
-				return new ServiceFieldValidationRange(value, value);
+				parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+				return null;
 			}
 
-			parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
-
-			return null;
+			return new ServiceFieldValidationRange<T>(value, value);
 		}
 
-		private static readonly Regex s_number = new(@"^[0-9]+(?:\.[0-9]+)?$");
 		private static readonly Regex s_unboundedStartRange = new(@"^\.\.([0-9]+(?:\.[0-9]+)?)$");
 		private static readonly Regex s_unboundedEndRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.$");
 		private static readonly Regex s_fullRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.([0-9]+(?:\.[0-9]+)?)$");

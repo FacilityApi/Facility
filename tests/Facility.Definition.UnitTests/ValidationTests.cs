@@ -70,6 +70,22 @@ service TestApi {
 		}
 
 		[Test]
+		public void CollectionValidateParameter()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(count: 1..10)]
+    one: double[];
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
+			range.Minimum.Should().Be(1UL);
+			range.Maximum.Should().Be(10UL);
+		}
+
+		[Test]
 		public void NumericValidateParameter()
 		{
 			var service = TestUtility.ParseTestApi(@"
@@ -81,8 +97,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(decimal.Zero);
-			range.Maximum.Should().Be(decimal.One);
+			range.Minimum.Should().Be(0L);
+			range.Maximum.Should().Be(1L);
 		}
 
 		[Test]
@@ -98,7 +114,7 @@ service TestApi {
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
 			range.Minimum.Should().BeNull();
-			range.Maximum.Should().Be(decimal.Zero);
+			range.Maximum.Should().Be(0L);
 		}
 
 		[Test]
@@ -113,7 +129,7 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(decimal.Zero);
+			range.Minimum.Should().Be(0L);
 			range.Maximum.Should().BeNull();
 		}
 
@@ -129,8 +145,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(decimal.One);
-			range.Maximum.Should().Be(decimal.One);
+			range.Minimum.Should().Be(1L);
+			range.Maximum.Should().Be(1L);
 		}
 
 		[Test]
