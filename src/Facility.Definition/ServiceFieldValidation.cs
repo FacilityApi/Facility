@@ -14,6 +14,8 @@ namespace Facility.Definition
 		/// </summary>
 		internal ServiceFieldValidation(ServiceAttributeInfo attributeInfo)
 		{
+			Attribute = attributeInfo ?? throw new ArgumentNullException(nameof(attributeInfo));
+
 			foreach (var parameterInfo in attributeInfo.Parameters)
 			{
 				switch (parameterInfo.Name)
@@ -36,6 +38,8 @@ namespace Facility.Definition
 				}
 			}
 		}
+
+		internal ServiceAttributeInfo Attribute { get; }
 
 		/// <summary>
 		/// Allowed range for the collection entry count.

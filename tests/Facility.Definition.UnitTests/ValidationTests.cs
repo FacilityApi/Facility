@@ -146,7 +146,7 @@ service TestApi {
     one: double;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): Unexpected 'validate' parameter 'regex'.");
+			exception.Message.Should().Be(@"TestApi.fsd(5,6): 'validate' parameter 'regex' is invalid for Double.");
 		}
 
 		[Test]
@@ -179,7 +179,7 @@ service TestApi {
     one: One[];
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(10,15): Unexpected 'validate' parameter 'regex'.");
+			exception.Message.Should().Be(@"TestApi.fsd(10,6): 'validate' parameter 'regex' is invalid for Array.");
 		}
 	}
 }

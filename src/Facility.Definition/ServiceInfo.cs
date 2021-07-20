@@ -167,26 +167,39 @@ namespace Facility.Definition
 		private static void EnsureProperValidateUsage(ServiceTypeInfo type, ServiceFieldInfo field)
 		{
 			if (field.Validation == null) return;
-			var validateAttribute = field.TryGetAttribute("validate")!;
+
+			var validation = field.Validation!;
+			var attribute = validation.Attribute;
 
 			switch (type.Kind)
 			{
 				case ServiceTypeKind.Enum:
 				{
-					foreach (var validateAttributeParameter in validateAttribute.Parameters)
-						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
+
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
+
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
+
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
 					break;
 				}
 
 				case ServiceTypeKind.String:
 				{
-					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "length" && x.Name != "regex"))
-						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name is "length" or "regex");
-					if (requiredAttributeCount < 1)
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "length", "regex"));
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
+
+					if (validation.LengthRange == null && validation.RegexPattern == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "length", "regex"));
 
 					break;
 				}
@@ -196,12 +209,17 @@ namespace Facility.Definition
 				case ServiceTypeKind.Int64:
 				case ServiceTypeKind.Decimal:
 				{
-					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "value"))
-						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name == "value");
-					if (requiredAttributeCount < 1)
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "value"));
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
+
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
+
+					if (validation.ValueRange == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
 
 					break;
 				}
@@ -210,18 +228,23 @@ namespace Facility.Definition
 				case ServiceTypeKind.Array:
 				case ServiceTypeKind.Map:
 				{
-					foreach (var validateAttributeParameter in validateAttribute.Parameters.Where(x => x.Name != "count"))
-						field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(validateAttribute.Name, validateAttributeParameter));
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
 
-					var requiredAttributeCount = validateAttribute.Parameters.Count(x => x.Name == "count");
-					if (requiredAttributeCount < 1)
-						field.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(validateAttribute, "count"));
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
+
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
+
+					if (validation.CountRange == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "count"));
 
 					break;
 				}
 
 				default:
-					field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(validateAttribute));
+					field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(attribute));
 					break;
 			}
 		}
