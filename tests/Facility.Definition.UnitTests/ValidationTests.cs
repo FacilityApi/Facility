@@ -56,6 +56,36 @@ service TestApi {
 		}
 
 		[Test]
+		public void InvalidMinimumStringLengthValidateParameter()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(length: -1..10)]
+    one: string;
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [length, regex].");
+			errors[1].Message.Should().Be("'length' value '-1..10' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
+		public void InvalidMaximumStringLengthValidateParameter()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(length: 100..10)]
+    one: string;
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [length, regex].");
+			errors[1].Message.Should().Be("'length' value '100..10' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
 		public void CollectionValidateParameter()
 		{
 			var service = TestUtility.ParseTestApi(@"
@@ -67,8 +97,38 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
-			range.Minimum.Should().Be(1UL);
-			range.Maximum.Should().Be(10UL);
+			range.Minimum.Should().Be(1);
+			range.Maximum.Should().Be(10);
+		}
+
+		[Test]
+		public void InvalidMinimumCollectionValidateParameter()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(count: -1..10)]
+    one: double[];
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [count].");
+			errors[1].Message.Should().Be("'count' value '-1..10' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
+		public void InvalidMaximumCollectionValidateParameter()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(count: 100..10)]
+    one: double[];
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [count].");
+			errors[1].Message.Should().Be("'count' value '100..10' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -83,8 +143,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(0L);
-			range.Maximum.Should().Be(1L);
+			range.Minimum.Should().Be(0);
+			range.Maximum.Should().Be(1);
 		}
 
 		[Test]
@@ -100,7 +160,7 @@ service TestApi {
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
 			range.Minimum.Should().BeNull();
-			range.Maximum.Should().Be(0L);
+			range.Maximum.Should().Be(0);
 		}
 
 		[Test]
@@ -115,7 +175,7 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(0L);
+			range.Minimum.Should().Be(0);
 			range.Maximum.Should().BeNull();
 		}
 
@@ -131,8 +191,8 @@ service TestApi {
   }: {}
 }");
 			var range = service.Methods.Single().RequestFields.Single().Validation!.ValueRange!;
-			range.Minimum.Should().Be(1L);
-			range.Maximum.Should().Be(1L);
+			range.Minimum.Should().Be(1);
+			range.Maximum.Should().Be(1);
 		}
 
 		[Test]

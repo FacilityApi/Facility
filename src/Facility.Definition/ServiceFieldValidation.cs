@@ -15,24 +15,32 @@ namespace Facility.Definition
 		{
 			Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
 
-			foreach (var parameterInfo in attribute.Parameters)
+			foreach (var parameter in attribute.Parameters)
 			{
-				switch (parameterInfo.Name)
+				switch (parameter.Name)
 				{
 					case "length":
-						LengthRange = GetRange<ulong>(attribute, parameterInfo, s => ulong.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
+						var length = GetRange(attribute, parameter);
+						if (length is { Minimum: >= 0 } && length.Maximum >= length.Minimum)
+							LengthRange = length;
+						else
+							parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 						break;
 					case "count":
-						CountRange = GetRange<ulong>(attribute, parameterInfo, s => ulong.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
+						var count = GetRange(attribute, parameter);
+						if (count is { Minimum: >= 0 } && count.Maximum >= count.Minimum)
+							CountRange = count;
+						else
+							parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 						break;
 					case "value":
-						ValueRange = GetRange<long>(attribute, parameterInfo, s => long.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var value) ? value : null);
+						ValueRange = GetRange(attribute, parameter);
 						break;
 					case "regex":
-						RegexPattern = parameterInfo.Value;
+						RegexPattern = parameter.Value;
 						break;
 					default:
-						parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(parameterInfo.Name, parameterInfo));
+						parameter.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(parameter.Name, parameter));
 						break;
 				}
 			}
@@ -43,25 +51,24 @@ namespace Facility.Definition
 		/// <summary>
 		/// Allowed range for the collection entry count.
 		/// </summary>
-		public ServiceFieldValidationRange<ulong>? CountRange { get; }
+		public ServiceFieldValidationRange? CountRange { get; }
 
 		/// <summary>
 		/// Allowed range for the numeric value.
 		/// </summary>
-		public ServiceFieldValidationRange<long>? ValueRange { get; }
+		public ServiceFieldValidationRange? ValueRange { get; }
 
 		/// <summary>
 		/// Allowed range for the string length.
 		/// </summary>
-		public ServiceFieldValidationRange<ulong>? LengthRange { get; }
+		public ServiceFieldValidationRange? LengthRange { get; }
 
 		/// <summary>
 		/// Allowed pattern to which a string must conform.
 		/// </summary>
 		public string? RegexPattern { get; }
 
-		private static ServiceFieldValidationRange<T>? GetRange<T>(ServiceAttributeInfo attribute, ServiceAttributeParameterInfo parameter, Func<string, T?> parse)
-			where T : struct
+		private static ServiceFieldValidationRange? GetRange(ServiceAttributeInfo attribute, ServiceAttributeParameterInfo parameter)
 		{
 			if (string.IsNullOrEmpty(parameter.Value))
 			{
@@ -75,49 +82,49 @@ namespace Facility.Definition
 
 			if (bounds.Length == 1)
 			{
-				var value = parse(parameter.Value);
+				int? value = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
 				if (value == null)
 				{
 					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(value, value);
+				return new ServiceFieldValidationRange(value, value);
 			}
 
 			if (string.IsNullOrEmpty(first) && !string.IsNullOrEmpty(second))
 			{
-				var upperBound = parse(second!);
+				int? upperBound = int.TryParse(second, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
 				if (upperBound == null)
 				{
 					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(null, upperBound);
+				return new ServiceFieldValidationRange(null, upperBound);
 			}
 
 			if (!string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
 			{
-				var lowerBound = parse(first);
+				int? lowerBound = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
 				if (lowerBound == null)
 				{
 					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(lowerBound, null);
+				return new ServiceFieldValidationRange(lowerBound, null);
 			}
 
-			var minimum = parse(first);
-			var maximum = parse(second!);
+			int? minimum = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var minValue) ? minValue : null;
+			int? maximum = int.TryParse(second, NumberStyles.Number, CultureInfo.InvariantCulture, out var maxValue) ? maxValue : null;
 			if (minimum == null || maximum == null)
 			{
 				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
 			}
 
-			return new ServiceFieldValidationRange<T>(minimum, maximum);
+			return new ServiceFieldValidationRange(minimum, maximum);
 		}
 	}
 }
