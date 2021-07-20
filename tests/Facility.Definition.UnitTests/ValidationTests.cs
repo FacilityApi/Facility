@@ -33,7 +33,7 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(value: /^\d+/)]
+    [validate(value: ""^\\d+"")]
     one: string;
   }: {}
 }");
@@ -48,25 +48,11 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(length: /^\d+/)]
+    [validate(length: ""^\\d+"")]
     one: string;
   }: {}
 }");
 			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'length' value '^\d+' for 'validate' attribute is invalid.");
-		}
-
-		[Test]
-		public void InvalidStringValidatePatternArgument()
-		{
-			var exception = TestUtility.ParseInvalidTestApi(@"
-service TestApi {
-  method do
-  {
-    [validate(regex: 0..1)]
-    one: string;
-  }: {}
-}");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'regex' value '0..1' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -156,7 +142,7 @@ service TestApi {
 service TestApi {
   method do
   {
-    [validate(regex: /\d+.{2}/)]
+    [validate(regex: ""\\d+.{2}"")]
     one: double;
   }: {}
 }");
@@ -189,7 +175,7 @@ service TestApi {
 
   method do
   {
-    [validate(regex: /\d+.{2}/)]
+    [validate(regex: ""\\d+.{2}"")]
     one: One[];
   }: {}
 }");
