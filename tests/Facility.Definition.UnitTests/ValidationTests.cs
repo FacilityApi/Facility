@@ -37,8 +37,8 @@ service TestApi {
     one: string;
   }: {}
 }");
-			exception[0].Message.Should().Be("Unexpected 'validate' parameter 'value'.");
-			exception[1].Message.Should().Be("Missing 'validate' parameters: [length, regex].");
+			exception[0].Message.Should().Be("Missing 'validate' parameters: [length, regex].");
+			exception[1].Message.Should().Be("'value' value '^\\d+' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ service TestApi {
     one: string;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'length' value '^\d+' for 'validate' attribute is invalid.");
+			exception.Message.Should().Be(@"TestApi.fsd(5,6): Missing 'validate' parameters: [length, regex].");
 		}
 
 		[Test]
@@ -160,7 +160,7 @@ service TestApi {
     one: double;
   }: {}
 }");
-			exception.Message.Should().Be(@"TestApi.fsd(5,15): 'value' value '0..infinity' for 'validate' attribute is invalid.");
+			exception.Message.Should().Be(@"TestApi.fsd(5,6): Missing 'validate' parameters: [value].");
 		}
 
 		[Test]
