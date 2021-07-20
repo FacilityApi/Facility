@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Facility.Definition
 {
@@ -61,67 +60,64 @@ namespace Facility.Definition
 		/// </summary>
 		public string? RegexPattern { get; }
 
-		private static ServiceFieldValidationRange<T>? GetRange<T>(ServiceAttributeInfo attributeInfo, ServiceAttributeParameterInfo parameterInfo, Func<string, T?> parse)
+		private static ServiceFieldValidationRange<T>? GetRange<T>(ServiceAttributeInfo attribute, ServiceAttributeParameterInfo parameter, Func<string, T?> parse)
 			where T : struct
 		{
-			if (string.IsNullOrEmpty(parameterInfo.Value))
+			if (string.IsNullOrEmpty(parameter.Value))
 			{
-				parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
 			}
 
-			var fullRangeMatch = s_fullRange.Match(parameterInfo.Value).Groups;
-			if (fullRangeMatch.Count > 2)
+			var bounds = parameter.Value.Split(new[] { ".." }, 2, StringSplitOptions.None);
+			var first = bounds[0];
+			var second = bounds.Length > 1 ? bounds[1] : null;
+
+			if (bounds.Length == 1)
 			{
-				var start = parse(fullRangeMatch[1].Value);
-				var end = parse(fullRangeMatch[2].Value);
-				if (start == null || end == null)
+				var value = parse(parameter.Value);
+				if (value == null)
 				{
-					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(start, end);
+				return new ServiceFieldValidationRange<T>(value, value);
 			}
 
-			var unboundedStartMatch = s_unboundedStartRange.Match(parameterInfo.Value).Groups;
-			if (unboundedStartMatch.Count > 1)
+			if (string.IsNullOrEmpty(first) && !string.IsNullOrEmpty(second))
 			{
-				var end = parse(unboundedStartMatch[1].Value);
-				if (end == null)
+				var upperBound = parse(second!);
+				if (upperBound == null)
 				{
-					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(null, end);
+				return new ServiceFieldValidationRange<T>(null, upperBound);
 			}
 
-			var unboundedEndMatch = s_unboundedEndRange.Match(parameterInfo.Value).Groups;
-			if (unboundedEndMatch.Count > 1)
+			if (!string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
 			{
-				var start = parse(unboundedEndMatch[1].Value);
-				if (start == null)
+				var lowerBound = parse(first);
+				if (lowerBound == null)
 				{
-					parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+					parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					return null;
 				}
 
-				return new ServiceFieldValidationRange<T>(start, null);
+				return new ServiceFieldValidationRange<T>(lowerBound, null);
 			}
 
-			var value = parse(parameterInfo.Value);
-			if (value == null)
+			var minimum = parse(first);
+			var maximum = parse(second!);
+			if (minimum == null || maximum == null)
 			{
-				parameterInfo.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attributeInfo.Name, parameterInfo));
+				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
 			}
 
-			return new ServiceFieldValidationRange<T>(value, value);
+			return new ServiceFieldValidationRange<T>(minimum, maximum);
 		}
-
-		private static readonly Regex s_unboundedStartRange = new(@"^\.\.([0-9]+(?:\.[0-9]+)?)$");
-		private static readonly Regex s_unboundedEndRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.$");
-		private static readonly Regex s_fullRange = new(@"^([0-9]+(?:\.[0-9]+)?)\.\.([0-9]+(?:\.[0-9]+)?)$");
 	}
 }
