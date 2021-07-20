@@ -28,6 +28,15 @@ namespace Facility.Definition
 		public static ServiceDefinitionError CreateUnexpectedAttributeParameterError(string attributeName, ServiceAttributeParameterInfo parameter) =>
 			new ServiceDefinitionError($"Unexpected '{attributeName}' parameter '{parameter.Name}'.", parameter.Position);
 
+		public static ServiceDefinitionError CreateInvalidAttributeParameterForTypeError(ServiceAttributeInfo attribute, ServiceTypeInfo type, string parameter) =>
+			new ServiceDefinitionError($"'{attribute.Name}' parameter '{parameter}' is invalid for {type.Kind}.", attribute.Position);
+
+		public static ServiceDefinitionError CreateMissingAttributeParametersError(ServiceAttributeInfo attribute, params string[] missingParameterName) =>
+			new ServiceDefinitionError($"Missing '{attribute.Name}' parameters: [{string.Join(", ", missingParameterName)}].", attribute.Position);
+
+		public static ServiceDefinitionError CreateInvalidAttributeValueError(string attributeName, ServiceAttributeParameterInfo parameter) =>
+			new ServiceDefinitionError($"'{parameter.Name}' value '{parameter.Value}' for '{attributeName}' attribute is invalid.", parameter.Position);
+
 		/// <summary>
 		/// Returns true if the name is a valid service element name.
 		/// </summary>

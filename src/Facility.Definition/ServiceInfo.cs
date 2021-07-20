@@ -30,10 +30,19 @@ namespace Facility.Definition
 			foreach (var fieldGroup in GetDescendants().OfType<ServiceFieldInfo>().GroupBy(x => x.TypeName))
 			{
 				var type = ServiceTypeInfo.TryParse(fieldGroup.Key, FindMember);
-				if (type != null)
-					m_typesByName.Add(fieldGroup.Key, type);
-				else
+				if (type == null)
+				{
 					AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
+				}
+				else
+				{
+					m_typesByName.Add(fieldGroup.Key, type);
+
+					foreach (var field in fieldGroup)
+					{
+						EnsureProperValidateUsage(type, field);
+					}
+				}
 			}
 		}
 
@@ -152,6 +161,91 @@ namespace Facility.Definition
 				{
 					return member;
 				}
+			}
+		}
+
+		private static void EnsureProperValidateUsage(ServiceTypeInfo type, ServiceFieldInfo field)
+		{
+			if (field.Validation == null) return;
+
+			var validation = field.Validation!;
+			var attribute = validation.Attribute;
+
+			switch (type.Kind)
+			{
+				case ServiceTypeKind.Enum:
+				{
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
+
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
+
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
+
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
+
+					break;
+				}
+
+				case ServiceTypeKind.String:
+				{
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
+
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
+
+					if (validation.LengthRange == null && validation.RegexPattern == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "length", "regex"));
+
+					break;
+				}
+
+				case ServiceTypeKind.Double:
+				case ServiceTypeKind.Int32:
+				case ServiceTypeKind.Int64:
+				case ServiceTypeKind.Decimal:
+				{
+					if (validation.CountRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
+
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
+
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
+
+					if (validation.ValueRange == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
+
+					break;
+				}
+
+				case ServiceTypeKind.Bytes:
+				case ServiceTypeKind.Array:
+				case ServiceTypeKind.Map:
+				{
+					if (validation.LengthRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
+
+					if (validation.RegexPattern != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
+
+					if (validation.ValueRange != null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
+
+					if (validation.CountRange == null)
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "count"));
+
+					break;
+				}
+
+				default:
+					field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(attribute));
+					break;
 			}
 		}
 
