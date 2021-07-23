@@ -19,6 +19,12 @@ public abstract class ServiceElementInfo
 | [GetParts](ServiceElementInfo/GetParts.md)() | Gets the parts of the element, if any. |
 | [GetValidationErrors](ServiceElementInfo/GetValidationErrors.md)(…) | Gets the validation errors for the element, if any, including those of descendants by default. |
 
+## Protected Members
+
+| name | description |
+| --- | --- |
+| [AddValidationError](ServiceElementInfo/AddValidationError.md)(…) |  |
+
 ## See Also
 
 * namespace [Facility.Definition](../Facility.Definition.md)

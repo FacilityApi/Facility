@@ -16,6 +16,7 @@ public sealed class ServiceFieldInfo : ServiceElementWithAttributesInfo, IServic
 | [Name](ServiceFieldInfo/Name.md) { get; } | The name of the field. |
 | [Summary](ServiceFieldInfo/Summary.md) { get; } | The summary of the field. |
 | [TypeName](ServiceFieldInfo/TypeName.md) { get; } | The name of the type of the field. |
+| [Validation](ServiceFieldInfo/Validation.md) { get; } | Validation criteria for the field. |
 
 ## See Also
 
