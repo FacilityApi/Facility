@@ -148,7 +148,7 @@ service TestApi {
 		}
 
 		[Test]
-		public void NumericValidateUnboundedStartParameter()
+		public void NumericValidateUnboundedMinimumParameter()
 		{
 			var service = TestUtility.ParseTestApi(@"
 service TestApi {
@@ -196,7 +196,7 @@ service TestApi {
 		}
 
 		[Test]
-		public void InvalidNumericValidateParameter()
+		public void InvalidNumericValidateParameterStringValue()
 		{
 			var exception = TestUtility.ParseInvalidTestApi(@"
 service TestApi {
@@ -207,6 +207,21 @@ service TestApi {
   }: {}
 }");
 			exception.Message.Should().Be(@"TestApi.fsd(5,6): 'validate' parameter 'regex' is invalid for Double.");
+		}
+
+		[Test]
+		public void InvalidNumericValidateParameterReversedValue()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  method do
+  {
+    [validate(value: 100..10)]
+    one: double;
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [value].");
+			errors[1].Message.Should().Be("'value' value '100..10' for 'validate' attribute is invalid.");
 		}
 
 		[Test]
@@ -240,6 +255,89 @@ service TestApi {
   }: {}
 }");
 			exception.Message.Should().Be(@"TestApi.fsd(10,6): 'validate' parameter 'regex' is invalid for Array.");
+		}
+
+		[Test]
+		public void InvalidCollectionValidateValueNegativeMinimum()
+		{
+			var errors = TestUtility.TryParseInvalidTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate(count: -1..10)]
+    one: One[];
+  }: {}
+}");
+			errors[0].Message.Should().Be("Missing 'validate' parameters: [count].");
+			errors[1].Message.Should().Be("'count' value '-1..10' for 'validate' attribute is invalid.");
+		}
+
+		[Test]
+		public void CollectionValidateValueUnboundMinimum()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate(count: ..10)]
+    one: One[];
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
+			range.Minimum.Should().BeNull();
+			range.Maximum.Should().Be(10);
+		}
+
+		[Test]
+		public void CollectionValidateValueUnboundMaximum()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate(count: 0..)]
+    one: One[];
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
+			range.Minimum.Should().Be(0);
+			range.Maximum.Should().BeNull();
+		}
+
+		[Test]
+		public void CollectionValidateSingleValue()
+		{
+			var service = TestUtility.ParseTestApi(@"
+service TestApi {
+  enum One
+  {
+    X
+  }
+
+  method do
+  {
+    [validate(count: 10)]
+    one: One[];
+  }: {}
+}");
+			var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
+			range.Minimum.Should().Be(10);
+			range.Maximum.Should().Be(10);
 		}
 	}
 }

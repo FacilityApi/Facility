@@ -30,5 +30,7 @@ namespace Facility.Definition
 		/// The maximum allowed value, inclusive.
 		/// </summary>
 		public int? Maximum { get; }
+
+		internal bool IsValid() => Minimum == null || Maximum == null || Minimum <= Maximum;
 	}
 }
