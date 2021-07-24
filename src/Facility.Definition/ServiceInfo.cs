@@ -235,7 +235,7 @@ namespace Facility.Definition
 						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
 					if (validation.ValueRange != null)
-						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
+						attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
 
 					if (validation.CountRange == null)
 						attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "count"));
