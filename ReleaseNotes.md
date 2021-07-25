@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.6.1
+
+* Fixed range-valued `[validate]` parsing
+* Fixed an error message for invalid `[validate]` use on collections
+
 ## 2.6.0
 
 * Introduce attribute based validation via `[validate]`

@@ -21,20 +21,24 @@ namespace Facility.Definition
 				{
 					case "length":
 						var length = GetRange(attribute, parameter);
-						if (length is { Minimum: >= 0 } && length.Maximum >= length.Minimum)
+						if (length != null && length.IsValid() && length.Minimum is null or >= 0)
 							LengthRange = length;
 						else
 							parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 						break;
 					case "count":
 						var count = GetRange(attribute, parameter);
-						if (count is { Minimum: >= 0 } && count.Maximum >= count.Minimum)
+						if (count != null && count.IsValid() && count.Minimum is null or >= 0)
 							CountRange = count;
 						else
 							parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 						break;
 					case "value":
-						ValueRange = GetRange(attribute, parameter);
+						var value = GetRange(attribute, parameter);
+						if (value != null && value.IsValid())
+							ValueRange = value;
+						else
+							parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 						break;
 					case "regex":
 						RegexPattern = parameter.Value;
