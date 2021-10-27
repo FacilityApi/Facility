@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <NoWarn>$(NoWarn);1591;1998;NU5105;CA1014</NoWarn>
+    <NoWarn>$(NoWarn);1591;1998;NU5105;CA1014;CA1508</NoWarn>
     <DebugType>embedded</DebugType>
     <GitHubOrganization>FacilityApi</GitHubOrganization>
     <RepositoryName>Facility</RepositoryName>
@@ -26,6 +26,7 @@
 
   <PropertyGroup Condition=" '$(BuildNumber)' != '' ">
     <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
