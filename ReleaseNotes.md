@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.7.0
+
+* Add .NET 6 support to `fsdgenfsd`.
+* Drop .NET Core 2.1 support from `fsdgenfsd`.
+
 ## 2.6.1
 
 * Fixed range-valued `[validate]` parsing
