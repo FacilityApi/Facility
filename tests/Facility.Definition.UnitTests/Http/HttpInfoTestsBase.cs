@@ -1,4 +1,3 @@
-using System;
 using Facility.Definition.Http;
 
 namespace Facility.Definition.UnitTests.Http

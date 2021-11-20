@@ -1,4 +1,3 @@
-using System;
 using Facility.Definition.CodeGen;
 using FluentAssertions;
 using NUnit.Framework;

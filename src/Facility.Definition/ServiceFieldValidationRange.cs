@@ -1,5 +1,3 @@
-using System;
-
 namespace Facility.Definition
 {
 	/// <summary>

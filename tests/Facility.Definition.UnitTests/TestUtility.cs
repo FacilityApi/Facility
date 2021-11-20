@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Facility.Definition.Fsd;
 
 namespace Facility.Definition.UnitTests
