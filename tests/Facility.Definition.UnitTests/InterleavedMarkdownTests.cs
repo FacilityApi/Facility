@@ -1,26 +1,26 @@
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Facility.Definition.UnitTests
+namespace Facility.Definition.UnitTests;
+
+public sealed class InterleavedMarkdownTests
 {
-	public sealed class InterleavedMarkdownTests
+	[Test]
+	public void EmptyServiceNoRemarks()
 	{
-		[Test]
-		public void EmptyServiceNoRemarks()
-		{
-			var service = TestUtility.ParseTestApi(@"
+		var service = TestUtility.ParseTestApi(@"
 ```fsd
 service TestApi{}
 ```");
 
-			service.Name.Should().Be("TestApi");
-			service.Remarks.Count.Should().Be(0);
-		}
+		service.Name.Should().Be("TestApi");
+		service.Remarks.Count.Should().Be(0);
+	}
 
-		[Test]
-		public void EmptyServiceWithRemarks()
-		{
-			var service = TestUtility.ParseTestApi(@"
+	[Test]
+	public void EmptyServiceWithRemarks()
+	{
+		var service = TestUtility.ParseTestApi(@"
 # TestApi
 
 ```fsd
@@ -37,14 +37,14 @@ A test API.
 That's it.
 ");
 
-			service.Name.Should().Be("TestApi");
-			service.Remarks.Should().Equal("A test API.");
-		}
+		service.Name.Should().Be("TestApi");
+		service.Remarks.Should().Equal("A test API.");
+	}
 
-		[Test]
-		public void VariousRemarks()
-		{
-			var service = TestUtility.ParseTestApi(@"
+	[Test]
+	public void VariousRemarks()
+	{
+		var service = TestUtility.ParseTestApi(@"
 # TestApi
 
 ```fsd
@@ -81,16 +81,16 @@ A test method.
 That's it.
 ");
 
-			service.Name.Should().Be("TestApi");
-			service.Remarks.Should().Equal("A test API.", "", "More remarks.");
-			service.Dtos.Single().Remarks.Should().BeEmpty();
-			service.Methods.Single().Remarks.Should().Equal("A test method.");
-		}
+		service.Name.Should().Be("TestApi");
+		service.Remarks.Should().Equal("A test API.", "", "More remarks.");
+		service.Dtos.Single().Remarks.Should().BeEmpty();
+		service.Methods.Single().Remarks.Should().Equal("A test method.");
+	}
 
-		[Test]
-		public void VariousRemarksNoServiceBraces()
-		{
-			var service = TestUtility.ParseTestApi(@"
+	[Test]
+	public void VariousRemarksNoServiceBraces()
+	{
+		var service = TestUtility.ParseTestApi(@"
 # TestApi
 
 ```fsd
@@ -120,10 +120,9 @@ method do
 A test method.
 ");
 
-			service.Name.Should().Be("TestApi");
-			service.Remarks.Should().Equal("A test API.", "", "More remarks.");
-			service.Dtos.Single().Remarks.Should().BeEmpty();
-			service.Methods.Single().Remarks.Should().Equal("A test method.");
-		}
+		service.Name.Should().Be("TestApi");
+		service.Remarks.Should().Equal("A test API.", "", "More remarks.");
+		service.Dtos.Single().Remarks.Should().BeEmpty();
+		service.Methods.Single().Remarks.Should().Equal("A test method.");
 	}
 }

@@ -1,16 +1,15 @@
-namespace Facility.Definition.CodeGen
+namespace Facility.Definition.CodeGen;
+
+/// <summary>
+/// An exception thrown by a code generator.
+/// </summary>
+public sealed class CodeGeneratorException : Exception
 {
 	/// <summary>
-	/// An exception thrown by a code generator.
+	/// Creates an instance.
 	/// </summary>
-	public sealed class CodeGeneratorException : Exception
+	public CodeGeneratorException(string message)
+		: base(message)
 	{
-		/// <summary>
-		/// Creates an instance.
-		/// </summary>
-		public CodeGeneratorException(string message)
-			: base(message)
-		{
-		}
 	}
 }

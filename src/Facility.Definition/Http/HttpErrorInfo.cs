@@ -1,39 +1,38 @@
 using System.Net;
 
-namespace Facility.Definition.Http
+namespace Facility.Definition.Http;
+
+/// <summary>
+/// The HTTP mapping of an error.
+/// </summary>
+public sealed class HttpErrorInfo : HttpElementInfo
 {
 	/// <summary>
-	/// The HTTP mapping of an error.
+	/// The error.
 	/// </summary>
-	public sealed class HttpErrorInfo : HttpElementInfo
+	public ServiceErrorInfo ServiceError { get; }
+
+	/// <summary>
+	/// The HTTP status code used by the error.
+	/// </summary>
+	public HttpStatusCode StatusCode { get; }
+
+	internal HttpErrorInfo(ServiceErrorInfo errorInfo)
 	{
-		/// <summary>
-		/// The error.
-		/// </summary>
-		public ServiceErrorInfo ServiceError { get; }
+		ServiceError = errorInfo;
+		StatusCode = HttpStatusCode.InternalServerError;
 
-		/// <summary>
-		/// The HTTP status code used by the error.
-		/// </summary>
-		public HttpStatusCode StatusCode { get; }
-
-		internal HttpErrorInfo(ServiceErrorInfo errorInfo)
+		foreach (var parameter in GetHttpParameters(errorInfo))
 		{
-			ServiceError = errorInfo;
-			StatusCode = HttpStatusCode.InternalServerError;
-
-			foreach (var parameter in GetHttpParameters(errorInfo))
-			{
-				if (parameter.Name == "code")
-					StatusCode = TryParseStatusCodeInteger(parameter) ?? HttpStatusCode.InternalServerError;
-				else if (parameter.Name != "from")
-					AddInvalidHttpParameterError(parameter);
-			}
+			if (parameter.Name == "code")
+				StatusCode = TryParseStatusCodeInteger(parameter) ?? HttpStatusCode.InternalServerError;
+			else if (parameter.Name != "from")
+				AddInvalidHttpParameterError(parameter);
 		}
-
-		/// <summary>
-		/// The children of the element, if any.
-		/// </summary>
-		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 	}
+
+	/// <summary>
+	/// The children of the element, if any.
+	/// </summary>
+	public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
 }

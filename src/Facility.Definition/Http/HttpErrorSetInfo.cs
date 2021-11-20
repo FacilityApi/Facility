@@ -1,34 +1,33 @@
-namespace Facility.Definition.Http
+namespace Facility.Definition.Http;
+
+/// <summary>
+/// The HTTP mapping of an error set.
+/// </summary>
+public sealed class HttpErrorSetInfo : HttpElementInfo
 {
 	/// <summary>
-	/// The HTTP mapping of an error set.
+	/// The error set.
 	/// </summary>
-	public sealed class HttpErrorSetInfo : HttpElementInfo
+	public ServiceErrorSetInfo ServiceErrorSet { get; }
+
+	/// <summary>
+	/// The HTTP mapping of the errors.
+	/// </summary>
+	public IReadOnlyList<HttpErrorInfo> Errors { get; }
+
+	/// <summary>
+	/// The children of the element, if any.
+	/// </summary>
+	public override IEnumerable<HttpElementInfo> GetChildren() => Errors;
+
+	internal HttpErrorSetInfo(ServiceErrorSetInfo errorSetInfo)
 	{
-		/// <summary>
-		/// The error set.
-		/// </summary>
-		public ServiceErrorSetInfo ServiceErrorSet { get; }
+		ServiceErrorSet = errorSetInfo;
 
-		/// <summary>
-		/// The HTTP mapping of the errors.
-		/// </summary>
-		public IReadOnlyList<HttpErrorInfo> Errors { get; }
+		var parameter = GetHttpParameters(errorSetInfo).FirstOrDefault();
+		if (parameter != null)
+			AddInvalidHttpParameterError(parameter);
 
-		/// <summary>
-		/// The children of the element, if any.
-		/// </summary>
-		public override IEnumerable<HttpElementInfo> GetChildren() => Errors;
-
-		internal HttpErrorSetInfo(ServiceErrorSetInfo errorSetInfo)
-		{
-			ServiceErrorSet = errorSetInfo;
-
-			var parameter = GetHttpParameters(errorSetInfo).FirstOrDefault();
-			if (parameter != null)
-				AddInvalidHttpParameterError(parameter);
-
-			Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
-		}
+		Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
 	}
 }

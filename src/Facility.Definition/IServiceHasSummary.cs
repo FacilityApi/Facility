@@ -1,13 +1,12 @@
-namespace Facility.Definition
+namespace Facility.Definition;
+
+/// <summary>
+/// A service element with a summary.
+/// </summary>
+public interface IServiceHasSummary
 {
 	/// <summary>
-	/// A service element with a summary.
+	/// The summary.
 	/// </summary>
-	public interface IServiceHasSummary
-	{
-		/// <summary>
-		/// The summary.
-		/// </summary>
-		string Summary { get; }
-	}
+	string Summary { get; }
 }

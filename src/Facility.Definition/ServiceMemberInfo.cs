@@ -1,33 +1,32 @@
-namespace Facility.Definition
+namespace Facility.Definition;
+
+/// <summary>
+/// Properties common to service members.
+/// </summary>
+public abstract class ServiceMemberInfo : ServiceElementWithAttributesInfo, IServiceHasName, IServiceHasSummary
 {
 	/// <summary>
-	/// Properties common to service members.
+	/// The name of the service member.
 	/// </summary>
-	public abstract class ServiceMemberInfo : ServiceElementWithAttributesInfo, IServiceHasName, IServiceHasSummary
+	public string Name { get; }
+
+	/// <summary>
+	/// The summary of the service member.
+	/// </summary>
+	public string Summary { get; }
+
+	/// <summary>
+	/// The remarks of the service member.
+	/// </summary>
+	public IReadOnlyList<string> Remarks { get; internal set; }
+
+	private protected ServiceMemberInfo(string name, IEnumerable<ServiceAttributeInfo>? attributes, string? summary, IEnumerable<string>? remarks, IReadOnlyList<ServicePart> parts)
+		: base(attributes, parts)
 	{
-		/// <summary>
-		/// The name of the service member.
-		/// </summary>
-		public string Name { get; }
+		Name = name ?? throw new ArgumentNullException(nameof(name));
+		Summary = summary ?? "";
+		Remarks = remarks.ToReadOnlyList();
 
-		/// <summary>
-		/// The summary of the service member.
-		/// </summary>
-		public string Summary { get; }
-
-		/// <summary>
-		/// The remarks of the service member.
-		/// </summary>
-		public IReadOnlyList<string> Remarks { get; internal set; }
-
-		private protected ServiceMemberInfo(string name, IEnumerable<ServiceAttributeInfo>? attributes, string? summary, IEnumerable<string>? remarks, IReadOnlyList<ServicePart> parts)
-			: base(attributes, parts)
-		{
-			Name = name ?? throw new ArgumentNullException(nameof(name));
-			Summary = summary ?? "";
-			Remarks = remarks.ToReadOnlyList();
-
-			ValidateName();
-		}
+		ValidateName();
 	}
 }

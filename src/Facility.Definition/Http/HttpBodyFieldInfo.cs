@@ -1,39 +1,38 @@
 using System.Net;
 
-namespace Facility.Definition.Http
+namespace Facility.Definition.Http;
+
+/// <summary>
+/// Information about a DTO field used as a request or response body.
+/// </summary>
+public sealed class HttpBodyFieldInfo : HttpFieldInfo
 {
 	/// <summary>
-	/// Information about a DTO field used as a request or response body.
+	/// The specified status code, if any.
 	/// </summary>
-	public sealed class HttpBodyFieldInfo : HttpFieldInfo
+	public HttpStatusCode? StatusCode { get; }
+
+	/// <summary>
+	/// The specified content type, if any.
+	/// </summary>
+	public string? ContentType { get; }
+
+	/// <summary>
+	/// The children of the element, if any.
+	/// </summary>
+	public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
+
+	internal HttpBodyFieldInfo(ServiceFieldInfo fieldInfo)
+		: base(fieldInfo)
 	{
-		/// <summary>
-		/// The specified status code, if any.
-		/// </summary>
-		public HttpStatusCode? StatusCode { get; }
-
-		/// <summary>
-		/// The specified content type, if any.
-		/// </summary>
-		public string? ContentType { get; }
-
-		/// <summary>
-		/// The children of the element, if any.
-		/// </summary>
-		public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
-
-		internal HttpBodyFieldInfo(ServiceFieldInfo fieldInfo)
-			: base(fieldInfo)
+		foreach (var parameter in GetHttpParameters(fieldInfo))
 		{
-			foreach (var parameter in GetHttpParameters(fieldInfo))
-			{
-				if (parameter.Name == "code")
-					StatusCode = TryParseStatusCodeInteger(parameter);
-				else if (parameter.Name == "type")
-					ContentType = parameter.Value;
-				else if (parameter.Name != "from")
-					AddInvalidHttpParameterError(parameter);
-			}
+			if (parameter.Name == "code")
+				StatusCode = TryParseStatusCodeInteger(parameter);
+			else if (parameter.Name == "type")
+				ContentType = parameter.Value;
+			else if (parameter.Name != "from")
+				AddInvalidHttpParameterError(parameter);
 		}
 	}
 }

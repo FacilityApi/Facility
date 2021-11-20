@@ -1,26 +1,25 @@
-namespace Facility.Definition
+namespace Facility.Definition;
+
+/// <summary>
+/// A service DTO.
+/// </summary>
+public sealed class ServiceDtoInfo : ServiceMemberInfo
 {
 	/// <summary>
-	/// A service DTO.
+	/// Creates a DTO.
 	/// </summary>
-	public sealed class ServiceDtoInfo : ServiceMemberInfo
+	public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo>? fields = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
+		: base(name, attributes, summary, remarks, parts)
 	{
-		/// <summary>
-		/// Creates a DTO.
-		/// </summary>
-		public ServiceDtoInfo(string name, IEnumerable<ServiceFieldInfo>? fields = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
-			: base(name, attributes, summary, remarks, parts)
-		{
-			Fields = fields.ToReadOnlyList();
+		Fields = fields.ToReadOnlyList();
 
-			ValidateNoDuplicateNames(Fields, "field");
-		}
-
-		/// <summary>
-		/// The fields of the DTO.
-		/// </summary>
-		public IReadOnlyList<ServiceFieldInfo> Fields { get; }
-
-		private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Fields;
+		ValidateNoDuplicateNames(Fields, "field");
 	}
+
+	/// <summary>
+	/// The fields of the DTO.
+	/// </summary>
+	public IReadOnlyList<ServiceFieldInfo> Fields { get; }
+
+	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Fields;
 }

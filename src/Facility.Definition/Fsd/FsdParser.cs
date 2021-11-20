@@ -1,204 +1,203 @@
 using System.Text.RegularExpressions;
 using Faithlife.Parsing;
 
-namespace Facility.Definition.Fsd
+namespace Facility.Definition.Fsd;
+
+/// <summary>
+/// Parses FSD files.
+/// </summary>
+public sealed class FsdParser : ServiceParser
 {
 	/// <summary>
-	/// Parses FSD files.
+	/// Implements TryParseDefinition.
 	/// </summary>
-	public sealed class FsdParser : ServiceParser
+	protected override bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
-		/// <summary>
-		/// Implements TryParseDefinition.
-		/// </summary>
-		protected override bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
+		var errorList = new List<ServiceDefinitionError>();
+		var definitionLines = new List<string>();
+		var remarksSectionsByName = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
+		var interleavedRemarksSections = new List<FsdRemarksSection>();
+
+		if (!s_interleavedMarkdown.IsMatch(text.Text))
+			ReadRemarksAfterDefinition(text, definitionLines, remarksSectionsByName, errorList);
+		else
+			ReadInterleavedRemarks(text, definitionLines, interleavedRemarksSections);
+
+		text = new ServiceDefinitionText(text.Name, string.Join("\n", definitionLines));
+		service = null;
+
+		try
 		{
-			var errorList = new List<ServiceDefinitionError>();
-			var definitionLines = new List<string>();
-			var remarksSectionsByName = new Dictionary<string, FsdRemarksSection>(StringComparer.OrdinalIgnoreCase);
-			var interleavedRemarksSections = new List<FsdRemarksSection>();
+			service = FsdParsers.ParseDefinition(text, remarksSectionsByName);
+			errorList.AddRange(service.GetValidationErrors());
 
-			if (!s_interleavedMarkdown.IsMatch(text.Text))
-				ReadRemarksAfterDefinition(text, definitionLines, remarksSectionsByName, errorList);
-			else
-				ReadInterleavedRemarks(text, definitionLines, interleavedRemarksSections);
-
-			text = new ServiceDefinitionText(text.Name, string.Join("\n", definitionLines));
-			service = null;
-
-			try
+			// check for unused remarks sections
+			foreach (var remarksSectionPair in remarksSectionsByName)
 			{
-				service = FsdParsers.ParseDefinition(text, remarksSectionsByName);
-				errorList.AddRange(service.GetValidationErrors());
+				var sectionName = remarksSectionPair.Key;
+				if (service.Name != sectionName && service.FindMember(sectionName) == null)
+					errorList.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSectionPair.Value.Position));
+			}
 
-				// check for unused remarks sections
-				foreach (var remarksSectionPair in remarksSectionsByName)
+			// check for interleaved remarks sections
+			foreach (var remarksSection in interleavedRemarksSections)
+			{
+				var remarksLineNumber = remarksSection.Position.LineNumber;
+				if (remarksLineNumber > service.GetPart(ServicePartKind.Name)!.Position.LineNumber &&
+				    remarksLineNumber < service.GetPart(ServicePartKind.End)!.Position.LineNumber)
 				{
-					var sectionName = remarksSectionPair.Key;
-					if (service.Name != sectionName && service.FindMember(sectionName) == null)
-						errorList.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSectionPair.Value.Position));
-				}
-
-				// check for interleaved remarks sections
-				foreach (var remarksSection in interleavedRemarksSections)
-				{
-					var remarksLineNumber = remarksSection.Position.LineNumber;
-					if (remarksLineNumber > service.GetPart(ServicePartKind.Name)!.Position.LineNumber &&
-						remarksLineNumber < service.GetPart(ServicePartKind.End)!.Position.LineNumber)
+					ServiceMemberInfo targetMember = service;
+					var targetLineNumber = 0;
+					foreach (var member in service.Members)
 					{
-						ServiceMemberInfo targetMember = service;
-						var targetLineNumber = 0;
-						foreach (var member in service.Members)
+						var memberLineNumber = member.GetPart(ServicePartKind.Name)!.Position.LineNumber;
+						if (remarksLineNumber > memberLineNumber && memberLineNumber > targetLineNumber)
 						{
-							var memberLineNumber = member.GetPart(ServicePartKind.Name)!.Position.LineNumber;
-							if (remarksLineNumber > memberLineNumber && memberLineNumber > targetLineNumber)
-							{
-								targetMember = member;
-								targetLineNumber = memberLineNumber;
-							}
+							targetMember = member;
+							targetLineNumber = memberLineNumber;
 						}
-
-						targetMember.Remarks = targetMember.Remarks.Count == 0
-							? remarksSection.Lines
-							: targetMember.Remarks.Concat(new[] { "" }).Concat(remarksSection.Lines).ToList();
 					}
+
+					targetMember.Remarks = targetMember.Remarks.Count == 0
+						? remarksSection.Lines
+						: targetMember.Remarks.Concat(new[] { "" }).Concat(remarksSection.Lines).ToList();
 				}
 			}
-			catch (ParseException exception)
-			{
-				var expectation = exception
-					.Result
-					.GetNamedFailures()
-					.Distinct()
-					.GroupBy(x => x.Position)
-					.Select(x => new { LineColumn = x.Key.GetLineColumn(), Names = x.Select(y => y.Name) })
-					.OrderByDescending(x => x.LineColumn.LineNumber)
-					.ThenByDescending(x => x.LineColumn.ColumnNumber)
-					.First();
+		}
+		catch (ParseException exception)
+		{
+			var expectation = exception
+				.Result
+				.GetNamedFailures()
+				.Distinct()
+				.GroupBy(x => x.Position)
+				.Select(x => new { LineColumn = x.Key.GetLineColumn(), Names = x.Select(y => y.Name) })
+				.OrderByDescending(x => x.LineColumn.LineNumber)
+				.ThenByDescending(x => x.LineColumn.ColumnNumber)
+				.First();
 
-				int GetExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
-				errorList.Add(new ServiceDefinitionError(
-					"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
-					new ServiceDefinitionPosition(text.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
-			}
-
-			errors = errorList;
-			return errorList.Count == 0;
+			int GetExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
+			errorList.Add(new ServiceDefinitionError(
+				"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
+				new ServiceDefinitionPosition(text.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));
 		}
 
-		private static void ReadInterleavedRemarks(ServiceDefinitionText source, List<string> definitionLines, List<FsdRemarksSection> remarksSections)
+		errors = errorList;
+		return errorList.Count == 0;
+	}
+
+	private static void ReadInterleavedRemarks(ServiceDefinitionText source, List<string> definitionLines, List<FsdRemarksSection> remarksSections)
+	{
+		using var reader = new StringReader(source.Text);
+
+		var remarksLines = new List<string>();
+		var inFsdCode = false;
+
+		while (true)
 		{
-			using var reader = new StringReader(source.Text);
-
-			var remarksLines = new List<string>();
-			var inFsdCode = false;
-
-			while (true)
+			var line = reader.ReadLine();
+			if (line == null)
 			{
-				var line = reader.ReadLine();
-				if (line == null)
-				{
-					AddRemarksSection();
-					break;
-				}
+				AddRemarksSection();
+				break;
+			}
 
-				if (inFsdCode)
+			if (inFsdCode)
+			{
+				if (line.StartsWith("```", StringComparison.Ordinal))
 				{
-					if (line.StartsWith("```", StringComparison.Ordinal))
-					{
-						inFsdCode = false;
-						definitionLines.Add("");
-					}
-					else
-					{
-						definitionLines.Add(line);
-					}
-				}
-				else
-				{
-					if (s_interleavedMarkdown.IsMatch(line))
-					{
-						AddRemarksSection();
-						inFsdCode = true;
-					}
-					else
-					{
-						remarksLines.Add(line);
-					}
-
+					inFsdCode = false;
 					definitionLines.Add("");
 				}
-			}
-
-			void AddRemarksSection()
-			{
-				while (remarksLines.Count != 0 && string.IsNullOrWhiteSpace(remarksLines[0]))
-					remarksLines.RemoveAt(0);
-
-				var remarksLineNumber = definitionLines.Count - remarksLines.Count;
-
-				while (remarksLines.Count != 0 && string.IsNullOrWhiteSpace(remarksLines[remarksLines.Count - 1]))
-					remarksLines.RemoveAt(remarksLines.Count - 1);
-
-				if (remarksLines.Count != 0)
+				else
 				{
-					var position = new ServiceDefinitionPosition(source.Name, remarksLineNumber, 1);
-					remarksSections.Add(new FsdRemarksSection(remarksLines, position));
-					remarksLines = new List<string>();
+					definitionLines.Add(line);
 				}
 			}
-		}
-
-		private static void ReadRemarksAfterDefinition(ServiceDefinitionText source, List<string> definitionLines, Dictionary<string, FsdRemarksSection> remarksSections, List<ServiceDefinitionError> errorList)
-		{
-			using var reader = new StringReader(source.Text);
-
-			string? name = null;
-			var lines = new List<string>();
-			var lineNumber = 0;
-			var headingLineNumber = 0;
-
-			while (true)
+			else
 			{
-				var line = reader.ReadLine();
-				lineNumber++;
-
-				var match = line == null ? null : s_markdownHeading.Match(line);
-				if (match == null || match.Success)
+				if (s_interleavedMarkdown.IsMatch(line))
 				{
-					if (name == null)
-					{
-						definitionLines.AddRange(lines);
-					}
-					else
-					{
-						while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[0]))
-							lines.RemoveAt(0);
-						while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[lines.Count - 1]))
-							lines.RemoveAt(lines.Count - 1);
-
-						var position = new ServiceDefinitionPosition(source.Name, headingLineNumber, 1);
-						if (remarksSections.ContainsKey(name))
-							errorList.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
-						else
-							remarksSections.Add(name, new FsdRemarksSection(lines, position));
-					}
-
-					if (match == null)
-						break;
-
-					name = line!.Substring(match.Index + match.Length).Trim();
-					lines = new List<string>();
-					headingLineNumber = lineNumber;
+					AddRemarksSection();
+					inFsdCode = true;
 				}
 				else
 				{
-					lines.Add(line!);
+					remarksLines.Add(line);
 				}
+
+				definitionLines.Add("");
 			}
 		}
 
-		private static readonly Regex s_interleavedMarkdown = new(@"^```fsd\b", RegexOptions.Multiline);
-		private static readonly Regex s_markdownHeading = new(@"^#\s+");
+		void AddRemarksSection()
+		{
+			while (remarksLines.Count != 0 && string.IsNullOrWhiteSpace(remarksLines[0]))
+				remarksLines.RemoveAt(0);
+
+			var remarksLineNumber = definitionLines.Count - remarksLines.Count;
+
+			while (remarksLines.Count != 0 && string.IsNullOrWhiteSpace(remarksLines[remarksLines.Count - 1]))
+				remarksLines.RemoveAt(remarksLines.Count - 1);
+
+			if (remarksLines.Count != 0)
+			{
+				var position = new ServiceDefinitionPosition(source.Name, remarksLineNumber, 1);
+				remarksSections.Add(new FsdRemarksSection(remarksLines, position));
+				remarksLines = new List<string>();
+			}
+		}
 	}
+
+	private static void ReadRemarksAfterDefinition(ServiceDefinitionText source, List<string> definitionLines, Dictionary<string, FsdRemarksSection> remarksSections, List<ServiceDefinitionError> errorList)
+	{
+		using var reader = new StringReader(source.Text);
+
+		string? name = null;
+		var lines = new List<string>();
+		var lineNumber = 0;
+		var headingLineNumber = 0;
+
+		while (true)
+		{
+			var line = reader.ReadLine();
+			lineNumber++;
+
+			var match = line == null ? null : s_markdownHeading.Match(line);
+			if (match == null || match.Success)
+			{
+				if (name == null)
+				{
+					definitionLines.AddRange(lines);
+				}
+				else
+				{
+					while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[0]))
+						lines.RemoveAt(0);
+					while (lines.Count != 0 && string.IsNullOrWhiteSpace(lines[lines.Count - 1]))
+						lines.RemoveAt(lines.Count - 1);
+
+					var position = new ServiceDefinitionPosition(source.Name, headingLineNumber, 1);
+					if (remarksSections.ContainsKey(name))
+						errorList.Add(new ServiceDefinitionError("Duplicate remarks heading: " + name, position));
+					else
+						remarksSections.Add(name, new FsdRemarksSection(lines, position));
+				}
+
+				if (match == null)
+					break;
+
+				name = line!.Substring(match.Index + match.Length).Trim();
+				lines = new List<string>();
+				headingLineNumber = lineNumber;
+			}
+			else
+			{
+				lines.Add(line!);
+			}
+		}
+	}
+
+	private static readonly Regex s_interleavedMarkdown = new(@"^```fsd\b", RegexOptions.Multiline);
+	private static readonly Regex s_markdownHeading = new(@"^#\s+");
 }

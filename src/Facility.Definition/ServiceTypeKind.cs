@@ -1,78 +1,77 @@
-namespace Facility.Definition
+namespace Facility.Definition;
+
+/// <summary>
+/// A kind of field type.
+/// </summary>
+public enum ServiceTypeKind
 {
 	/// <summary>
-	/// A kind of field type.
+	/// A string.
 	/// </summary>
-	public enum ServiceTypeKind
-	{
-		/// <summary>
-		/// A string.
-		/// </summary>
-		String,
+	String,
 
-		/// <summary>
-		/// A Boolean.
-		/// </summary>
-		Boolean,
+	/// <summary>
+	/// A Boolean.
+	/// </summary>
+	Boolean,
 
-		/// <summary>
-		/// A double-precision floating point.
-		/// </summary>
-		Double,
+	/// <summary>
+	/// A double-precision floating point.
+	/// </summary>
+	Double,
 
-		/// <summary>
-		/// A 32-bit signed integer.
-		/// </summary>
-		Int32,
+	/// <summary>
+	/// A 32-bit signed integer.
+	/// </summary>
+	Int32,
 
-		/// <summary>
-		/// A 64-bit signed integer.
-		/// </summary>
-		Int64,
+	/// <summary>
+	/// A 64-bit signed integer.
+	/// </summary>
+	Int64,
 
-		/// <summary>
-		/// A 128-bit number appropriate for monetary calculations.
-		/// </summary>
-		Decimal,
+	/// <summary>
+	/// A 128-bit number appropriate for monetary calculations.
+	/// </summary>
+	Decimal,
 
-		/// <summary>
-		/// An array of bytes.
-		/// </summary>
-		Bytes,
+	/// <summary>
+	/// An array of bytes.
+	/// </summary>
+	Bytes,
 
-		/// <summary>
-		/// A JSON object.
-		/// </summary>
-		Object,
+	/// <summary>
+	/// A JSON object.
+	/// </summary>
+	Object,
 
-		/// <summary>
-		/// An error object.
-		/// </summary>
-		Error,
+	/// <summary>
+	/// An error object.
+	/// </summary>
+	Error,
 
-		/// <summary>
-		/// A DTO.
-		/// </summary>
-		Dto,
+	/// <summary>
+	/// A DTO.
+	/// </summary>
+	Dto,
 
-		/// <summary>
-		/// An enumerated type.
-		/// </summary>
-		Enum,
+	/// <summary>
+	/// An enumerated type.
+	/// </summary>
+	Enum,
 
-		/// <summary>
-		/// A service result.
-		/// </summary>
-		Result,
+	/// <summary>
+	/// A service result.
+	/// </summary>
+	Result,
 
-		/// <summary>
-		/// An array.
-		/// </summary>
-		Array,
+	/// <summary>
+	/// An array.
+	/// </summary>
+	Array,
 
-		/// <summary>
-		/// A map.
-		/// </summary>
-		Map,
-	}
+	/// <summary>
+	/// A map.
+	/// </summary>
+	Map,
 }
