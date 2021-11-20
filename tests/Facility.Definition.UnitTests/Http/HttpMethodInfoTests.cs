@@ -507,7 +507,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase(HttpStatusCode.NotModified)]
 		public void NonBooleanNoContentResponseBodyField(HttpStatusCode statusCode)
 		{
-			string statusCodeString = ((int) statusCode).ToString(CultureInfo.InvariantCulture);
+			var statusCodeString = ((int) statusCode).ToString(CultureInfo.InvariantCulture);
 			ParseInvalidHttpApi("service TestApi { method do {}: { [http(from: body, code: CODE)] body: error; } }".Replace("CODE", statusCodeString))
 				.ToString().Should().Be("TestApi.fsd(1,65): A body field with HTTP status code CODE must be Boolean.".Replace("CODE", statusCodeString));
 		}
@@ -653,7 +653,7 @@ namespace Facility.Definition.UnitTests.Http
 		[TestCase("[http(method: delete, path: \"/\")]", "[http(method: put, path: \"/\")]", 1)]
 		public void ByRouteComparer(string leftHttp, string rightHttp, int expected)
 		{
-			string fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);
+			var fsdText = "service TestApi { [left] method left { id: string; }: {} [right] method right { id: string; }: {} }".Replace("[left]", leftHttp).Replace("[right]", rightHttp);
 			var service = HttpServiceInfo.Create(new FsdParser().ParseDefinition(new ServiceDefinitionText("", fsdText)));
 			var left = service.Methods.Single(x => x.ServiceMethod.Name == "left");
 			var right = service.Methods.Single(x => x.ServiceMethod.Name == "right");

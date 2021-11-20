@@ -26,7 +26,7 @@ namespace Facility.CodeGen.Console
 				var argsReader = new ArgsReader(args) { LongOptionIgnoreCase = true, LongOptionIgnoreKebabCase = true };
 				if (argsReader.ReadHelpFlag())
 				{
-					foreach (string line in Description)
+					foreach (var line in Description)
 						System.Console.WriteLine(line);
 					System.Console.WriteLine();
 					WriteUsage(generator);
