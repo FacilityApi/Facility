@@ -25,7 +25,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 ## See Also
 
-* class [HttpElementInfo](HttpElementInfo.md)
+* class [HttpElementInfo](./HttpElementInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpMethodInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpMethodInfo.cs)
 

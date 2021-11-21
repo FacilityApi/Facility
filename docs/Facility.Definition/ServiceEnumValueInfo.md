@@ -17,9 +17,9 @@ public sealed class ServiceEnumValueInfo : ServiceElementWithAttributesInfo, ISe
 
 ## See Also
 
-* class [ServiceElementWithAttributesInfo](ServiceElementWithAttributesInfo.md)
-* interface [IServiceHasName](IServiceHasName.md)
-* interface [IServiceHasSummary](IServiceHasSummary.md)
+* class [ServiceElementWithAttributesInfo](./ServiceElementWithAttributesInfo.md)
+* interface [IServiceHasName](./IServiceHasName.md)
+* interface [IServiceHasSummary](./IServiceHasSummary.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceEnumValueInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceEnumValueInfo.cs)
 

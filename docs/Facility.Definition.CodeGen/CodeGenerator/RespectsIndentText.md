@@ -1,6 +1,6 @@
 # CodeGenerator.RespectsIndentText property
 
-True if the generator respects [`IndentText`](IndentText.md). (Default true.)
+True if the generator respects [`IndentText`](./IndentText.md). (Default true.)
 
 ```csharp
 public virtual bool RespectsIndentText { get; }

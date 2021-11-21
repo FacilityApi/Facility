@@ -1,6 +1,6 @@
 # CodeGenerator.RespectsNewLine property
 
-True if the generator respects [`NewLine`](NewLine.md). (Default true.)
+True if the generator respects [`NewLine`](./NewLine.md). (Default true.)
 
 ```csharp
 public virtual bool RespectsNewLine { get; }

@@ -16,7 +16,7 @@ public sealed class HttpErrorSetInfo : HttpElementInfo
 
 ## See Also
 
-* class [HttpElementInfo](HttpElementInfo.md)
+* class [HttpElementInfo](./HttpElementInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpErrorSetInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpErrorSetInfo.cs)
 

@@ -20,9 +20,9 @@ public sealed class ServiceFieldInfo : ServiceElementWithAttributesInfo, IServic
 
 ## See Also
 
-* class [ServiceElementWithAttributesInfo](ServiceElementWithAttributesInfo.md)
-* interface [IServiceHasName](IServiceHasName.md)
-* interface [IServiceHasSummary](IServiceHasSummary.md)
+* class [ServiceElementWithAttributesInfo](./ServiceElementWithAttributesInfo.md)
+* interface [IServiceHasName](./IServiceHasName.md)
+* interface [IServiceHasSummary](./IServiceHasSummary.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceFieldInfo.cs)
 

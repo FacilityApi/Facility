@@ -15,7 +15,7 @@ public sealed class ServiceDtoInfo : ServiceMemberInfo
 
 ## See Also
 
-* class [ServiceMemberInfo](ServiceMemberInfo.md)
+* class [ServiceMemberInfo](./ServiceMemberInfo.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceDtoInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceDtoInfo.cs)
 

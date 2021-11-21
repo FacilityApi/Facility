@@ -14,8 +14,8 @@ public abstract class CodeGenerator
 | virtual [HasPatternsToClean](CodeGenerator/HasPatternsToClean.md) { get; } | True if patterns to clean are returned with the output. (Default false.) |
 | [IndentText](CodeGenerator/IndentText.md) { get; set; } | The text to use for each indent (null for tab). |
 | [NewLine](CodeGenerator/NewLine.md) { get; set; } | The text to use for each new line (null for default). |
-| virtual [RespectsIndentText](CodeGenerator/RespectsIndentText.md) { get; } | True if the generator respects [`IndentText`](CodeGenerator/IndentText.md). (Default true.) |
-| virtual [RespectsNewLine](CodeGenerator/RespectsNewLine.md) { get; } | True if the generator respects [`NewLine`](CodeGenerator/NewLine.md). (Default true.) |
+| virtual [RespectsIndentText](CodeGenerator/RespectsIndentText.md) { get; } | True if the generator respects [`IndentText`](./CodeGenerator/IndentText.md). (Default true.) |
+| virtual [RespectsNewLine](CodeGenerator/RespectsNewLine.md) { get; } | True if the generator respects [`NewLine`](./CodeGenerator/NewLine.md). (Default true.) |
 | virtual [SupportsSingleOutput](CodeGenerator/SupportsSingleOutput.md) { get; } | True if the generator supports writing output to a single file. (Default false.) |
 | virtual [ApplySettings](CodeGenerator/ApplySettings.md)(…) | Applies any generator-specific settings. |
 | abstract [GenerateOutput](CodeGenerator/GenerateOutput.md)(…) | Generates output for the specified service. |

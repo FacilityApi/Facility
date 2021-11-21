@@ -15,7 +15,7 @@ public sealed class ServiceErrorSetInfo : ServiceMemberInfo
 
 ## See Also
 
-* class [ServiceMemberInfo](ServiceMemberInfo.md)
+* class [ServiceMemberInfo](./ServiceMemberInfo.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceErrorSetInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceErrorSetInfo.cs)
 

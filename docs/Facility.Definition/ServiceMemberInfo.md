@@ -17,9 +17,9 @@ public abstract class ServiceMemberInfo : ServiceElementWithAttributesInfo, ISer
 
 ## See Also
 
-* class [ServiceElementWithAttributesInfo](ServiceElementWithAttributesInfo.md)
-* interface [IServiceHasName](IServiceHasName.md)
-* interface [IServiceHasSummary](IServiceHasSummary.md)
+* class [ServiceElementWithAttributesInfo](./ServiceElementWithAttributesInfo.md)
+* interface [IServiceHasName](./IServiceHasName.md)
+* interface [IServiceHasSummary](./IServiceHasSummary.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceMemberInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceMemberInfo.cs)
 

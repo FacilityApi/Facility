@@ -15,7 +15,7 @@ public sealed class ServiceEnumInfo : ServiceMemberInfo
 
 ## See Also
 
-* class [ServiceMemberInfo](ServiceMemberInfo.md)
+* class [ServiceMemberInfo](./ServiceMemberInfo.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceEnumInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceEnumInfo.cs)
 

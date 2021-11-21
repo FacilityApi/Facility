@@ -20,7 +20,7 @@ public abstract class ServiceElementWithAttributesInfo : ServiceElementInfo
 
 ## See Also
 
-* class [ServiceElementInfo](ServiceElementInfo.md)
+* class [ServiceElementInfo](./ServiceElementInfo.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceElementWithAttributesInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceElementWithAttributesInfo.cs)
 

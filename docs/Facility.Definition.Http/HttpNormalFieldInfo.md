@@ -14,7 +14,7 @@ public sealed class HttpNormalFieldInfo : HttpFieldInfo
 
 ## See Also
 
-* class [HttpFieldInfo](HttpFieldInfo.md)
+* class [HttpFieldInfo](./HttpFieldInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpNormalFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpNormalFieldInfo.cs)
 

@@ -15,7 +15,7 @@ public sealed class HttpPathFieldInfo : HttpFieldInfo
 
 ## See Also
 
-* class [HttpFieldInfo](HttpFieldInfo.md)
+* class [HttpFieldInfo](./HttpFieldInfo.md)
 * namespace [Facility.Definition.Http](../Facility.Definition.md)
 * [HttpPathFieldInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Http/HttpPathFieldInfo.cs)
 

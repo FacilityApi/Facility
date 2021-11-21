@@ -17,9 +17,9 @@ public sealed class ServiceErrorInfo : ServiceElementWithAttributesInfo, IServic
 
 ## See Also
 
-* class [ServiceElementWithAttributesInfo](ServiceElementWithAttributesInfo.md)
-* interface [IServiceHasName](IServiceHasName.md)
-* interface [IServiceHasSummary](IServiceHasSummary.md)
+* class [ServiceElementWithAttributesInfo](./ServiceElementWithAttributesInfo.md)
+* interface [IServiceHasName](./IServiceHasName.md)
+* interface [IServiceHasSummary](./IServiceHasSummary.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceErrorInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceErrorInfo.cs)
 

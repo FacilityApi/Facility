@@ -17,8 +17,8 @@ public sealed class ServiceAttributeParameterInfo : ServiceElementInfo, IService
 
 ## See Also
 
-* class [ServiceElementInfo](ServiceElementInfo.md)
-* interface [IServiceHasName](IServiceHasName.md)
+* class [ServiceElementInfo](./ServiceElementInfo.md)
+* interface [IServiceHasName](./IServiceHasName.md)
 * namespace [Facility.Definition](../Facility.Definition.md)
 * [ServiceAttributeParameterInfo.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/ServiceAttributeParameterInfo.cs)
 

@@ -20,7 +20,7 @@ public sealed class FsdParser : ServiceParser
 
 ## See Also
 
-* class [ServiceParser](ServiceParser.md)
+* class [ServiceParser](./ServiceParser.md)
 * namespace [Facility.Definition.Fsd](../Facility.Definition.md)
 * [FsdParser.cs](https://github.com/FacilityApi/Facility/tree/master/src/Facility.Definition/Fsd/FsdParser.cs)
 
