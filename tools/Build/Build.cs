@@ -43,7 +43,7 @@ return BuildRunner.Execute(args, build =>
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
-		var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/net5.0/{codegen}.dll").FirstOrDefault() ?? throw new BuildException($"Missing {codegen}.dll.");
+		var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/net6.0/{codegen}.dll").FirstOrDefault() ?? throw new BuildException($"Missing {codegen}.dll.");
 
 		var verifyOption = verify ? "--verify" : null;
 
