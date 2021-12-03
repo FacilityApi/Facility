@@ -1,7 +1,3 @@
-using Faithlife.Build;
-using static Faithlife.Build.BuildUtility;
-using static Faithlife.Build.DotNetRunner;
-
 return BuildRunner.Execute(args, build =>
 {
 	var codegen = "fsdgen___";
