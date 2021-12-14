@@ -24,12 +24,10 @@ return BuildRunner.Execute(args, build =>
 	build.AddDotNetTargets(dotNetBuildSettings);
 
 	build.Target("codegen")
-		.DependsOn("build")
 		.Describe("Generates code from the FSD")
 		.Does(() => CodeGen(verify: false));
 
 	build.Target("verify-codegen")
-		.DependsOn("build")
 		.Describe("Ensures the generated code is up-to-date")
 		.Does(() => CodeGen(verify: true));
 
@@ -39,10 +37,11 @@ return BuildRunner.Execute(args, build =>
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
-		var toolPath = FindFiles($"src/{codegen}/bin/{configuration}/net6.0/{codegen}.dll").FirstOrDefault() ?? throw new BuildException($"Missing {codegen}.dll.");
+		RunDotNet("build", "-f", "net6.0", "-c", configuration, $"src/{codegen}");
 
-		var verifyOption = verify ? "--verify" : null;
+		RunCodeGen("___", "___");
 
-		RunDotNet(toolPath, "___", "___", "--newline", "lf", verifyOption);
+		void RunCodeGen(params string?[] args) =>
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verify ? "--verify" : null }.Concat(args));
 	}
 });
