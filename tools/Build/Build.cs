@@ -24,10 +24,12 @@ return BuildRunner.Execute(args, build =>
 	build.AddDotNetTargets(dotNetBuildSettings);
 
 	build.Target("codegen")
+		.DependsOn("build")
 		.Describe("Generates code from the FSD")
 		.Does(() => CodeGen(verify: false));
 
 	build.Target("verify-codegen")
+		.DependsOn("build")
 		.Describe("Ensures the generated code is up-to-date")
 		.Does(() => CodeGen(verify: true));
 
@@ -37,7 +39,6 @@ return BuildRunner.Execute(args, build =>
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
-		RunDotNet("build", "-f", "net6.0", "-c", configuration, $"src/{codegen}");
 
 		RunCodeGen("___", "___");
 
