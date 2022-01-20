@@ -39,10 +39,11 @@ return BuildRunner.Execute(args, build =>
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
+		var verifyOption = verify ? "--verify" : null;
 
 		RunCodeGen("___", "___");
 
 		void RunCodeGen(params string?[] args) =>
-			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verify ? "--verify" : null }.Concat(args));
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));
 	}
 });
