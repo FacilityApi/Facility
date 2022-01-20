@@ -24,10 +24,12 @@ return BuildRunner.Execute(args, build =>
 	build.AddDotNetTargets(dotNetBuildSettings);
 
 	build.Target("codegen")
+		.DependsOn("build")
 		.Describe("Generates code from the FSD")
 		.Does(() => CodeGen(verify: false));
 
 	build.Target("verify-codegen")
+		.DependsOn("build")
 		.Describe("Ensures the generated code is up-to-date")
 		.Does(() => CodeGen(verify: true));
 
@@ -37,7 +39,7 @@ return BuildRunner.Execute(args, build =>
 	void CodeGen(bool verify)
 	{
 		var configuration = dotNetBuildSettings.GetConfiguration();
-		RunDotNet("build", "-f", "net6.0", "-c", configuration, $"src/{codegen}");
+		var verifyOption = verify ? "--verify" : null;
 
 		RunCodeGen("example/ExampleApi.fsd", "example/output");
 		RunCodeGen("example/ExampleApi.fsd.md", "example/output");
@@ -46,6 +48,6 @@ return BuildRunner.Execute(args, build =>
 		RunCodeGen("example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets");
 
 		void RunCodeGen(params string?[] args) =>
-			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verify ? "--verify" : null }.Concat(args));
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));
 	}
 });
