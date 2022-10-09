@@ -189,7 +189,11 @@ internal static class FsdParsers
 			'n' => "\n",
 			'r' => "\r",
 			't' => "\t",
+#if NET6_0_OR_GREATER
+			'u' => new string((char) ushort.Parse(text.AsSpan(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),
+#else
 			'u' => new string((char) ushort.Parse(text.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),
+#endif
 			_ => text.Substring(1),
 		};
 
@@ -214,7 +218,7 @@ internal static class FsdParsers
 
 		public ServicePart GetPart<T>(ServicePartKind kind, Positioned<T> positioned) => new(kind, GetPosition(positioned.Position), GetPosition(positioned.Position.WithNextIndex(positioned.Length)));
 
-		public FsdRemarksSection GetRemarksSection(string name)
+		public FsdRemarksSection? GetRemarksSection(string name)
 		{
 			m_remarksSectionsByName.TryGetValue(name, out var section);
 			return section;

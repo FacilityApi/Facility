@@ -42,5 +42,13 @@ public static class ServiceDefinitionUtility
 
 	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
 
+#if NET6_0_OR_GREATER
+	internal static bool ContainsOrdinal(this string text, string value) => text.Contains(value, StringComparison.Ordinal);
+	internal static string ReplaceOrdinal(this string text, string oldValue, string newValue) => text.Replace(oldValue, newValue, StringComparison.Ordinal);
+#else
+	internal static bool ContainsOrdinal(this string text, string value) => text.Contains(value);
+	internal static string ReplaceOrdinal(this string text, string oldValue, string newValue) => text.Replace(oldValue, newValue);
+#endif
+
 	private static readonly Regex s_validNameRegex = new(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
 }

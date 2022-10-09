@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 
 namespace Facility.Definition.CodeGen;
@@ -15,12 +16,20 @@ public static class CodeGenUtility
 	/// <summary>
 	/// Capitalizes the specified string.
 	/// </summary>
+#if NET6_0_OR_GREATER
+	public static string Capitalize(string value) => value.Length == 0 ? value : string.Concat(value[..1].ToUpperInvariant(), value.AsSpan(1));
+#else
 	public static string Capitalize(string value) => value.Length == 0 ? value : value.Substring(0, 1).ToUpperInvariant() + value.Substring(1);
+#endif
 
 	/// <summary>
 	/// Uncapitalizes the specified string.
 	/// </summary>
+#if NET6_0_OR_GREATER
+	public static string Uncapitalize(string value) => value.Length == 0 ? value : string.Concat(value[..1].ToLowerInvariant(), value.AsSpan(1));
+#else
 	public static string Uncapitalize(string value) => value.Length == 0 ? value : value.Substring(0, 1).ToLowerInvariant() + value.Substring(1);
+#endif
 
 	/// <summary>
 	/// Converts the string to camel case.

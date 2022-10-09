@@ -99,7 +99,7 @@ public static class FileGenerator
 			if (File.Exists(existingFilePath))
 			{
 				// ignore CR when comparing files
-				string Normalize(string text) => settings.IgnoreNewLines ? text.Replace("\r", "") : text;
+				string Normalize(string text) => settings.IgnoreNewLines ? text.ReplaceOrdinal("\r", "") : text;
 				if (Normalize(file.Text) != Normalize(File.ReadAllText(existingFilePath)))
 				{
 					filesToWrite.Add(file);
@@ -177,7 +177,7 @@ public static class FileGenerator
 		{
 			foreach (var fileInfo in directoryInfo.GetFiles(parts[0]))
 			{
-				if (File.ReadAllText(fileInfo.FullName).Contains(patternToClean.RequiredSubstring))
+				if (File.ReadAllText(fileInfo.FullName).ContainsOrdinal(patternToClean.RequiredSubstring))
 					yield return fileInfo.Name;
 			}
 		}

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.7.2
+
+* Add .NET 6 target.
+
 ## 2.7.1
 
 * Fix build that didn't work properly on .NET 5 or .NET Core 3.1.
