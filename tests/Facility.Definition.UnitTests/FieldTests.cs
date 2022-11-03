@@ -182,12 +182,6 @@ public sealed class FieldTests
 		type.ValueType.Dto!.Name.Should().Be("One");
 	}
 
-	[Test]
-	public void ResultOfEnumInvalid()
-	{
-		TestUtility.ParseInvalidTestApi("service TestApi { enum Xs { x, xx }; data One { x: result<Xs>; } }");
-	}
-
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
 	[TestCase("double", ServiceTypeKind.Double)]
