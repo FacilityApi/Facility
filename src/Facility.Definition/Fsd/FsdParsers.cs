@@ -22,7 +22,7 @@ internal static class FsdParsers
 		Parser.String(token, StringComparison.Ordinal).Positioned().CommentedToken().Named("'" + token + "'");
 
 	private static IParser<Positioned<string>> NameParser { get; } =
-		Parser.Regex(@"[a-zA-Z_][0-9a-zA-Z_]*").Select(x => x.ToString()).Positioned().CommentedToken();
+		Parser.Regex("[a-zA-Z_][0-9a-zA-Z_]*").Select(x => x.ToString()).Positioned().CommentedToken();
 
 	private static IParser<Positioned<string>> KeywordParser(params string[] keywords) =>
 		NameParser.Where(x => keywords.Contains(x.Value)).Named(string.Join(" or ", keywords.Select(x => "'" + x + "'")));

@@ -190,6 +190,6 @@ public sealed class FsdGenerator : CodeGenerator
 		}
 	}
 
-	private static readonly Regex s_unquotedAttributeValueRegex = new(@"^[0-9a-zA-Z.+_-]+$");
+	private static readonly Regex s_unquotedAttributeValueRegex = new("^[0-9a-zA-Z.+_-]+$");
 	private static readonly Regex s_escapeAttributeValueRegex = new(@"[\\""\u0000-\u001F]");
 }

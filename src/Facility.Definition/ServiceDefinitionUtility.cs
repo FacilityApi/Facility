@@ -50,5 +50,5 @@ public static class ServiceDefinitionUtility
 	internal static string ReplaceOrdinal(this string text, string oldValue, string newValue) => text.Replace(oldValue, newValue);
 #endif
 
-	private static readonly Regex s_validNameRegex = new(@"^[a-zA-Z_][a-zA-Z0-9_]*$");
+	private static readonly Regex s_validNameRegex = new("^[a-zA-Z_][a-zA-Z0-9_]*$");
 }
