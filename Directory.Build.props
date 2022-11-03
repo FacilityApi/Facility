@@ -1,7 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <VersionPrefix>2.7.2</VersionPrefix>
+    <VersionPrefix>2.8.0</VersionPrefix>
+    <VersionSuffix>beta.1</VersionSuffix>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
