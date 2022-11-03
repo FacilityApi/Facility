@@ -196,6 +196,7 @@ public sealed class FieldTests
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
 	[TestCase("int32[]", ServiceTypeKind.Array)]
 	[TestCase("map<int32>", ServiceTypeKind.Map)]
+	[TestCase("nullable<int32>", ServiceTypeKind.Nullable)]
 	public void ArrayOfAnything(string name, ServiceTypeKind kind)
 	{
 		var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: xyzzy[]; } }".Replace("xyzzy", name));
@@ -224,6 +225,7 @@ public sealed class FieldTests
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
 	[TestCase("int32[]", ServiceTypeKind.Array)]
 	[TestCase("map<int32>", ServiceTypeKind.Map)]
+	[TestCase("nullable<int32>", ServiceTypeKind.Nullable)]
 	public void MapOfAnything(string name, ServiceTypeKind kind)
 	{
 		var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: map<xyzzy>; } }".Replace("xyzzy", name));
@@ -252,6 +254,7 @@ public sealed class FieldTests
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
 	[TestCase("int32[]", ServiceTypeKind.Array)]
 	[TestCase("map<int32>", ServiceTypeKind.Map)]
+	[TestCase("nullable<int32>", ServiceTypeKind.Nullable)]
 	public void ResultOfAnything(string name, ServiceTypeKind kind)
 	{
 		var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: result<xyzzy>; } }".Replace("xyzzy", name));
@@ -264,6 +267,41 @@ public sealed class FieldTests
 		var type = service.GetFieldType(field)!;
 		type.Kind.Should().Be(ServiceTypeKind.Result);
 		type.ValueType!.Kind.Should().Be(kind);
+	}
+
+	[TestCase("string", ServiceTypeKind.String)]
+	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("double", ServiceTypeKind.Double)]
+	[TestCase("int32", ServiceTypeKind.Int32)]
+	[TestCase("int64", ServiceTypeKind.Int64)]
+	[TestCase("decimal", ServiceTypeKind.Decimal)]
+	[TestCase("bytes", ServiceTypeKind.Bytes)]
+	[TestCase("object", ServiceTypeKind.Object)]
+	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("Dto", ServiceTypeKind.Dto)]
+	[TestCase("Enum", ServiceTypeKind.Enum)]
+	[TestCase("result<Dto>", ServiceTypeKind.Result)]
+	[TestCase("int32[]", ServiceTypeKind.Array)]
+	[TestCase("map<int32>", ServiceTypeKind.Map)]
+	public void NullableOfAnything(string name, ServiceTypeKind kind)
+	{
+		var service = TestUtility.ParseTestApi("service TestApi { enum Enum { x, y } data Dto { x: nullable<xyzzy>; } }".Replace("xyzzy", name));
+
+		var dto = service.Dtos.Single();
+		var field = dto.Fields.Single();
+		field.Name.Should().Be("x");
+		field.Attributes.Count.Should().Be(0);
+		field.Summary.Should().Be("");
+		var type = service.GetFieldType(field)!;
+		type.Kind.Should().Be(ServiceTypeKind.Nullable);
+		type.ValueType!.Kind.Should().Be(kind);
+	}
+
+	[Test]
+	public void NullableOfNullable()
+	{
+		var errors = TestUtility.TryParseInvalidTestApi("service TestApi { enum Enum { x, y } data Dto { x: nullable<nullable<int32>>; } }");
+		errors.Single().Message.Should().Be("Unknown field type 'nullable<nullable<int32>>'.");
 	}
 
 	[Test]

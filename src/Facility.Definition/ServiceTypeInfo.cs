@@ -10,7 +10,7 @@ public sealed class ServiceTypeInfo
 	/// </summary>
 	public static ServiceTypeInfo CreatePrimitive(ServiceTypeKind kind)
 	{
-		if (kind == ServiceTypeKind.Dto || kind == ServiceTypeKind.Enum || kind == ServiceTypeKind.Result || kind == ServiceTypeKind.Array || kind == ServiceTypeKind.Map)
+		if (kind == ServiceTypeKind.Dto || kind == ServiceTypeKind.Enum || kind == ServiceTypeKind.Result || kind == ServiceTypeKind.Array || kind == ServiceTypeKind.Map || kind == ServiceTypeKind.Nullable)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Kind must be primitive.");
 		return new ServiceTypeInfo(kind);
 	}
@@ -39,6 +39,11 @@ public sealed class ServiceTypeInfo
 	/// Create a map type.
 	/// </summary>
 	public static ServiceTypeInfo CreateMap(ServiceTypeInfo valueType) => new(ServiceTypeKind.Map, valueType: valueType);
+
+	/// <summary>
+	/// Create a nullable type.
+	/// </summary>
+	public static ServiceTypeInfo CreateNullable(ServiceTypeInfo valueType) => new(ServiceTypeKind.Nullable, valueType: valueType);
 
 	/// <summary>
 	/// The kind of type.
@@ -72,6 +77,7 @@ public sealed class ServiceTypeInfo
 			ServiceTypeKind.Result => $"result<{ValueType}>",
 			ServiceTypeKind.Array => $"{ValueType}[]",
 			ServiceTypeKind.Map => $"map<{ValueType}>",
+			ServiceTypeKind.Nullable => $"nullable<{ValueType}>",
 			_ => s_primitives.Where(x => x.Kind == Kind).Select(x => x.Name).Single(),
 		};
 	}
@@ -104,6 +110,13 @@ public sealed class ServiceTypeInfo
 		{
 			var valueType = TryParse(mapValueType, findMember);
 			return valueType == null ? null : CreateMap(valueType);
+		}
+
+		var nullableValueType = TryPrefixSuffix(text, "nullable<", ">");
+		if (nullableValueType != null)
+		{
+			var valueType = TryParse(nullableValueType, findMember);
+			return valueType == null || valueType.Kind == ServiceTypeKind.Nullable ? null : CreateNullable(valueType);
 		}
 
 		var member = findMember(text);

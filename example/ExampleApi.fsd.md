@@ -410,6 +410,8 @@ data Preference
 
 	[tag(name: widgets)]
 	namedWidgets: map<Widget>;
+
+	ternary: nullable<boolean>;
 }
 ```
 

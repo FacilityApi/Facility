@@ -370,6 +370,8 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("int64")]
 	[TestCase("decimal")]
 	[TestCase("Enum")]
+	[TestCase("nullable<string>")]
+	[TestCase("nullable<Dto>")]
 	public void BodyResponseFieldInvalidType(string type)
 	{
 		ParseInvalidHttpApi("service TestApi { data Dto {} enum Enum { x } method do {}: { [http(from: body)] id: xyzzy; } }".Replace("xyzzy", type))
@@ -623,6 +625,7 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("result<string>")]
 	[TestCase("string[][]")]
 	[TestCase("Thing")]
+	[TestCase("nullable<string>")]
 	public void NonSimpleFieldTypeNotSupported(string type)
 	{
 		ParseInvalidHttpApi("service TestApi { [http(method: get, path: \"/xyzzy/{id}\")] method do { id: _; }: {} data Thing { id: string; } }".Replace("_", type))

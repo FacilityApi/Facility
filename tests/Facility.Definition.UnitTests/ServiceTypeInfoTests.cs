@@ -54,6 +54,7 @@ public class ServiceTypeInfoTests
 	[TestCase("result<MyDto>", ServiceTypeKind.Result)]
 	[TestCase("MyDto[]", ServiceTypeKind.Array)]
 	[TestCase("map<MyDto>", ServiceTypeKind.Map)]
+	[TestCase("nullable<MyDto>", ServiceTypeKind.Nullable)]
 	public void ContainerOfDtoType(string name, ServiceTypeKind kind)
 	{
 		var service = new ServiceInfo(name: "MyApi",
