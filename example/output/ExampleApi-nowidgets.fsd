@@ -123,6 +123,8 @@ service ExampleApi
 		objects: object[];
 
 		namedStrings: map<string>;
+
+		ternary: nullable<boolean>;
 	}
 
 	/// An obsolete DTO.

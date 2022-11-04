@@ -359,6 +359,8 @@ service ExampleApi
 
 		[tag(name: widgets)]
 		namedWidgets: map<Widget>;
+
+		ternary: nullable<boolean>;
 	}
 
 	/// Identifies a widget field.

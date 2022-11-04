@@ -74,4 +74,9 @@ public enum ServiceTypeKind
 	/// A map.
 	/// </summary>
 	Map,
+
+	/// <summary>
+	/// A nullable.
+	/// </summary>
+	Nullable,
 }

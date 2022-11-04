@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.8.0-beta.1
+
+* Support nullable fields.
+
 ## 2.7.2
 
 * Add .NET 6 target.
