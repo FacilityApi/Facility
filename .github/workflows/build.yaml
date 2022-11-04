@@ -28,6 +28,8 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Set up .NET 6
       uses: actions/setup-dotnet@v3
       with:
