@@ -27,12 +27,23 @@ public sealed class HttpBodyFieldInfo : HttpFieldInfo
 	{
 		foreach (var parameter in GetHttpParameters(fieldInfo))
 		{
-			if (parameter.Name == "code")
-				StatusCode = TryParseStatusCodeInteger(parameter);
-			else if (parameter.Name == "type")
-				ContentType = parameter.Value;
-			else if (parameter.Name != "from")
-				AddInvalidHttpParameterError(parameter);
+			switch (parameter.Name)
+			{
+				case "code":
+					StatusCode = TryParseStatusCodeInteger(parameter);
+					break;
+
+				case "type":
+					ContentType = parameter.Value;
+					break;
+
+				case "from":
+					break;
+
+				default:
+					AddInvalidHttpParameterError(parameter);
+					break;
+			}
 		}
 	}
 }

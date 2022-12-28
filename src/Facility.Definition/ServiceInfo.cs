@@ -170,7 +170,6 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		switch (type.Kind)
 		{
 			case ServiceTypeKind.Enum:
-			{
 				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
@@ -184,10 +183,8 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
 				break;
-			}
 
 			case ServiceTypeKind.String:
-			{
 				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
@@ -198,13 +195,11 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "length", "regex"));
 
 				break;
-			}
 
 			case ServiceTypeKind.Double:
 			case ServiceTypeKind.Int32:
 			case ServiceTypeKind.Int64:
 			case ServiceTypeKind.Decimal:
-			{
 				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
@@ -218,12 +213,10 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
 
 				break;
-			}
 
 			case ServiceTypeKind.Bytes:
 			case ServiceTypeKind.Array:
 			case ServiceTypeKind.Map:
-			{
 				if (validation.LengthRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
 
@@ -237,7 +230,6 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "count"));
 
 				break;
-			}
 
 			default:
 				field.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(attribute));

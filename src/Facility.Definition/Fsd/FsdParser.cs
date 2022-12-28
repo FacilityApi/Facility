@@ -76,7 +76,7 @@ public sealed class FsdParser : ServiceParser
 				.ThenByDescending(x => x.LineColumn.ColumnNumber)
 				.First();
 
-			int GetExpectationNameRank(string name) => name == "')'" || name == "']'" || name == "'}'" || name == "';'" ? 1 : 2;
+			static int GetExpectationNameRank(string name) => name is "')'" or "']'" or "'}'" or "';'" ? 1 : 2;
 			errorList.Add(new ServiceDefinitionError(
 				"expected " + string.Join(" or ", expectation.Names.Distinct().OrderBy(GetExpectationNameRank).ThenBy(x => x, StringComparer.Ordinal)),
 				new ServiceDefinitionPosition(text.Name, expectation.LineColumn.LineNumber, expectation.LineColumn.ColumnNumber)));

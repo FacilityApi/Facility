@@ -24,10 +24,19 @@ public sealed class HttpErrorInfo : HttpElementInfo
 
 		foreach (var parameter in GetHttpParameters(errorInfo))
 		{
-			if (parameter.Name == "code")
-				StatusCode = TryParseStatusCodeInteger(parameter) ?? HttpStatusCode.InternalServerError;
-			else if (parameter.Name != "from")
-				AddInvalidHttpParameterError(parameter);
+			switch (parameter.Name)
+			{
+				case "code":
+					StatusCode = TryParseStatusCodeInteger(parameter) ?? HttpStatusCode.InternalServerError;
+					break;
+
+				case "from":
+					break;
+
+				default:
+					AddInvalidHttpParameterError(parameter);
+					break;
+			}
 		}
 	}
 

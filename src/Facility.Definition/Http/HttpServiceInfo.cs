@@ -66,7 +66,7 @@ public sealed class HttpServiceInfo : HttpElementInfo
 			var httpAttributes = descendant.GetAttributes("http");
 			if (httpAttributes.Count != 0)
 			{
-				if (!(descendant is ServiceInfo || descendant is ServiceMethodInfo || descendant is ServiceFieldInfo || descendant is ServiceErrorSetInfo || descendant is ServiceErrorInfo))
+				if (!(descendant is ServiceInfo or ServiceMethodInfo or ServiceFieldInfo or ServiceErrorSetInfo or ServiceErrorInfo))
 					AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(httpAttributes[0]));
 				else if (httpAttributes.Count > 1)
 					AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(httpAttributes[1]));

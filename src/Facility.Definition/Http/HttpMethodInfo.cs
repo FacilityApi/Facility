@@ -75,23 +75,25 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 		foreach (var methodParameter in GetHttpParameters(methodInfo))
 		{
-			if (methodParameter.Name == "method")
+			switch (methodParameter.Name)
 			{
-				Method = GetHttpMethodFromParameter(methodParameter);
-			}
-			else if (methodParameter.Name == "path")
-			{
-				if (methodParameter.Value.Length == 0 || methodParameter.Value[0] != '/')
-					AddValidationError(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.GetPart(ServicePartKind.Value)?.Position));
-				Path = methodParameter.Value;
-			}
-			else if (methodParameter.Name == "code")
-			{
-				statusCode = TryParseStatusCodeInteger(methodParameter);
-			}
-			else
-			{
-				AddInvalidHttpParameterError(methodParameter);
+				case "method":
+					Method = GetHttpMethodFromParameter(methodParameter);
+					break;
+
+				case "path":
+					if (methodParameter.Value.Length == 0 || methodParameter.Value[0] != '/')
+						AddValidationError(new ServiceDefinitionError("'path' value must start with a slash.", methodParameter.GetPart(ServicePartKind.Value)?.Position));
+					Path = methodParameter.Value;
+					break;
+
+				case "code":
+					statusCode = TryParseStatusCodeInteger(methodParameter);
+					break;
+
+				default:
+					AddInvalidHttpParameterError(methodParameter);
+					break;
 			}
 		}
 
@@ -154,7 +156,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 					AddValidationError(new ServiceDefinitionError("Type not supported by path field.", requestField.Position));
 				requestPathFields.Add(new HttpPathFieldInfo(requestField));
 			}
-			else if (Method == "GET" || Method == "DELETE")
+			else if (Method is "GET" or "DELETE")
 			{
 				if (!IsValidSimpleField(requestField, serviceInfo))
 					AddValidationError(new ServiceDefinitionError("Type not supported by query field.", requestField.Position));
@@ -184,29 +186,31 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		foreach (var responseField in methodInfo.ResponseFields)
 		{
 			var from = responseField.TryGetHttpAttribute()?.TryGetParameterValue("from");
-			if (from == "path" || from == "query")
+			switch (from)
 			{
-				AddValidationError(new ServiceDefinitionError("Response fields must not be path or query fields.", responseField.Position));
-			}
-			else if (from == "body")
-			{
-				if (!IsValidResponseBodyField(responseField, serviceInfo))
-					AddValidationError(new ServiceDefinitionError("Type not supported by body response field.", responseField.Position));
-				responseBodyFields.Add(new HttpBodyFieldInfo(responseField));
-			}
-			else if (from == "header")
-			{
-				if (!IsValidSimpleField(responseField, serviceInfo))
-					AddValidationError(new ServiceDefinitionError("Type not supported by header response field.", responseField.Position));
-				responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
-			}
-			else if (from == "normal" || from is null)
-			{
-				responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
-			}
-			else
-			{
-				AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position));
+				case "path" or "query":
+					AddValidationError(new ServiceDefinitionError("Response fields must not be path or query fields.", responseField.Position));
+					break;
+
+				case "body":
+					if (!IsValidResponseBodyField(responseField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by body response field.", responseField.Position));
+					responseBodyFields.Add(new HttpBodyFieldInfo(responseField));
+					break;
+
+				case "header":
+					if (!IsValidSimpleField(responseField, serviceInfo))
+						AddValidationError(new ServiceDefinitionError("Type not supported by header response field.", responseField.Position));
+					responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
+					break;
+
+				case "normal" or null:
+					responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
+					break;
+
+				default:
+					AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", responseField.Position));
+					break;
 			}
 		}
 
@@ -247,45 +251,26 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		if (fieldTypeKind == ServiceTypeKind.Array)
 			fieldTypeKind = fieldType!.ValueType!.Kind;
 
-		return fieldTypeKind == ServiceTypeKind.String ||
-			fieldTypeKind == ServiceTypeKind.Boolean ||
-			fieldTypeKind == ServiceTypeKind.Double ||
-			fieldTypeKind == ServiceTypeKind.Int32 ||
-			fieldTypeKind == ServiceTypeKind.Int64 ||
-			fieldTypeKind == ServiceTypeKind.Decimal ||
-			fieldTypeKind == ServiceTypeKind.Enum;
+		return fieldTypeKind is ServiceTypeKind.String or ServiceTypeKind.Boolean or ServiceTypeKind.Double or ServiceTypeKind.Int32 or ServiceTypeKind.Int64 or ServiceTypeKind.Decimal or ServiceTypeKind.Enum;
 	}
 
 	private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 	{
 		var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
-		return fieldTypeKind == ServiceTypeKind.Object ||
-			fieldTypeKind == ServiceTypeKind.Error ||
-			fieldTypeKind == ServiceTypeKind.Dto ||
-			fieldTypeKind == ServiceTypeKind.Result ||
-			fieldTypeKind == ServiceTypeKind.Array ||
-			fieldTypeKind == ServiceTypeKind.Map ||
-			fieldTypeKind == ServiceTypeKind.Bytes ||
-			fieldTypeKind == ServiceTypeKind.String;
+		return fieldTypeKind is ServiceTypeKind.Object or ServiceTypeKind.Error or ServiceTypeKind.Dto or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Bytes or ServiceTypeKind.String;
 	}
 
-	private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
-	{
-		return IsValidRequestBodyField(fieldInfo, serviceInfo) ||
-			serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.Boolean;
-	}
+	private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) =>
+		IsValidRequestBodyField(fieldInfo, serviceInfo) ||
+		serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.Boolean;
 
 	private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
 	{
 		foreach (var responseBodyField in responseBodyFields)
 		{
 			// use the status code on the field or the default: OK or NoContent
-			HttpStatusCode bodyStatusCode;
 			var isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField)?.Kind == ServiceTypeKind.Boolean;
-			if (responseBodyField.StatusCode is not null)
-				bodyStatusCode = responseBodyField.StatusCode.Value;
-			else
-				bodyStatusCode = isBoolean ? HttpStatusCode.NoContent : HttpStatusCode.OK;
+			var bodyStatusCode = responseBodyField.StatusCode ?? (isBoolean ? HttpStatusCode.NoContent : HttpStatusCode.OK);
 
 			// 204 and 304 don't support content
 			if (IsNoContentStatusCode(bodyStatusCode) && !isBoolean)
@@ -310,9 +295,9 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		}
 	}
 
-	private static bool IsNoContentMethod(string method) => method == "GET" || method == "DELETE";
+	private static bool IsNoContentMethod(string method) => method is "GET" or "DELETE";
 
-	private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.NotModified;
+	private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode is HttpStatusCode.NoContent or HttpStatusCode.NotModified;
 
 	private static IReadOnlyList<string> GetPathParameterNames(string routePath) =>
 		s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();

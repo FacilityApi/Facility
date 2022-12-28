@@ -103,26 +103,26 @@ public sealed class FsdGenerator : CodeGenerator
 	/// </summary>
 	public override bool SupportsSingleOutput => true;
 
-	private void WriteSummaryAndAttributes<T>(CodeWriter code, T info)
+	private static void WriteSummaryAndAttributes<T>(CodeWriter code, T info)
 		where T : ServiceElementWithAttributesInfo, IServiceHasSummary
 	{
 		WriteSummary(code, info.Summary);
 		WriteAttributes(code, info.Attributes);
 	}
 
-	private void WriteSummary(CodeWriter code, string summary)
+	private static void WriteSummary(CodeWriter code, string summary)
 	{
 		if (!string.IsNullOrEmpty(summary))
 			code.WriteLine($"/// {summary}");
 	}
 
-	private void WriteAttributes(CodeWriter code, IEnumerable<ServiceAttributeInfo> attributes)
+	private static void WriteAttributes(CodeWriter code, IEnumerable<ServiceAttributeInfo> attributes)
 	{
 		foreach (var attribute in attributes)
 			WriteAttribute(code, attribute);
 	}
 
-	private void WriteAttribute(CodeWriter code, ServiceAttributeInfo attribute)
+	private static void WriteAttribute(CodeWriter code, ServiceAttributeInfo attribute)
 	{
 		var parameters = string.Join(", ", attribute.Parameters.Select(RenderAttributeParameter));
 		if (parameters.Length != 0)
@@ -130,10 +130,10 @@ public sealed class FsdGenerator : CodeGenerator
 		code.WriteLine($"[{attribute.Name}{parameters}]");
 	}
 
-	private string RenderAttributeParameter(ServiceAttributeParameterInfo parameter) =>
+	private static string RenderAttributeParameter(ServiceAttributeParameterInfo parameter) =>
 		$"{parameter.Name}: {RenderAttributeParameterValue(parameter)}";
 
-	private string RenderAttributeParameterValue(ServiceAttributeParameterInfo parameter)
+	private static string RenderAttributeParameterValue(ServiceAttributeParameterInfo parameter)
 	{
 		if (s_unquotedAttributeValueRegex.IsMatch(parameter.Value))
 			return parameter.Value;
@@ -141,7 +141,7 @@ public sealed class FsdGenerator : CodeGenerator
 		return "\"" + s_escapeAttributeValueRegex.Replace(parameter.Value, RenderAttributeValueEscape) + "\"";
 	}
 
-	private string RenderAttributeValueEscape(Match match) =>
+	private static string RenderAttributeValueEscape(Match match) =>
 		match.Value[0] switch
 		{
 			'\\' => @"\\",
@@ -154,7 +154,7 @@ public sealed class FsdGenerator : CodeGenerator
 			var ch => $@"\u{(int) ch:x4}",
 		};
 
-	private void WriteFields(CodeWriter code, IEnumerable<ServiceFieldInfo> fields)
+	private static void WriteFields(CodeWriter code, IEnumerable<ServiceFieldInfo> fields)
 	{
 		foreach (var field in fields)
 		{
@@ -170,7 +170,7 @@ public sealed class FsdGenerator : CodeGenerator
 		}
 	}
 
-	private void WriteEnumValues(CodeWriter code, IEnumerable<ServiceEnumValueInfo> enumValues)
+	private static void WriteEnumValues(CodeWriter code, IEnumerable<ServiceEnumValueInfo> enumValues)
 	{
 		foreach (var enumValue in enumValues)
 		{
@@ -180,7 +180,7 @@ public sealed class FsdGenerator : CodeGenerator
 		}
 	}
 
-	private void WriteErrors(CodeWriter code, IEnumerable<ServiceErrorInfo> errors)
+	private static void WriteErrors(CodeWriter code, IEnumerable<ServiceErrorInfo> errors)
 	{
 		foreach (var error in errors)
 		{

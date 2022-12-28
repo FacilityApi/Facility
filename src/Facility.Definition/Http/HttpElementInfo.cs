@@ -40,7 +40,7 @@ public abstract class HttpElementInfo
 	private protected HttpStatusCode? TryParseStatusCodeInteger(ServiceAttributeParameterInfo parameter)
 	{
 		int.TryParse(parameter.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var valueAsInteger);
-		if (valueAsInteger < 200 || valueAsInteger >= 599)
+		if (valueAsInteger is < 200 or >= 599)
 		{
 			AddValidationError(new ServiceDefinitionError($"'{parameter.Name}' parameter must be an integer between 200 and 599.", parameter.GetPart(ServicePartKind.Value)?.Position));
 			return null;

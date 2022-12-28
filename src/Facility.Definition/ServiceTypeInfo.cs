@@ -10,7 +10,7 @@ public sealed class ServiceTypeInfo
 	/// </summary>
 	public static ServiceTypeInfo CreatePrimitive(ServiceTypeKind kind)
 	{
-		if (kind == ServiceTypeKind.Dto || kind == ServiceTypeKind.Enum || kind == ServiceTypeKind.Result || kind == ServiceTypeKind.Array || kind == ServiceTypeKind.Map || kind == ServiceTypeKind.Nullable)
+		if (kind is ServiceTypeKind.Dto or ServiceTypeKind.Enum or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Nullable)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Kind must be primitive.");
 		return new ServiceTypeInfo(kind);
 	}

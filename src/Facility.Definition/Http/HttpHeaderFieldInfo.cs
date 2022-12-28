@@ -22,10 +22,19 @@ public sealed class HttpHeaderFieldInfo : HttpFieldInfo
 
 		foreach (var parameter in GetHttpParameters(fieldInfo))
 		{
-			if (parameter.Name == "name")
-				Name = parameter.Value;
-			else if (parameter.Name != "from")
-				AddInvalidHttpParameterError(parameter);
+			switch (parameter.Name)
+			{
+				case "name":
+					Name = parameter.Value;
+					break;
+
+				case "from":
+					break;
+
+				default:
+					AddInvalidHttpParameterError(parameter);
+					break;
+			}
 		}
 	}
 }

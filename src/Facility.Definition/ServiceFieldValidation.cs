@@ -25,6 +25,7 @@ public sealed class ServiceFieldValidation
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					break;
+
 				case "count":
 					var count = GetRange(attribute, parameter);
 					if (count is not null && count.IsValid() && count.Minimum is null or >= 0)
@@ -32,6 +33,7 @@ public sealed class ServiceFieldValidation
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					break;
+
 				case "value":
 					var value = GetRange(attribute, parameter);
 					if (value is not null && value.IsValid())
@@ -39,9 +41,11 @@ public sealed class ServiceFieldValidation
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					break;
+
 				case "regex":
 					RegexPattern = parameter.Value;
 					break;
+
 				default:
 					parameter.AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(parameter.Name, parameter));
 					break;
