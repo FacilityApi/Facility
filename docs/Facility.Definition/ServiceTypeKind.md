@@ -24,6 +24,7 @@ public enum ServiceTypeKind
 | Result | `11` | A service result. |
 | Array | `12` | An array. |
 | Map | `13` | A map. |
+| Nullable | `14` | A nullable. |
 
 ## See Also
 

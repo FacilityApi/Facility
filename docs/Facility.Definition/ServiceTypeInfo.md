@@ -14,6 +14,7 @@ public sealed class ServiceTypeInfo
 | static [CreateDto](ServiceTypeInfo/CreateDto.md)(…) | Create a DTO type. |
 | static [CreateEnum](ServiceTypeInfo/CreateEnum.md)(…) | Create an enumerated type. |
 | static [CreateMap](ServiceTypeInfo/CreateMap.md)(…) | Create a map type. |
+| static [CreateNullable](ServiceTypeInfo/CreateNullable.md)(…) | Create a nullable type. |
 | static [CreatePrimitive](ServiceTypeInfo/CreatePrimitive.md)(…) | Create a primitive type of the specified kind. |
 | static [CreateResult](ServiceTypeInfo/CreateResult.md)(…) | Create a service result type. |
 | [Dto](ServiceTypeInfo/Dto.md) { get; } | The DTO (when Kind is Dto). |
