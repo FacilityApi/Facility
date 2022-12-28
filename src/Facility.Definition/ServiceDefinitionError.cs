@@ -27,5 +27,5 @@ public sealed class ServiceDefinitionError
 	/// <summary>
 	/// Returns a string with the position and the error message.
 	/// </summary>
-	public override string ToString() => Position != null ? $"{Position}: {Message}" : Message;
+	public override string ToString() => Position is not null ? $"{Position}: {Message}" : Message;
 }

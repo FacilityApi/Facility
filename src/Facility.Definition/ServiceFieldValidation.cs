@@ -20,21 +20,21 @@ public sealed class ServiceFieldValidation
 			{
 				case "length":
 					var length = GetRange(attribute, parameter);
-					if (length != null && length.IsValid() && length.Minimum is null or >= 0)
+					if (length is not null && length.IsValid() && length.Minimum is null or >= 0)
 						LengthRange = length;
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					break;
 				case "count":
 					var count = GetRange(attribute, parameter);
-					if (count != null && count.IsValid() && count.Minimum is null or >= 0)
+					if (count is not null && count.IsValid() && count.Minimum is null or >= 0)
 						CountRange = count;
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 					break;
 				case "value":
 					var value = GetRange(attribute, parameter);
-					if (value != null && value.IsValid())
+					if (value is not null && value.IsValid())
 						ValueRange = value;
 					else
 						parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
@@ -86,7 +86,7 @@ public sealed class ServiceFieldValidation
 		if (bounds.Length == 1)
 		{
 			int? value = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
-			if (value == null)
+			if (value is null)
 			{
 				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
@@ -98,7 +98,7 @@ public sealed class ServiceFieldValidation
 		if (string.IsNullOrEmpty(first) && !string.IsNullOrEmpty(second))
 		{
 			int? upperBound = int.TryParse(second, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
-			if (upperBound == null)
+			if (upperBound is null)
 			{
 				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
@@ -110,7 +110,7 @@ public sealed class ServiceFieldValidation
 		if (!string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
 		{
 			int? lowerBound = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue) ? intValue : null;
-			if (lowerBound == null)
+			if (lowerBound is null)
 			{
 				parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 				return null;
@@ -121,7 +121,7 @@ public sealed class ServiceFieldValidation
 
 		int? minimum = int.TryParse(first, NumberStyles.Number, CultureInfo.InvariantCulture, out var minValue) ? minValue : null;
 		int? maximum = int.TryParse(second, NumberStyles.Number, CultureInfo.InvariantCulture, out var maxValue) ? maxValue : null;
-		if (minimum == null || maximum == null)
+		if (minimum is null || maximum is null)
 		{
 			parameter.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeValueError(attribute.Name, parameter));
 			return null;

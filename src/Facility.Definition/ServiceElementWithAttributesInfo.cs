@@ -52,7 +52,7 @@ public abstract class ServiceElementWithAttributesInfo : ServiceElementInfo
 		if (obsoleteAttributes.Count > 1)
 			AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(obsoleteAttributes[1]));
 		var obsoleteAttribute = obsoleteAttributes.Count == 0 ? null : obsoleteAttributes[0];
-		if (obsoleteAttribute != null)
+		if (obsoleteAttribute is not null)
 		{
 			IsObsolete = true;
 
@@ -78,7 +78,7 @@ public abstract class ServiceElementWithAttributesInfo : ServiceElementInfo
 					AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError(tagParameter.Name, tagParameter));
 			}
 
-			if (tagName != null)
+			if (tagName is not null)
 				tagNames.Add(tagName);
 			else
 				AddValidationError(new ServiceDefinitionError("'tag' attribute is missing required 'name' parameter.", tagAttribute.Position));

@@ -62,7 +62,7 @@ public abstract class ServiceElementInfo
 
 	protected internal void AddValidationError(ServiceDefinitionError error)
 	{
-		if (error == null)
+		if (error is null)
 			throw new ArgumentNullException(nameof(error));
 
 		m_validationErrors.Add(error);
@@ -70,7 +70,7 @@ public abstract class ServiceElementInfo
 
 	private protected void AddValidationErrors(IEnumerable<ServiceDefinitionError> errors)
 	{
-		if (errors == null)
+		if (errors is null)
 			throw new ArgumentNullException(nameof(errors));
 
 		foreach (var error in errors)

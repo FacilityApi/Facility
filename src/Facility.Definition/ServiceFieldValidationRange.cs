@@ -12,7 +12,7 @@ public sealed class ServiceFieldValidationRange
 	/// <param name="maximum">The inclusive end of the range.</param>
 	public ServiceFieldValidationRange(int? minimum, int? maximum)
 	{
-		if (minimum == null && maximum == null)
+		if (minimum is null && maximum is null)
 			throw new ArgumentException($"{nameof(minimum)} or {nameof(maximum)} must be specified");
 
 		Minimum = minimum;
@@ -29,5 +29,5 @@ public sealed class ServiceFieldValidationRange
 	/// </summary>
 	public int? Maximum { get; }
 
-	internal bool IsValid() => Minimum == null || Maximum == null || Minimum <= Maximum;
+	internal bool IsValid() => Minimum is null || Maximum is null || Minimum <= Maximum;
 }

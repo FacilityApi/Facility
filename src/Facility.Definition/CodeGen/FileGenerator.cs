@@ -24,24 +24,24 @@ public static class FileGenerator
 	/// <returns>The number of updated files.</returns>
 	public static int GenerateFiles(ServiceParser parser, CodeGenerator generator, FileGeneratorSettings settings)
 	{
-		if (parser == null)
+		if (parser is null)
 			throw new ArgumentNullException(nameof(parser));
-		if (generator == null)
+		if (generator is null)
 			throw new ArgumentNullException(nameof(generator));
 
-		if (settings.InputPath == null)
+		if (settings.InputPath is null)
 			throw new ArgumentException("InputPath required.", nameof(settings));
-		if (settings.OutputPath == null)
+		if (settings.OutputPath is null)
 			throw new ArgumentException("OutputPath required.", nameof(settings));
 
-		if (settings.IndentText != null)
+		if (settings.IndentText is not null)
 		{
 			if (!generator.RespectsIndentText)
 				throw new ArgumentException("Generator does not support IndentText setting.");
 			generator.IndentText = settings.IndentText;
 		}
 
-		if (settings.NewLine != null)
+		if (settings.NewLine is not null)
 		{
 			if (!generator.RespectsNewLine)
 				throw new ArgumentException("Generator does not support NewLine setting.");
@@ -68,7 +68,7 @@ public static class FileGenerator
 
 		var service = parser.ParseDefinition(input);
 
-		if (settings.ExcludeTags != null)
+		if (settings.ExcludeTags is not null)
 		{
 			foreach (var excludeTag in settings.ExcludeTags)
 				service = service.ExcludeTag(excludeTag);
@@ -142,7 +142,7 @@ public static class FileGenerator
 				var outputFilePath = outputIsFile ? settings.OutputPath : Path.Combine(settings.OutputPath, fileToWrite.Name);
 
 				var outputFileDirectoryPath = Path.GetDirectoryName(outputFilePath);
-				if (outputFileDirectoryPath != null && outputFileDirectoryPath.Length != 0 && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
+				if (outputFileDirectoryPath is not null && outputFileDirectoryPath.Length != 0 && outputFileDirectoryPath != settings.OutputPath && !Directory.Exists(outputFileDirectoryPath))
 					Directory.CreateDirectory(outputFileDirectoryPath);
 
 				if (writeToConsole)

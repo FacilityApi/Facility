@@ -21,7 +21,7 @@ public sealed class ServiceFieldInfo : ServiceElementWithAttributesInfo, IServic
 		if (requiredAttributes.Count > 1)
 			AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(requiredAttributes[1]));
 		var requiredAttribute = requiredAttributes.Count == 0 ? null : requiredAttributes[0];
-		if (requiredAttribute != null)
+		if (requiredAttribute is not null)
 		{
 			IsRequired = true;
 
@@ -34,7 +34,7 @@ public sealed class ServiceFieldInfo : ServiceElementWithAttributesInfo, IServic
 			AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(validateAttributes[1]));
 
 		var validateAttribute = validateAttributes.Count == 0 ? null : validateAttributes[0];
-		if (validateAttribute != null)
+		if (validateAttribute is not null)
 		{
 			Validation = new ServiceFieldValidation(validateAttribute);
 		}

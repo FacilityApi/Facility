@@ -25,7 +25,7 @@ public sealed class HttpErrorSetInfo : HttpElementInfo
 		ServiceErrorSet = errorSetInfo;
 
 		var parameter = GetHttpParameters(errorSetInfo).FirstOrDefault();
-		if (parameter != null)
+		if (parameter is not null)
 			AddInvalidHttpParameterError(parameter);
 
 		Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();

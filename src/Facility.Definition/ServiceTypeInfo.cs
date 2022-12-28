@@ -84,43 +84,43 @@ public sealed class ServiceTypeInfo
 
 	internal static ServiceTypeInfo? TryParse(string text, Func<string, ServiceMemberInfo?> findMember)
 	{
-		if (text == null)
+		if (text is null)
 			throw new ArgumentNullException(nameof(text));
 
 		var primitive = s_primitives.FirstOrDefault(x => text == x.Name);
-		if (primitive.Name != null)
+		if (primitive.Name is not null)
 			return CreatePrimitive(primitive.Kind);
 
 		var resultValueType = TryPrefixSuffix(text, "result<", ">");
-		if (resultValueType != null)
+		if (resultValueType is not null)
 		{
 			var valueType = TryParse(resultValueType, findMember);
-			return valueType == null ? null : CreateResult(valueType);
+			return valueType is null ? null : CreateResult(valueType);
 		}
 
 		var arrayValueType = TryPrefixSuffix(text, "", "[]");
-		if (arrayValueType != null)
+		if (arrayValueType is not null)
 		{
 			var valueType = TryParse(arrayValueType, findMember);
-			return valueType == null ? null : CreateArray(valueType);
+			return valueType is null ? null : CreateArray(valueType);
 		}
 
 		var mapValueType = TryPrefixSuffix(text, "map<", ">");
-		if (mapValueType != null)
+		if (mapValueType is not null)
 		{
 			var valueType = TryParse(mapValueType, findMember);
-			return valueType == null ? null : CreateMap(valueType);
+			return valueType is null ? null : CreateMap(valueType);
 		}
 
 		var nullableValueType = TryPrefixSuffix(text, "nullable<", ">");
-		if (nullableValueType != null)
+		if (nullableValueType is not null)
 		{
 			var valueType = TryParse(nullableValueType, findMember);
-			return valueType == null || valueType.Kind == ServiceTypeKind.Nullable ? null : CreateNullable(valueType);
+			return valueType is null || valueType.Kind == ServiceTypeKind.Nullable ? null : CreateNullable(valueType);
 		}
 
 		var member = findMember(text);
-		if (member != null)
+		if (member is not null)
 		{
 			if (member is ServiceDtoInfo dto)
 				return CreateDto(dto);

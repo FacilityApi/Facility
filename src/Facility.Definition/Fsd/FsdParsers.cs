@@ -161,8 +161,8 @@ internal static class FsdParsers
 		from keyword in KeywordParser("service")
 		from name in NameParser.Named("service name")
 		from start in PunctuationParser("{").OrDefault()
-		from items in ServiceItemParser(context).AtLeast(start != null ? 0 : 1)
-		from end in start != null ? PunctuationParser("}") : Parser.Success("").Positioned()
+		from items in ServiceItemParser(context).AtLeast(start is not null ? 0 : 1)
+		from end in start is not null ? PunctuationParser("}") : Parser.Success("").Positioned()
 		select new ServiceInfo(name.Value, items,
 			attributes.SelectMany(x => x),
 			BuildSummary(comments1, comments2),

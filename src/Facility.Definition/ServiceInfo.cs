@@ -17,7 +17,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		ValidateNoDuplicateNames(Members, "service member");
 
 		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo));
-		if (unsupportedMember != null)
+		if (unsupportedMember is not null)
 			throw new InvalidOperationException($"Unsupported member type: {unsupportedMember.GetType()}");
 
 		m_membersByName = Members.GroupBy(x => x.Name).ToDictionary(x => x.First().Name, x => x.First());
@@ -26,7 +26,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		foreach (var fieldGroup in GetDescendants().OfType<ServiceFieldInfo>().GroupBy(x => x.TypeName))
 		{
 			var type = ServiceTypeInfo.TryParse(fieldGroup.Key, FindMember);
-			if (type == null)
+			if (type is null)
 			{
 				AddValidationErrors(fieldGroup.Select(x => new ServiceDefinitionError($"Unknown field type '{x.TypeName}'.", x.GetPart(ServicePartKind.TypeName)?.Position)));
 			}
@@ -162,7 +162,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 
 	private static void EnsureProperValidateUsage(ServiceTypeInfo type, ServiceFieldInfo field)
 	{
-		if (field.Validation == null) return;
+		if (field.Validation is null) return;
 
 		var validation = field.Validation!;
 		var attribute = validation.Attribute;
@@ -171,16 +171,16 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		{
 			case ServiceTypeKind.Enum:
 			{
-				if (validation.CountRange != null)
+				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
-				if (validation.LengthRange != null)
+				if (validation.LengthRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
 
-				if (validation.ValueRange != null)
+				if (validation.ValueRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
 
-				if (validation.RegexPattern != null)
+				if (validation.RegexPattern is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
 				break;
@@ -188,13 +188,13 @@ public sealed class ServiceInfo : ServiceMemberInfo
 
 			case ServiceTypeKind.String:
 			{
-				if (validation.CountRange != null)
+				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
-				if (validation.ValueRange != null)
+				if (validation.ValueRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
 
-				if (validation.LengthRange == null && validation.RegexPattern == null)
+				if (validation.LengthRange is null && validation.RegexPattern is null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "length", "regex"));
 
 				break;
@@ -205,16 +205,16 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			case ServiceTypeKind.Int64:
 			case ServiceTypeKind.Decimal:
 			{
-				if (validation.CountRange != null)
+				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 
-				if (validation.LengthRange != null)
+				if (validation.LengthRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
 
-				if (validation.RegexPattern != null)
+				if (validation.RegexPattern is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
-				if (validation.ValueRange == null)
+				if (validation.ValueRange is null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "value"));
 
 				break;
@@ -224,16 +224,16 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			case ServiceTypeKind.Array:
 			case ServiceTypeKind.Map:
 			{
-				if (validation.LengthRange != null)
+				if (validation.LengthRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "length"));
 
-				if (validation.RegexPattern != null)
+				if (validation.RegexPattern is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "regex"));
 
-				if (validation.ValueRange != null)
+				if (validation.ValueRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "value"));
 
-				if (validation.CountRange == null)
+				if (validation.CountRange is null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateMissingAttributeParametersError(attribute, "count"));
 
 				break;

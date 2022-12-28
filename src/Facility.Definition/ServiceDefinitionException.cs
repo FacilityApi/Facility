@@ -11,7 +11,7 @@ public sealed class ServiceDefinitionException : Exception
 	public ServiceDefinitionException(IEnumerable<ServiceDefinitionError> errors, Exception? innerException = null)
 		: base("", innerException)
 	{
-		if (errors == null)
+		if (errors is null)
 			throw new ArgumentNullException(nameof(errors));
 
 		Errors = errors.ToReadOnlyList();
@@ -33,7 +33,7 @@ public sealed class ServiceDefinitionException : Exception
 		get
 		{
 			var firstError = Errors[0];
-			return firstError.Position != null ? $"{firstError.Position}: {firstError.Message}" : firstError.Message;
+			return firstError.Position is not null ? $"{firstError.Position}: {firstError.Message}" : firstError.Message;
 		}
 	}
 }

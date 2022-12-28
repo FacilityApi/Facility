@@ -58,14 +58,17 @@ public abstract class CodeGenerator
 	/// </summary>
 	protected CodeGenFile CreateFile(string name, Action<CodeWriter> writeTo)
 	{
+		if (writeTo is null)
+			throw new ArgumentNullException(nameof(writeTo));
+
 		using var stringWriter = new StringWriter();
 
-		if (NewLine != null)
+		if (NewLine is not null)
 			stringWriter.NewLine = NewLine;
 
 		var code = new CodeWriter(stringWriter);
 
-		if (IndentText != null)
+		if (IndentText is not null)
 			code.IndentText = IndentText;
 
 		writeTo(code);

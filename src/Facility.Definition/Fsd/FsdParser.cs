@@ -35,7 +35,7 @@ public sealed class FsdParser : ServiceParser
 			foreach (var remarksSectionPair in remarksSectionsByName)
 			{
 				var sectionName = remarksSectionPair.Key;
-				if (service.Name != sectionName && service.FindMember(sectionName) == null)
+				if (service.Name != sectionName && service.FindMember(sectionName) is null)
 					errorList.Add(new ServiceDefinitionError($"Unused remarks heading: {sectionName}", remarksSectionPair.Value.Position));
 			}
 
@@ -96,7 +96,7 @@ public sealed class FsdParser : ServiceParser
 		while (true)
 		{
 			var line = reader.ReadLine();
-			if (line == null)
+			if (line is null)
 			{
 				AddRemarksSection();
 				break;
@@ -163,10 +163,10 @@ public sealed class FsdParser : ServiceParser
 			var line = reader.ReadLine();
 			lineNumber++;
 
-			var match = line == null ? null : s_markdownHeading.Match(line);
-			if (match == null || match.Success)
+			var match = line is null ? null : s_markdownHeading.Match(line);
+			if (match is null || match.Success)
 			{
-				if (name == null)
+				if (name is null)
 				{
 					definitionLines.AddRange(lines);
 				}
@@ -184,7 +184,7 @@ public sealed class FsdParser : ServiceParser
 						remarksSections.Add(name, new FsdRemarksSection(lines, position));
 				}
 
-				if (match == null)
+				if (match is null)
 					break;
 
 				name = line!.Substring(match.Index + match.Length).Trim();

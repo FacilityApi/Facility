@@ -53,7 +53,7 @@ public sealed class ServiceDefinitionPosition
 
 	private (int LineNumber, int ColumnNumber) GetLineColumn()
 	{
-		if (m_getLineColumn != null)
+		if (m_getLineColumn is not null)
 		{
 			m_lineColumn = m_getLineColumn();
 			m_getLineColumn = null;

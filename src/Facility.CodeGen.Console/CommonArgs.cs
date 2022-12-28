@@ -1,5 +1,4 @@
 using System.Globalization;
-using ArgsReading;
 
 namespace Facility.CodeGen.Console;
 
@@ -18,7 +17,7 @@ internal static class CommonArgs
 	public static string? ReadIndentOption(this ArgsReader args)
 	{
 		var value = args.ReadOption("indent");
-		if (value == null)
+		if (value is null)
 			return null;
 
 		if (value == "tab")
@@ -49,7 +48,7 @@ internal static class CommonArgs
 		while (true)
 		{
 			var value = args.ReadOption("exclude-tag");
-			if (value == null)
+			if (value is null)
 				break;
 			values.Add(value);
 		}

@@ -69,13 +69,13 @@ public sealed class CodeWriter
 	/// </summary>
 	public IDisposable Block(string? before, string? after)
 	{
-		if (before != null)
+		if (before is not null)
 			WriteLine(before);
 		var indent = Indent();
 		return new Scope(() =>
 		{
 			indent.Dispose();
-			if (after != null)
+			if (after is not null)
 				WriteLine(after);
 		});
 	}
@@ -137,7 +137,7 @@ public sealed class CodeWriter
 
 		public void Dispose()
 		{
-			if (m_action != null)
+			if (m_action is not null)
 			{
 				m_action();
 				m_action = null;

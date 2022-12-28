@@ -131,10 +131,10 @@ public sealed class HttpMethodInfo : HttpElementInfo
 			{
 				if (!IsValidRequestBodyField(requestField, serviceInfo))
 					AddValidationError(new ServiceDefinitionError("Type not supported by body request field.", requestField.Position));
-				if (requestBodyField != null)
+				if (requestBodyField is not null)
 					AddValidationError(new ServiceDefinitionError("Requests do not support multiple body fields.", requestField.Position));
 				var bodyInfo = new HttpBodyFieldInfo(requestField);
-				if (bodyInfo.StatusCode != null)
+				if (bodyInfo.StatusCode is not null)
 					AddValidationError(new ServiceDefinitionError("Request fields do not support status codes.", requestField.Position));
 				requestBodyField = bodyInfo;
 			}
@@ -144,7 +144,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 					AddValidationError(new ServiceDefinitionError("Type not supported by header request field.", requestField.Position));
 				requestHeaderFields.Add(new HttpHeaderFieldInfo(requestField));
 			}
-			else if (from != null)
+			else if (from is not null)
 			{
 				AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", requestField.Position));
 			}
@@ -168,7 +168,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 		if (pathParameterNames.Count != 0)
 			AddValidationError(new ServiceDefinitionError($"Unused path parameter '{pathParameterNames.First()}'.", methodInfo.Position));
-		if (requestBodyField != null && requestNormalFields.Count != 0)
+		if (requestBodyField is not null && requestNormalFields.Count != 0)
 			AddValidationError(new ServiceDefinitionError("A request cannot have a normal field and a body field.", requestBodyField.ServiceField.Position));
 
 		PathFields = requestPathFields;
@@ -200,7 +200,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 					AddValidationError(new ServiceDefinitionError("Type not supported by header response field.", responseField.Position));
 				responseHeaderFields.Add(new HttpHeaderFieldInfo(responseField));
 			}
-			else if (from == "normal" || from == null)
+			else if (from == "normal" || from is null)
 			{
 				responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
 			}
@@ -214,7 +214,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		ValidResponses = GetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode).ToList();
 
 		var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
-		if (duplicateStatusCode != null)
+		if (duplicateStatusCode is not null)
 			AddValidationError(new ServiceDefinitionError($"Multiple handlers for status code {(int) duplicateStatusCode.Key}.", methodInfo.Position));
 	}
 
@@ -222,7 +222,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 	/// The children of the element, if any.
 	/// </summary>
 	public override IEnumerable<HttpElementInfo> GetChildren() => PathFields.AsEnumerable<HttpElementInfo>()
-		.Concat(QueryFields).Concat(RequestNormalFields).Concat(new[] { RequestBodyField }.Where(x => x != null))
+		.Concat(QueryFields).Concat(RequestNormalFields).Concat(new[] { RequestBodyField }.Where(x => x is not null))
 		.Concat(RequestHeaderFields).Concat(ResponseHeaderFields).Concat(ValidResponses)!;
 
 	private string GetHttpMethodFromParameter(ServiceAttributeParameterInfo parameter)
@@ -241,7 +241,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 	{
 		var fieldType = serviceInfo.GetFieldType(fieldInfo);
 		var fieldTypeKind = fieldType?.Kind;
-		if (fieldTypeKind == null)
+		if (fieldTypeKind is null)
 			return false;
 
 		if (fieldTypeKind == ServiceTypeKind.Array)
@@ -282,7 +282,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 			// use the status code on the field or the default: OK or NoContent
 			HttpStatusCode bodyStatusCode;
 			var isBoolean = serviceInfo.GetFieldType(responseBodyField.ServiceField)?.Kind == ServiceTypeKind.Boolean;
-			if (responseBodyField.StatusCode != null)
+			if (responseBodyField.StatusCode is not null)
 				bodyStatusCode = responseBodyField.StatusCode.Value;
 			else
 				bodyStatusCode = isBoolean ? HttpStatusCode.NoContent : HttpStatusCode.OK;
@@ -296,11 +296,11 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 		// if the DTO has a status code, or there are any normal fields, or there are no body fields, the DTO must represent a status code
 		HttpStatusCode? responseStatusCode = null;
-		if (statusCode != null)
+		if (statusCode is not null)
 			responseStatusCode = statusCode;
 		else if (responseNormalFields.Count != 0 || responseBodyFields.Count == 0)
 			responseStatusCode = HttpStatusCode.OK;
-		if (responseStatusCode != null)
+		if (responseStatusCode is not null)
 		{
 			// 204 and 304 don't support content
 			if (IsNoContentStatusCode(responseStatusCode) && responseNormalFields.Count != 0)
@@ -321,9 +321,9 @@ public sealed class HttpMethodInfo : HttpElementInfo
 	{
 		public int Compare(HttpMethodInfo? left, HttpMethodInfo? right)
 		{
-			if (left == null)
-				return right == null ? 0 : -1;
-			if (right == null)
+			if (left is null)
+				return right is null ? 0 : -1;
+			if (right is null)
 				return 1;
 
 			var leftParts = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -333,11 +333,11 @@ public sealed class HttpMethodInfo : HttpElementInfo
 			{
 				var leftPart = partIndex < leftParts.Length ? leftParts[partIndex] : null;
 				var rightPart = partIndex < rightParts.Length ? rightParts[partIndex] : null;
-				if (leftPart == null && rightPart == null)
+				if (leftPart is null && rightPart is null)
 					break;
-				if (leftPart == null)
+				if (leftPart is null)
 					return -1;
-				if (rightPart == null)
+				if (rightPart is null)
 					return 1;
 
 				var leftPlaceholder = leftPart[0] == '{';

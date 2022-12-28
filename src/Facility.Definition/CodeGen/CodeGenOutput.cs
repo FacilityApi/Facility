@@ -9,7 +9,7 @@ public sealed class CodeGenOutput
 	/// Creates a single-output instance.
 	/// </summary>
 	public CodeGenOutput(CodeGenFile? file)
-		: this(files: file == null ? null : new[] { file }, patternsToClean: null)
+		: this(files: file is null ? null : new[] { file }, patternsToClean: null)
 	{
 	}
 
@@ -22,7 +22,7 @@ public sealed class CodeGenOutput
 		PatternsToClean = patternsToClean ?? Array.Empty<CodeGenPattern>();
 
 		var duplicate = Files.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(x => x.Skip(1).Any());
-		if (duplicate != null)
+		if (duplicate is not null)
 			throw new ArgumentException($"File names must be unique but '{duplicate.Key}' is duplicated.", nameof(files));
 	}
 

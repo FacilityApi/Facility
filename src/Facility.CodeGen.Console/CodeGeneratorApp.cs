@@ -1,5 +1,4 @@
 using System.Reflection;
-using ArgsReading;
 using Facility.Definition;
 using Facility.Definition.CodeGen;
 using Facility.Definition.Fsd;
@@ -45,11 +44,11 @@ public abstract class CodeGeneratorApp
 			settings.IgnoreNewLines = isVerify;
 
 			settings.InputPath = argsReader.ReadArgument();
-			if (settings.InputPath == null)
+			if (settings.InputPath is null)
 				throw new ArgsReaderException("Missing input path.");
 
 			settings.OutputPath = argsReader.ReadArgument();
-			if (settings.OutputPath == null)
+			if (settings.OutputPath is null)
 				throw new ArgsReaderException("Missing output path.");
 
 			argsReader.VerifyComplete();

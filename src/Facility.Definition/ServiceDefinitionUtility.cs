@@ -38,7 +38,7 @@ public static class ServiceDefinitionUtility
 	/// <summary>
 	/// Returns true if the name is a valid service element name.
 	/// </summary>
-	public static bool IsValidName(string? name) => name != null && s_validNameRegex.IsMatch(name);
+	public static bool IsValidName(string? name) => name is not null && s_validNameRegex.IsMatch(name);
 
 	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
 
