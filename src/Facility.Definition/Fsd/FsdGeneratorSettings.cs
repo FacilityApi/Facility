@@ -7,4 +7,8 @@ namespace Facility.Definition.Fsd;
 /// </summary>
 public sealed class FsdGeneratorSettings : FileGeneratorSettings
 {
+	/// <summary>
+	/// True to generate a file-scoped service (instead of using braces).
+	/// </summary>
+	public bool FileScopedService { get; set; }
 }

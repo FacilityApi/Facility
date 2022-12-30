@@ -29,9 +29,11 @@ internal static class TestUtility
 		return errors;
 	}
 
-	public static string[] GenerateFsd(ServiceInfo service)
+	public static string[] GenerateFsd(ServiceInfo service, FsdGeneratorSettings? settings = null)
 	{
 		var generator = new FsdGenerator { GeneratorName = "TestUtility" };
+		if (settings is not null)
+			generator.ApplySettings(settings);
 		return generator.GenerateOutput(service).Files[0].Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 	}
 }

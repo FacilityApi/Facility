@@ -17,6 +17,11 @@ public sealed class FsdGenerator : CodeGenerator
 		FileGenerator.GenerateFiles(new FsdGenerator { GeneratorName = nameof(FsdGenerator) }, settings);
 
 	/// <summary>
+	/// True to generate a file-scoped service (instead of using braces).
+	/// </summary>
+	public bool FileScopedService { get; set; }
+
+	/// <summary>
 	/// Generates an FSD file for a service definition.
 	/// </summary>
 	public override CodeGenOutput GenerateOutput(ServiceInfo service)
@@ -34,14 +39,18 @@ public sealed class FsdGenerator : CodeGenerator
 				remarks.AddRange(new[] { "", $"# {service.Name}", "" }.Concat(service.Remarks));
 
 			WriteSummaryAndAttributes(code, service);
-			code.WriteLine($"service {service.Name}");
-			using (code.Block())
+			code.WriteLine($"service {service.Name}{(FileScopedService ? ";" : "")}");
+			using (FileScopedService ? null : code.Block())
 			{
 				foreach (var member in service.Members)
 				{
+					if (FileScopedService)
+						code.WriteLine();
+					else
+						code.WriteLineSkipOnce();
+
 					if (member is ServiceMethodInfo method)
 					{
-						code.WriteLineSkipOnce();
 						WriteSummaryAndAttributes(code, method);
 						code.WriteLine($"method {method.Name}");
 						using (code.Block("{", "}:"))
@@ -54,7 +63,6 @@ public sealed class FsdGenerator : CodeGenerator
 					}
 					else if (member is ServiceDtoInfo dto)
 					{
-						code.WriteLineSkipOnce();
 						WriteSummaryAndAttributes(code, dto);
 						code.WriteLine($"data {dto.Name}");
 						using (code.Block())
@@ -65,7 +73,6 @@ public sealed class FsdGenerator : CodeGenerator
 					}
 					else if (member is ServiceEnumInfo enumInfo)
 					{
-						code.WriteLineSkipOnce();
 						WriteSummaryAndAttributes(code, enumInfo);
 						code.WriteLine($"enum {enumInfo.Name}");
 						using (code.Block())
@@ -76,7 +83,6 @@ public sealed class FsdGenerator : CodeGenerator
 					}
 					else if (member is ServiceErrorSetInfo errorSet)
 					{
-						code.WriteLineSkipOnce();
 						WriteSummaryAndAttributes(code, errorSet);
 						code.WriteLine($"errors {errorSet.Name}");
 						using (code.Block())
@@ -96,6 +102,15 @@ public sealed class FsdGenerator : CodeGenerator
 				code.WriteLine(remark);
 		});
 		return new CodeGenOutput(output);
+	}
+
+	/// <summary>
+	/// Applies generator-specific settings.
+	/// </summary>
+	public override void ApplySettings(FileGeneratorSettings settings)
+	{
+		var fsdSettings = (FsdGeneratorSettings) settings;
+		FileScopedService = fsdSettings.FileScopedService;
 	}
 
 	/// <summary>
