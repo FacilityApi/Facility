@@ -54,7 +54,7 @@ public sealed class ValidationTests
 			  }: {}
 			}
 			""");
-		exception.Message.Should().Be("TestApi.fsd(5,6): Missing 'validate' parameters: [length, regex].");
+		exception.Message.Should().Be("TestApi.fsd(4,6): Missing 'validate' parameters: [length, regex].");
 	}
 
 	[Test]
@@ -218,7 +218,7 @@ public sealed class ValidationTests
 			  }: {}
 			}
 			""");
-		exception.Message.Should().Be("TestApi.fsd(5,6): 'validate' parameter 'regex' is invalid for Double.");
+		exception.Message.Should().Be("TestApi.fsd(4,6): 'validate' parameter 'regex' is invalid for Double.");
 	}
 
 	[Test]
@@ -249,7 +249,7 @@ public sealed class ValidationTests
 			  }: {}
 			}
 			""");
-		exception.Message.Should().Be("TestApi.fsd(5,6): Missing 'validate' parameters: [value].");
+		exception.Message.Should().Be("TestApi.fsd(4,6): Missing 'validate' parameters: [value].");
 	}
 
 	[Test]
@@ -269,7 +269,7 @@ public sealed class ValidationTests
 			  }: {}
 			}
 			""");
-		exception.Message.Should().Be("TestApi.fsd(10,6): 'validate' parameter 'regex' is invalid for Array.");
+		exception.Message.Should().Be("TestApi.fsd(9,6): 'validate' parameter 'regex' is invalid for Array.");
 	}
 
 	[Test]
