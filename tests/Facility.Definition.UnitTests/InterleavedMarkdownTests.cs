@@ -8,10 +8,11 @@ public sealed class InterleavedMarkdownTests
 	[Test]
 	public void EmptyServiceNoRemarks()
 	{
-		var service = TestUtility.ParseTestApi(@"
-```fsd
-service TestApi{}
-```");
+		var service = TestUtility.ParseTestApi("""
+			```fsd
+			service TestApi{}
+			```
+			""");
 
 		service.Name.Should().Be("TestApi");
 		service.Remarks.Count.Should().Be(0);
@@ -20,22 +21,24 @@ service TestApi{}
 	[Test]
 	public void EmptyServiceWithRemarks()
 	{
-		var service = TestUtility.ParseTestApi(@"
-# TestApi
+		var service = TestUtility.ParseTestApi("""
 
-```fsd
-service TestApi
-{
-```
+			# TestApi
 
-A test API.
+			```fsd
+			service TestApi
+			{
+			```
 
-```fsd
-}
-```
+			A test API.
 
-That's it.
-");
+			```fsd
+			}
+			```
+
+			That's it.
+
+			""");
 
 		service.Name.Should().Be("TestApi");
 		service.Remarks.Should().Equal("A test API.");
@@ -44,42 +47,44 @@ That's it.
 	[Test]
 	public void VariousRemarks()
 	{
-		var service = TestUtility.ParseTestApi(@"
-# TestApi
+		var service = TestUtility.ParseTestApi("""
 
-```fsd
-service TestApi
-{
-```
+			# TestApi
 
-A test API.
+			```fsd
+			service TestApi
+			{
+			```
 
-```fsd
-// nothing
-```
+			A test API.
 
-More remarks.
+			```fsd
+			// nothing
+			```
 
-```fsd
-data Data
-{
-}
+			More remarks.
 
-method do
-{
-}:
-{
-}
-```
+			```fsd
+			data Data
+			{
+			}
 
-A test method.
+			method do
+			{
+			}:
+			{
+			}
+			```
 
-```fsd
-}
-```
+			A test method.
 
-That's it.
-");
+			```fsd
+			}
+			```
+
+			That's it.
+
+			""");
 
 		service.Name.Should().Be("TestApi");
 		service.Remarks.Should().Equal("A test API.", "", "More remarks.");
@@ -90,35 +95,37 @@ That's it.
 	[Test]
 	public void VariousRemarksNoServiceBraces([Values] bool semicolon)
 	{
-		var service = TestUtility.ParseTestApi($@"
-# TestApi
+		var service = TestUtility.ParseTestApi($$"""
 
-```fsd
-service TestApi{(semicolon ? ";" : "")}
-```
+			# TestApi
 
-A test API.
+			```fsd
+			service TestApi{{(semicolon ? ";" : "")}}
+			```
 
-```fsd
-// nothing
-```
+			A test API.
 
-More remarks.
+			```fsd
+			// nothing
+			```
 
-```fsd
-data Data
-{{
-}}
+			More remarks.
 
-method do
-{{
-}}:
-{{
-}}
-```
+			```fsd
+			data Data
+			{
+			}
 
-A test method.
-");
+			method do
+			{
+			}:
+			{
+			}
+			```
+
+			A test method.
+
+			""");
 
 		service.Name.Should().Be("TestApi");
 		service.Remarks.Should().Equal("A test API.", "", "More remarks.");
