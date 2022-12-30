@@ -1,5 +1,12 @@
 # Release Notes
 
+## 2.9.0
+
+* Allow semicolon after file-scoped service (like C# namespace).
+* Support generating file-scoped service via `--file-scoped-service`.
+* Add .NET 7 support to `fsdgenfsd`.
+* Drop .NET Core 3.1 and .NET 5 support from `fsdgenfsd`.
+
 ## 2.8.0
 
 * Support nullable fields.
