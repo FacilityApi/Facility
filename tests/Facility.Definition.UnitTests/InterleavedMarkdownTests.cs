@@ -88,13 +88,13 @@ That's it.
 	}
 
 	[Test]
-	public void VariousRemarksNoServiceBraces()
+	public void VariousRemarksNoServiceBraces([Values] bool semicolon)
 	{
-		var service = TestUtility.ParseTestApi(@"
+		var service = TestUtility.ParseTestApi($@"
 # TestApi
 
 ```fsd
-service TestApi
+service TestApi{(semicolon ? ";" : "")}
 ```
 
 A test API.
@@ -107,14 +107,14 @@ More remarks.
 
 ```fsd
 data Data
-{
-}
+{{
+}}
 
 method do
-{
-}:
-{
-}
+{{
+}}:
+{{
+}}
 ```
 
 A test method.
