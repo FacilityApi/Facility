@@ -11,7 +11,9 @@ public sealed class FsdGenerator : CodeGenerator
 | name | description |
 | --- | --- |
 | [FsdGenerator](FsdGenerator/FsdGenerator.md)() | The default constructor. |
+| [FileScopedService](FsdGenerator/FileScopedService.md) { get; set; } | True to generate a file-scoped service (instead of using braces). |
 | override [SupportsSingleOutput](FsdGenerator/SupportsSingleOutput.md) { get; } | The generator writes output to a single file. |
+| override [ApplySettings](FsdGenerator/ApplySettings.md)(…) | Applies generator-specific settings. |
 | override [GenerateOutput](FsdGenerator/GenerateOutput.md)(…) | Generates an FSD file for a service definition. |
 | static [GenerateFsd](FsdGenerator/GenerateFsd.md)(…) | Generates an FSD file for a service definition. |
 

@@ -11,6 +11,7 @@ public sealed class FsdGeneratorSettings : FileGeneratorSettings
 | name | description |
 | --- | --- |
 | [FsdGeneratorSettings](FsdGeneratorSettings/FsdGeneratorSettings.md)() | The default constructor. |
+| [FileScopedService](FsdGeneratorSettings/FileScopedService.md) { get; set; } | True to generate a file-scoped service (instead of using braces). |
 
 ## See Also
 
