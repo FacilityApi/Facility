@@ -16,7 +16,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		ValidateName();
 		ValidateNoDuplicateNames(Members, "service member");
 
-		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo));
+		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo || x is ServiceExternalDtoInfo));
 		if (unsupportedMember is not null)
 			throw new InvalidOperationException($"Unsupported member type: {unsupportedMember.GetType()}");
 
@@ -66,6 +66,11 @@ public sealed class ServiceInfo : ServiceMemberInfo
 	/// The error sets.
 	/// </summary>
 	public IReadOnlyList<ServiceErrorSetInfo> ErrorSets => Members.OfType<ServiceErrorSetInfo>().ToReadOnlyList();
+
+	/// <summary>
+	/// The external DTOs.
+	/// </summary>
+	public IReadOnlyList<ServiceExternalDtoInfo> ExternalDtos => Members.OfType<ServiceExternalDtoInfo>().ToReadOnlyList();
 
 	/// <summary>
 	/// Finds the member of the specified name.
@@ -152,6 +157,15 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					summary: errorSet.Summary,
 					remarks: errorSet.Remarks,
 					parts: errorSet.GetParts().ToArray());
+			}
+			else if (member is ServiceExternalDtoInfo externalDto)
+			{
+				return new ServiceExternalDtoInfo(
+					name: externalDto.Name,
+					attributes: externalDto.Attributes,
+					summary: externalDto.Summary,
+					remarks: externalDto.Remarks,
+					parts: externalDto.GetParts().ToArray());
 			}
 			else
 			{

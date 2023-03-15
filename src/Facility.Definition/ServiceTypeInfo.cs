@@ -10,7 +10,7 @@ public sealed class ServiceTypeInfo
 	/// </summary>
 	public static ServiceTypeInfo CreatePrimitive(ServiceTypeKind kind)
 	{
-		if (kind is ServiceTypeKind.Dto or ServiceTypeKind.Enum or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Nullable)
+		if (kind is ServiceTypeKind.Dto or ServiceTypeKind.Enum or ServiceTypeKind.ExternalDto or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Nullable)
 			throw new ArgumentOutOfRangeException(nameof(kind), "Kind must be primitive.");
 		return new ServiceTypeInfo(kind);
 	}
@@ -24,6 +24,11 @@ public sealed class ServiceTypeInfo
 	/// Create an enumerated type.
 	/// </summary>
 	public static ServiceTypeInfo CreateEnum(ServiceEnumInfo @enum) => new(ServiceTypeKind.Enum, @enum: @enum);
+
+	/// <summary>
+	/// Create a DTO type.
+	/// </summary>
+	public static ServiceTypeInfo CreateExternalDto(ServiceExternalDtoInfo externalDto) => new(ServiceTypeKind.ExternalDto, externalDto: externalDto);
 
 	/// <summary>
 	/// Create a service result type.
@@ -61,6 +66,11 @@ public sealed class ServiceTypeInfo
 	public ServiceEnumInfo? Enum { get; }
 
 	/// <summary>
+	/// The external DTO (when Kind is ExternalDto).
+	/// </summary>
+	public ServiceExternalDtoInfo? ExternalDto { get; }
+
+	/// <summary>
 	/// The value type (when Kind is Result, Array, or Map).
 	/// </summary>
 	public ServiceTypeInfo? ValueType { get; }
@@ -74,6 +84,7 @@ public sealed class ServiceTypeInfo
 		{
 			ServiceTypeKind.Dto => Dto!.Name,
 			ServiceTypeKind.Enum => Enum!.Name,
+			ServiceTypeKind.ExternalDto => ExternalDto!.Name,
 			ServiceTypeKind.Result => $"result<{ValueType}>",
 			ServiceTypeKind.Array => $"{ValueType}[]",
 			ServiceTypeKind.Map => $"map<{ValueType}>",
@@ -127,16 +138,20 @@ public sealed class ServiceTypeInfo
 
 			if (member is ServiceEnumInfo @enum)
 				return CreateEnum(@enum);
+
+			if (member is ServiceExternalDtoInfo externalDto)
+				return CreateExternalDto(externalDto);
 		}
 
 		return null;
 	}
 
-	private ServiceTypeInfo(ServiceTypeKind kind, ServiceDtoInfo? dto = null, ServiceEnumInfo? @enum = null, ServiceTypeInfo? valueType = null)
+	private ServiceTypeInfo(ServiceTypeKind kind, ServiceDtoInfo? dto = null, ServiceEnumInfo? @enum = null, ServiceExternalDtoInfo? externalDto = null, ServiceTypeInfo? valueType = null)
 	{
 		Kind = kind;
 		Dto = dto;
 		Enum = @enum;
+		ExternalDto = externalDto;
 		ValueType = valueType;
 	}
 

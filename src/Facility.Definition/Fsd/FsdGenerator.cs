@@ -81,6 +81,14 @@ public sealed class FsdGenerator : CodeGenerator
 						if (enumInfo.Remarks.Count != 0)
 							remarks.AddRange(new[] { "", $"# {enumInfo.Name}", "" }.Concat(enumInfo.Remarks));
 					}
+					else if (member is ServiceExternalDtoInfo externalDto)
+					{
+						WriteSummaryAndAttributes(code, externalDto);
+						code.WriteLine($"extern data {externalDto.Name};");
+
+						if (externalDto.Remarks.Count != 0)
+							remarks.AddRange(new[] { "", $"# {externalDto.Name}", "" }.Concat(externalDto.Remarks));
+					}
 					else if (member is ServiceErrorSetInfo errorSet)
 					{
 						WriteSummaryAndAttributes(code, errorSet);
