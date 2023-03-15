@@ -16,7 +16,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		ValidateName();
 		ValidateNoDuplicateNames(Members, "service member");
 
-		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo || x is ServiceExternalDtoInfo));
+		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo || x is ServiceExternalDtoInfo || x is ServiceExternalEnumInfo));
 		if (unsupportedMember is not null)
 			throw new InvalidOperationException($"Unsupported member type: {unsupportedMember.GetType()}");
 
@@ -71,6 +71,11 @@ public sealed class ServiceInfo : ServiceMemberInfo
 	/// The external DTOs.
 	/// </summary>
 	public IReadOnlyList<ServiceExternalDtoInfo> ExternalDtos => Members.OfType<ServiceExternalDtoInfo>().ToReadOnlyList();
+
+	/// <summary>
+	/// The external enumerated types.
+	/// </summary>
+	public IReadOnlyList<ServiceExternalEnumInfo> ExternalEnums => Members.OfType<ServiceExternalEnumInfo>().ToReadOnlyList();
 
 	/// <summary>
 	/// Finds the member of the specified name.
@@ -166,6 +171,15 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					summary: externalDto.Summary,
 					remarks: externalDto.Remarks,
 					parts: externalDto.GetParts().ToArray());
+			}
+			else if (member is ServiceExternalEnumInfo externalEnum)
+			{
+				return new ServiceExternalEnumInfo(
+					name: externalEnum.Name,
+					attributes: externalEnum.Attributes,
+					summary: externalEnum.Summary,
+					remarks: externalEnum.Remarks,
+					parts: externalEnum.GetParts().ToArray());
 			}
 			else
 			{

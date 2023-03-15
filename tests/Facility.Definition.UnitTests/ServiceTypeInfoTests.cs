@@ -22,6 +22,7 @@ public class ServiceTypeInfoTests
 		type.Dto.Should().BeNull();
 		type.Enum.Should().BeNull();
 		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType.Should().BeNull();
 		type.ToString().Should().Be(name);
 	}
@@ -36,6 +37,7 @@ public class ServiceTypeInfoTests
 		type.Dto.Should().Be(service.Dtos[0]);
 		type.Enum.Should().BeNull();
 		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType.Should().BeNull();
 		type.ToString().Should().Be("MyDto");
 	}
@@ -50,6 +52,7 @@ public class ServiceTypeInfoTests
 		type.Dto.Should().BeNull();
 		type.Enum.Should().Be(service.Enums[0]);
 		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType.Should().BeNull();
 		type.ToString().Should().Be("MyEnum");
 	}
@@ -64,8 +67,24 @@ public class ServiceTypeInfoTests
 		type.Dto.Should().BeNull();
 		type.Enum.Should().BeNull();
 		type.ExternalDto.Should().Be(service.ExternalDtos[0]);
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType.Should().BeNull();
 		type.ToString().Should().Be("MyExternalDto");
+	}
+
+	[Test]
+	public void ExternalEnumType()
+	{
+		var service = new ServiceInfo(name: "MyApi",
+			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyExternalEnum") }), new ServiceExternalEnumInfo("MyExternalEnum") });
+		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
+		type.Kind.Should().Be(ServiceTypeKind.ExternalEnum);
+		type.Dto.Should().BeNull();
+		type.Enum.Should().BeNull();
+		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().Be(service.ExternalEnums[0]);
+		type.ValueType.Should().BeNull();
+		type.ToString().Should().Be("MyExternalEnum");
 	}
 
 	[TestCase("result<MyDto>", ServiceTypeKind.Result)]
@@ -80,6 +99,8 @@ public class ServiceTypeInfoTests
 		type.Kind.Should().Be(kind);
 		type.Dto.Should().BeNull();
 		type.Enum.Should().BeNull();
+		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType!.Dto.Should().Be(service.Dtos[0]);
 		type.ToString().Should().Be(name);
 	}
@@ -97,6 +118,7 @@ public class ServiceTypeInfoTests
 		type.Dto.Should().BeNull();
 		type.Enum.Should().BeNull();
 		type.ExternalDto.Should().BeNull();
+		type.ExternalEnum.Should().BeNull();
 		type.ValueType!.ExternalDto.Should().Be(service.ExternalDtos[0]);
 		type.ToString().Should().Be(name);
 	}

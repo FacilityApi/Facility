@@ -66,6 +66,11 @@ public enum ServiceTypeKind
 	ExternalDto,
 
 	/// <summary>
+	/// An external enumerated type.
+	/// </summary>
+	ExternalEnum,
+
+	/// <summary>
 	/// A service result.
 	/// </summary>
 	Result,

@@ -151,6 +151,20 @@ internal static class FsdParsers
 			context.GetPart(ServicePartKind.Keyword, keyword),
 			context.GetPart(ServicePartKind.Name, name));
 
+	private static IParser<ServiceExternalEnumInfo> ExternalEnumParser(Context context) =>
+		from comments1 in CommentOrWhiteSpaceParser.Many()
+		from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
+		from comments2 in CommentOrWhiteSpaceParser.Many()
+		from keyword in KeywordParser("externenum")
+		from name in NameParser.Named("externenum name")
+		from end in PunctuationParser(";")
+		select new ServiceExternalEnumInfo(name.Value,
+			attributes.SelectMany(x => x),
+			BuildSummary(comments1, comments2),
+			context.GetRemarksSection(name.Value)?.Lines,
+			context.GetPart(ServicePartKind.Keyword, keyword),
+			context.GetPart(ServicePartKind.Name, name));
+
 	private static IParser<ServiceMethodInfo> MethodParser(Context context) =>
 		from comments1 in CommentOrWhiteSpaceParser.Many()
 		from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
@@ -168,7 +182,7 @@ internal static class FsdParsers
 			context.GetPart(ServicePartKind.Name, name));
 
 	private static IParser<ServiceMemberInfo> ServiceItemParser(Context context) =>
-		Parser.Or<ServiceMemberInfo>(EnumParser(context), DtoParser(context), ExternalDtoParser(context), MethodParser(context), ErrorSetParser(context));
+		Parser.Or<ServiceMemberInfo>(EnumParser(context), DtoParser(context), ExternalDtoParser(context), ExternalEnumParser(context), MethodParser(context), ErrorSetParser(context));
 
 	private static IParser<ServiceInfo> ServiceParser(Context context) =>
 		from comments1 in CommentOrWhiteSpaceParser.Many()
