@@ -198,6 +198,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		switch (type.Kind)
 		{
 			case ServiceTypeKind.Enum:
+			case ServiceTypeKind.ExternalEnum:
 				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 

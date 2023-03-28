@@ -261,7 +261,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-			
+
 			  method do
 			  {
 			    [validate(regex: "\\d+.{2}")]
@@ -281,7 +281,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-			
+
 			  method do
 			  {
 			    [validate(count: -1..10)]
@@ -357,5 +357,23 @@ public sealed class ValidationTests
 		var range = service.Methods.Single().RequestFields.Single().Validation!.CountRange!;
 		range.Minimum.Should().Be(10);
 		range.Maximum.Should().Be(10);
+	}
+
+	[Test]
+	public void ExternEnum_CanHaveValidation()
+	{
+		var service = TestUtility.ParseTestApi("""
+			service TestApi {
+				[csharp(name: "ExternalEnum", namespace: "Facility.Definition.UnitTests.ValidationTests")]
+				extern enum ExternalEnum;
+
+				method do
+				{
+					[validate]
+					one: ExternalEnum;
+				}: {}
+			}
+			""");
+		service.Methods.Single().RequestFields.Single().Validation.Should().NotBeNull();
 	}
 }

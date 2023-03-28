@@ -251,13 +251,13 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		if (fieldTypeKind == ServiceTypeKind.Array)
 			fieldTypeKind = fieldType!.ValueType!.Kind;
 
-		return fieldTypeKind is ServiceTypeKind.String or ServiceTypeKind.Boolean or ServiceTypeKind.Double or ServiceTypeKind.Int32 or ServiceTypeKind.Int64 or ServiceTypeKind.Decimal or ServiceTypeKind.Enum;
+		return fieldTypeKind is ServiceTypeKind.String or ServiceTypeKind.Boolean or ServiceTypeKind.Double or ServiceTypeKind.Int32 or ServiceTypeKind.Int64 or ServiceTypeKind.Decimal or ServiceTypeKind.Enum or ServiceTypeKind.ExternalEnum;
 	}
 
 	private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)
 	{
 		var fieldTypeKind = serviceInfo.GetFieldType(fieldInfo)?.Kind;
-		return fieldTypeKind is ServiceTypeKind.Object or ServiceTypeKind.Error or ServiceTypeKind.Dto or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Bytes or ServiceTypeKind.String;
+		return fieldTypeKind is ServiceTypeKind.Object or ServiceTypeKind.Error or ServiceTypeKind.Dto or ServiceTypeKind.Result or ServiceTypeKind.Array or ServiceTypeKind.Map or ServiceTypeKind.Bytes or ServiceTypeKind.String or ServiceTypeKind.ExternalDto;
 	}
 
 	private static bool IsValidResponseBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo) =>
