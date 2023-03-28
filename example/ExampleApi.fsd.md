@@ -463,3 +463,13 @@ data KitchenSink
 	oldField: string;
 }
 ```
+
+```fsd
+/// An external data type.
+extern data ExternalDto;
+```
+
+```fsd
+/// An external enum.
+extern enum ExternalEnum;
+```

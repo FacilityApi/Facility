@@ -403,10 +403,10 @@ service ExampleApi
 	}
 
 	/// An external data type.
-	externdata ExternalDto;
+	extern data ExternalDto;
 
 	/// An external enum.
-	externenum ExternalEnum;
+	extern enum ExternalEnum;
 }
 
 # ExampleApi
