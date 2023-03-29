@@ -144,8 +144,8 @@ internal static class FsdParsers
 		from keyword in KeywordParser("extern")
 		from memberInfo in Parser.Or<ServiceMemberInfo>(
 			ExternalDtoParser(context, attributes.SelectMany(x => x), BuildSummary(comments1, comments2)),
-			ExternalEnumParser(context, attributes.SelectMany(x => x), BuildSummary(comments1, comments2))).Once()
-		select memberInfo.Single();
+			ExternalEnumParser(context, attributes.SelectMany(x => x), BuildSummary(comments1, comments2)))
+		select memberInfo;
 
 	private static IParser<ServiceExternalDtoInfo> ExternalDtoParser(Context context, IEnumerable<ServiceAttributeInfo>? attributes, string? summary) =>
 		from keyword in KeywordParser("data")
