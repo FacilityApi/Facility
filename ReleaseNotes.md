@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.10.0-beta.1
+
+* Support `extern` data and enum types.
+
 ## 2.9.0
 
 * Allow semicolon after file-scoped service (like C# namespace).
