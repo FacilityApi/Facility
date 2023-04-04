@@ -16,7 +16,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		ValidateName();
 		ValidateNoDuplicateNames(Members, "service member");
 
-		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo));
+		var unsupportedMember = Members.FirstOrDefault(x => !(x is ServiceMethodInfo || x is ServiceDtoInfo || x is ServiceEnumInfo || x is ServiceErrorSetInfo || x is ServiceExternalDtoInfo || x is ServiceExternalEnumInfo));
 		if (unsupportedMember is not null)
 			throw new InvalidOperationException($"Unsupported member type: {unsupportedMember.GetType()}");
 
@@ -66,6 +66,16 @@ public sealed class ServiceInfo : ServiceMemberInfo
 	/// The error sets.
 	/// </summary>
 	public IReadOnlyList<ServiceErrorSetInfo> ErrorSets => Members.OfType<ServiceErrorSetInfo>().ToReadOnlyList();
+
+	/// <summary>
+	/// The external DTOs.
+	/// </summary>
+	public IReadOnlyList<ServiceExternalDtoInfo> ExternalDtos => Members.OfType<ServiceExternalDtoInfo>().ToReadOnlyList();
+
+	/// <summary>
+	/// The external enumerated types.
+	/// </summary>
+	public IReadOnlyList<ServiceExternalEnumInfo> ExternalEnums => Members.OfType<ServiceExternalEnumInfo>().ToReadOnlyList();
 
 	/// <summary>
 	/// Finds the member of the specified name.
@@ -153,6 +163,24 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					remarks: errorSet.Remarks,
 					parts: errorSet.GetParts().ToArray());
 			}
+			else if (member is ServiceExternalDtoInfo externalDto)
+			{
+				return new ServiceExternalDtoInfo(
+					name: externalDto.Name,
+					attributes: externalDto.Attributes,
+					summary: externalDto.Summary,
+					remarks: externalDto.Remarks,
+					parts: externalDto.GetParts().ToArray());
+			}
+			else if (member is ServiceExternalEnumInfo externalEnum)
+			{
+				return new ServiceExternalEnumInfo(
+					name: externalEnum.Name,
+					attributes: externalEnum.Attributes,
+					summary: externalEnum.Summary,
+					remarks: externalEnum.Remarks,
+					parts: externalEnum.GetParts().ToArray());
+			}
 			else
 			{
 				return member;
@@ -170,6 +198,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 		switch (type.Kind)
 		{
 			case ServiceTypeKind.Enum:
+			case ServiceTypeKind.ExternalEnum:
 				if (validation.CountRange is not null)
 					attribute.AddValidationError(ServiceDefinitionUtility.CreateInvalidAttributeParameterForTypeError(attribute, type, "count"));
 

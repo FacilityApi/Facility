@@ -91,6 +91,22 @@ public sealed class FsdGenerator : CodeGenerator
 						if (errorSet.Remarks.Count != 0)
 							remarks.AddRange(new[] { "", $"# {errorSet.Name}", "" }.Concat(errorSet.Remarks));
 					}
+					else if (member is ServiceExternalDtoInfo externalDto)
+					{
+						WriteSummaryAndAttributes(code, externalDto);
+						code.WriteLine($"extern data {externalDto.Name};");
+
+						if (externalDto.Remarks.Count != 0)
+							remarks.AddRange(new[] { "", $"# {externalDto.Name}", "" }.Concat(externalDto.Remarks));
+					}
+					else if (member is ServiceExternalEnumInfo externalEnum)
+					{
+						WriteSummaryAndAttributes(code, externalEnum);
+						code.WriteLine($"extern enum {externalEnum.Name};");
+
+						if (externalEnum.Remarks.Count != 0)
+							remarks.AddRange(new[] { "", $"# {externalEnum.Name}", "" }.Concat(externalEnum.Remarks));
+					}
 					else
 					{
 						throw new InvalidOperationException("Unexpected member type.");

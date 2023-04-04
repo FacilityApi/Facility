@@ -79,4 +79,14 @@ public enum ServiceTypeKind
 	/// A nullable.
 	/// </summary>
 	Nullable,
+
+	/// <summary>
+	/// An external DTO.
+	/// </summary>
+	ExternalDto,
+
+	/// <summary>
+	/// An external enumerated type.
+	/// </summary>
+	ExternalEnum,
 }

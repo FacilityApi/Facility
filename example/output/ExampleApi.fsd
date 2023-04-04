@@ -401,6 +401,12 @@ service ExampleApi
 		[obsolete(message: "This field was never used.")]
 		oldField: string;
 	}
+
+	/// An external data type.
+	extern data ExternalDto;
+
+	/// An external enum.
+	extern enum ExternalEnum;
 }
 
 # ExampleApi

@@ -75,7 +75,13 @@ public sealed class ServiceTests
 	[Test]
 	public void MissingEndBrace()
 	{
-		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'method'");
+		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'extern' or 'method'");
+	}
+
+	[Test]
+	public void MissingExternType()
+	{
+		TestUtility.ParseInvalidTestApi("service TestApi { extern xyz; }").Message.Should().Be("TestApi.fsd(1,26): expected 'data' or 'enum'");
 	}
 
 	[Test]
@@ -103,6 +109,20 @@ public sealed class ServiceTests
 	{
 		TestUtility.ParseInvalidTestApi("service TestApi { enum xyzzy { x } enum xyzzy { x } }")
 			.Message.Should().Be("TestApi.fsd(1,36): Duplicate service member: xyzzy");
+	}
+
+	[Test]
+	public void DuplicateExternalDto()
+	{
+		TestUtility.ParseInvalidTestApi("service TestApi { extern data xyzzy; extern data xyzzy; }")
+			.Message.Should().Be("TestApi.fsd(1,45): Duplicate service member: xyzzy");
+	}
+
+	[Test]
+	public void DuplicateExternalEnum()
+	{
+		TestUtility.ParseInvalidTestApi("service TestApi { extern enum xyzzy; extern enum xyzzy; }")
+			.Message.Should().Be("TestApi.fsd(1,45): Duplicate service member: xyzzy");
 	}
 
 	[Test]
