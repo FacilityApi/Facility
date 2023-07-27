@@ -1,5 +1,7 @@
 # ServiceElementInfo.AddValidationError method
 
+Adds a validation error to the element.
+
 ```csharp
 protected internal void AddValidationError(ServiceDefinitionError error)
 ```

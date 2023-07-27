@@ -23,7 +23,7 @@ public abstract class ServiceElementInfo
 
 | name | description |
 | --- | --- |
-| [AddValidationError](ServiceElementInfo/AddValidationError.md)(…) |  |
+| [AddValidationError](ServiceElementInfo/AddValidationError.md)(…) | Adds a validation error to the element. |
 
 ## See Also
 

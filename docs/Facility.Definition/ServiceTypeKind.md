@@ -25,6 +25,8 @@ public enum ServiceTypeKind
 | Array | `12` | An array. |
 | Map | `13` | A map. |
 | Nullable | `14` | A nullable. |
+| ExternalDto | `15` | An external DTO. |
+| ExternalEnum | `16` | An external enumerated type. |
 
 ## See Also
 

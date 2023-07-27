@@ -14,6 +14,8 @@ public sealed class ServiceInfo : ServiceMemberInfo
 | [Dtos](ServiceInfo/Dtos.md) { get; } | The DTOs. |
 | [Enums](ServiceInfo/Enums.md) { get; } | The enumerated types. |
 | [ErrorSets](ServiceInfo/ErrorSets.md) { get; } | The error sets. |
+| [ExternalDtos](ServiceInfo/ExternalDtos.md) { get; } | The external DTOs. |
+| [ExternalEnums](ServiceInfo/ExternalEnums.md) { get; } | The external enumerated types. |
 | [Members](ServiceInfo/Members.md) { get; } | All of the service members.. |
 | [Methods](ServiceInfo/Methods.md) { get; } | The methods. |
 | [ExcludeTag](ServiceInfo/ExcludeTag.md)(…) | Excludes a tag from the service. |

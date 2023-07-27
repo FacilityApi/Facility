@@ -20,6 +20,8 @@
 | class [ServiceEnumValueInfo](./Facility.Definition/ServiceEnumValueInfo.md) | A value of an enumerated type. |
 | class [ServiceErrorInfo](./Facility.Definition/ServiceErrorInfo.md) | An error of an error set. |
 | class [ServiceErrorSetInfo](./Facility.Definition/ServiceErrorSetInfo.md) | An error set. |
+| class [ServiceExternalDtoInfo](./Facility.Definition/ServiceExternalDtoInfo.md) | An external service DTO. |
+| class [ServiceExternalEnumInfo](./Facility.Definition/ServiceExternalEnumInfo.md) | An external service enumerated type. |
 | class [ServiceFieldInfo](./Facility.Definition/ServiceFieldInfo.md) | A field of a DTO. |
 | class [ServiceFieldValidation](./Facility.Definition/ServiceFieldValidation.md) | A validation criterion of a DTO field. |
 | class [ServiceFieldValidationRange](./Facility.Definition/ServiceFieldValidationRange.md) | A range for validating numeric values. |

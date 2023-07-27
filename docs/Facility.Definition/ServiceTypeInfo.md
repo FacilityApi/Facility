@@ -13,12 +13,16 @@ public sealed class ServiceTypeInfo
 | static [CreateArray](ServiceTypeInfo/CreateArray.md)(…) | Create an array type. |
 | static [CreateDto](ServiceTypeInfo/CreateDto.md)(…) | Create a DTO type. |
 | static [CreateEnum](ServiceTypeInfo/CreateEnum.md)(…) | Create an enumerated type. |
+| static [CreateExternalDto](ServiceTypeInfo/CreateExternalDto.md)(…) | Create an external DTO type. |
+| static [CreateExternalEnum](ServiceTypeInfo/CreateExternalEnum.md)(…) | Create an external enumerated type. |
 | static [CreateMap](ServiceTypeInfo/CreateMap.md)(…) | Create a map type. |
 | static [CreateNullable](ServiceTypeInfo/CreateNullable.md)(…) | Create a nullable type. |
 | static [CreatePrimitive](ServiceTypeInfo/CreatePrimitive.md)(…) | Create a primitive type of the specified kind. |
 | static [CreateResult](ServiceTypeInfo/CreateResult.md)(…) | Create a service result type. |
 | [Dto](ServiceTypeInfo/Dto.md) { get; } | The DTO (when Kind is Dto). |
 | [Enum](ServiceTypeInfo/Enum.md) { get; } | The enumerated type (when Kind is Enum). |
+| [ExternalDto](ServiceTypeInfo/ExternalDto.md) { get; } | The external DTO (when Kind is ExternalDto). |
+| [ExternalEnum](ServiceTypeInfo/ExternalEnum.md) { get; } | The external enumerated type (when Kind is ExternalEnum). |
 | [Kind](ServiceTypeInfo/Kind.md) { get; } | The kind of type. |
 | [ValueType](ServiceTypeInfo/ValueType.md) { get; } | The value type (when Kind is Result, Array, or Map). |
 | override [ToString](ServiceTypeInfo/ToString.md)() | The string form of the service type. |
