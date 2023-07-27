@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.10.0-beta.1
+## 2.10.0
 
 * Support `extern` data and enum types.
 
