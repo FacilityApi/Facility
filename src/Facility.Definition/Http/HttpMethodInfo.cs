@@ -302,7 +302,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 	private static IReadOnlyList<string> GetPathParameterNames(string routePath) =>
 		s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 
-	private class NestedByRouteComparer : IComparer<HttpMethodInfo>
+	private sealed class NestedByRouteComparer : IComparer<HttpMethodInfo>
 	{
 		public int Compare(HttpMethodInfo? left, HttpMethodInfo? right)
 		{

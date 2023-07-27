@@ -5,7 +5,6 @@
     <Description>Used by code generators to process Facility Service Definitions.</Description>
     <PackageTags>Facility FSD Definition</PackageTags>
     <IsPackable>true</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

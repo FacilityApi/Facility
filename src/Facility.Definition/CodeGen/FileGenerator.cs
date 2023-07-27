@@ -82,10 +82,10 @@ public static class FileGenerator
 		var writeToConsole = false;
 
 		if (generator.SupportsSingleOutput &&
-		    !settings.OutputPath.EndsWith("/", StringComparison.Ordinal) &&
-		    !settings.OutputPath.EndsWith("\\", StringComparison.Ordinal) &&
-		    !Directory.Exists(settings.OutputPath) &&
-		    output.Files.Count == 1)
+			!settings.OutputPath.EndsWith("/", StringComparison.Ordinal) &&
+			!settings.OutputPath.EndsWith("\\", StringComparison.Ordinal) &&
+			!Directory.Exists(settings.OutputPath) &&
+			output.Files.Count == 1)
 		{
 			outputIsFile = true;
 			writeToConsole = settings.OutputPath == "-";

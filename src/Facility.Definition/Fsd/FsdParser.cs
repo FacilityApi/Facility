@@ -44,7 +44,7 @@ public sealed class FsdParser : ServiceParser
 			{
 				var remarksLineNumber = remarksSection.Position.LineNumber;
 				if (remarksLineNumber > service.GetPart(ServicePartKind.Name)!.Position.LineNumber &&
-				    remarksLineNumber < service.GetPart(ServicePartKind.End)!.Position.LineNumber)
+					remarksLineNumber < service.GetPart(ServicePartKind.End)!.Position.LineNumber)
 				{
 					ServiceMemberInfo targetMember = service;
 					var targetLineNumber = 0;

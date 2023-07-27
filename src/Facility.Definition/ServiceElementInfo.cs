@@ -54,18 +54,21 @@ public abstract class ServiceElementInfo
 	/// </summary>
 	public IEnumerable<ServiceElementInfo> GetElementAndDescendants() => new[] { this }.Concat(GetDescendants());
 
-	private protected ServiceElementInfo(IEnumerable<ServicePart> parts)
-	{
-		m_parts = parts.ToReadOnlyList();
-		m_validationErrors = new List<ServiceDefinitionError>();
-	}
-
+	/// <summary>
+	/// Adds a validation error to the element.
+	/// </summary>
 	protected internal void AddValidationError(ServiceDefinitionError error)
 	{
 		if (error is null)
 			throw new ArgumentNullException(nameof(error));
 
 		m_validationErrors.Add(error);
+	}
+
+	private protected ServiceElementInfo(IEnumerable<ServicePart> parts)
+	{
+		m_parts = parts.ToReadOnlyList();
+		m_validationErrors = new List<ServiceDefinitionError>();
 	}
 
 	private protected void AddValidationErrors(IEnumerable<ServiceDefinitionError> errors)

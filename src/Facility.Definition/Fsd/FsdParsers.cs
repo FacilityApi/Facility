@@ -186,7 +186,7 @@ internal static class FsdParsers
 			context.GetPart(ServicePartKind.Name, name));
 
 	private static IParser<ServiceMemberInfo> ServiceItemParser(Context context) =>
-		Parser.Or<ServiceMemberInfo>(EnumParser(context), DtoParser(context), ExternParser(context), MethodParser(context), ErrorSetParser(context));
+		Parser.Or(EnumParser(context), DtoParser(context), ExternParser(context), MethodParser(context), ErrorSetParser(context));
 
 	private static IParser<ServiceInfo> ServiceParser(Context context) =>
 		from comments1 in CommentOrWhiteSpaceParser.Many()
