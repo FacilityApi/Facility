@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.10.1
+
+* Add a package README.
+
 ## 2.10.0
 
 * Support `extern` data and enum types.
