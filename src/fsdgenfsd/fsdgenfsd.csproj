@@ -7,11 +7,16 @@
     <PackageTags>Facility FSD CodeGen</PackageTags>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Facility.CodeGen.Console\Facility.CodeGen.Console.csproj" />
     <ProjectReference Include="..\Facility.Definition\Facility.Definition.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
