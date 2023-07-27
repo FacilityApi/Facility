@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <NoWarn>$(NoWarn);1591;1998;NU5105;CA1014;CA1508;CA1852</NoWarn>
+    <NoWarn>$(NoWarn);1591;1998;NU5105</NoWarn>
     <DebugType>embedded</DebugType>
     <GitHubOrganization>FacilityApi</GitHubOrganization>
     <RepositoryName>RepoTemplate</RepositoryName>
