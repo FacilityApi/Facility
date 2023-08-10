@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.11.0
+
+* Add support for `datetime`.
+
 ## 2.10.1
 
 * Add a package README.
