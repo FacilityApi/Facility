@@ -41,13 +41,13 @@ return BuildRunner.Execute(args, build =>
 		var configuration = dotNetBuildSettings.GetConfiguration();
 		var verifyOption = verify ? "--verify" : null;
 
-		RunCodeGen("example/ExampleApi.fsd", "example/output");
-		RunCodeGen("example/ExampleApi.fsd.md", "example/output");
+		RunCodeGen("example/ExampleApi.fsd", "example/output", verifyOption);
+		RunCodeGen("example/ExampleApi.fsd.md", "example/output", "--verify");
 
-		RunCodeGen("example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets");
-		RunCodeGen("example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets");
+		RunCodeGen("example/ExampleApi.fsd", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", verifyOption);
+		RunCodeGen("example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--verify");
 
 		void RunCodeGen(params string?[] args) =>
-			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf", verifyOption }.Concat(args));
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf" }.Concat(args));
 	}
 });

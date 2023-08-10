@@ -255,6 +255,7 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("int32")]
 	[TestCase("int64")]
 	[TestCase("decimal")]
+	[TestCase("datetime")]
 	[TestCase("Enum")]
 	public void BodyRequestFieldInvalidType(string type)
 	{
@@ -369,6 +370,7 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("int32")]
 	[TestCase("int64")]
 	[TestCase("decimal")]
+	[TestCase("datetime")]
 	[TestCase("Enum")]
 	[TestCase("nullable<string>")]
 	[TestCase("nullable<Dto>")]
@@ -592,6 +594,7 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("int32")]
 	[TestCase("int64")]
 	[TestCase("decimal")]
+	[TestCase("datetime")]
 	[TestCase("Enum")]
 	[TestCase("string[]")]
 	[TestCase("boolean[]")]
@@ -599,6 +602,7 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	[TestCase("int32[]")]
 	[TestCase("int64[]")]
 	[TestCase("decimal[]")]
+	[TestCase("datetime[]")]
 	[TestCase("Enum[]")]
 	public void SimpleFieldTypeSupported(string type)
 	{

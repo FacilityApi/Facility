@@ -328,6 +328,9 @@ data Widget
 
 	/// The price of the widget.
 	price: decimal;
+
+	/// When the widget was created.
+	created: datetime;
 }
 ```
 

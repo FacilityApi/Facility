@@ -20,6 +20,7 @@ public sealed class FieldTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	public void PrimitiveFields(string name, ServiceTypeKind kind)
 	{
 		var service = TestUtility.ParseTestApi("service TestApi { data One { x: xyzzy; } }".Replace("xyzzy", name));
@@ -191,6 +192,7 @@ public sealed class FieldTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	[TestCase("Dto", ServiceTypeKind.Dto)]
 	[TestCase("Enum", ServiceTypeKind.Enum)]
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
@@ -220,6 +222,7 @@ public sealed class FieldTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	[TestCase("Dto", ServiceTypeKind.Dto)]
 	[TestCase("Enum", ServiceTypeKind.Enum)]
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
@@ -249,6 +252,7 @@ public sealed class FieldTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	[TestCase("Dto", ServiceTypeKind.Dto)]
 	[TestCase("Enum", ServiceTypeKind.Enum)]
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
@@ -278,6 +282,7 @@ public sealed class FieldTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	[TestCase("Dto", ServiceTypeKind.Dto)]
 	[TestCase("Enum", ServiceTypeKind.Enum)]
 	[TestCase("result<Dto>", ServiceTypeKind.Result)]
