@@ -27,6 +27,7 @@ public enum ServiceTypeKind
 | Nullable | `14` | A nullable. |
 | ExternalDto | `15` | An external DTO. |
 | ExternalEnum | `16` | An external enumerated type. |
+| DateTime | `17` | A date and time. |
 
 ## See Also
 
