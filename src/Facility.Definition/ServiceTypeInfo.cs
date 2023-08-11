@@ -187,5 +187,6 @@ public sealed class ServiceTypeInfo
 		(ServiceTypeKind.Bytes, "bytes"),
 		(ServiceTypeKind.Object, "object"),
 		(ServiceTypeKind.Error, "error"),
+		(ServiceTypeKind.DateTime, "datetime"),
 	};
 }

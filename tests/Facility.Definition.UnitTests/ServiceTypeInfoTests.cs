@@ -14,6 +14,7 @@ public class ServiceTypeInfoTests
 	[TestCase("bytes", ServiceTypeKind.Bytes)]
 	[TestCase("object", ServiceTypeKind.Object)]
 	[TestCase("error", ServiceTypeKind.Error)]
+	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	public void PrimitiveTypes(string name, ServiceTypeKind kind)
 	{
 		var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: new[] { new ServiceFieldInfo("myField", name) }) });

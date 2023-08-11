@@ -89,4 +89,9 @@ public enum ServiceTypeKind
 	/// An external enumerated type.
 	/// </summary>
 	ExternalEnum,
+
+	/// <summary>
+	/// A date and time.
+	/// </summary>
+	DateTime,
 }
