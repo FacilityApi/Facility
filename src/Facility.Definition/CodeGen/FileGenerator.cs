@@ -169,7 +169,7 @@ public static class FileGenerator
 
 	private static IEnumerable<string> FindNamesMatchingPattern(DirectoryInfo directoryInfo, CodeGenPattern patternToClean)
 	{
-		var parts = patternToClean.NamePattern.Split(new[] { '/' }, 2);
+		var parts = patternToClean.NamePattern.Split(s_oneSlash, 2);
 		if (parts[0].Length == 0)
 			throw new InvalidOperationException("Invalid name pattern.");
 
@@ -190,4 +190,6 @@ public static class FileGenerator
 			}
 		}
 	}
+
+	private static readonly char[] s_oneSlash = ['/'];
 }

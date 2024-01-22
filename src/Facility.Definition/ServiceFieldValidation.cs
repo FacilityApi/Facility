@@ -83,7 +83,7 @@ public sealed class ServiceFieldValidation
 			return null;
 		}
 
-		var bounds = parameter.Value.Split(new[] { ".." }, 2, StringSplitOptions.None);
+		var bounds = parameter.Value.Split(s_oneDoubleDot, 2, StringSplitOptions.None);
 		var first = bounds[0];
 		var second = bounds.Length > 1 ? bounds[1] : null;
 
@@ -133,4 +133,6 @@ public sealed class ServiceFieldValidation
 
 		return new ServiceFieldValidationRange(minimum, maximum);
 	}
+
+	private static readonly string[] s_oneDoubleDot = [".."];
 }

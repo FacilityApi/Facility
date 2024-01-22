@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Faithlife.Parsing" Version="3.5.1" />
+    <PackageReference Include="Faithlife.Parsing" />
   </ItemGroup>
 
   <ItemGroup>

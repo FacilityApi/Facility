@@ -110,7 +110,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			attributes: Attributes,
 			summary: Summary,
 			remarks: Remarks,
-			parts: GetParts().ToArray());
+			parts: [.. GetParts()]);
 
 		errors = service.GetValidationErrors()
 			.Select(x => new ServiceDefinitionError($"{x.Message} ('{tagName}' tags are excluded.)", x.Position))
@@ -131,7 +131,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: method.Attributes,
 					summary: method.Summary,
 					remarks: method.Remarks,
-					parts: method.GetParts().ToArray());
+					parts: [.. method.GetParts()]);
 			}
 			else if (member is ServiceDtoInfo dto)
 			{
@@ -141,7 +141,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: dto.Attributes,
 					summary: dto.Summary,
 					remarks: dto.Remarks,
-					parts: dto.GetParts().ToArray());
+					parts: [.. dto.GetParts()]);
 			}
 			else if (member is ServiceEnumInfo @enum)
 			{
@@ -151,7 +151,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: @enum.Attributes,
 					summary: @enum.Summary,
 					remarks: @enum.Remarks,
-					parts: @enum.GetParts().ToArray());
+					parts: [.. @enum.GetParts()]);
 			}
 			else if (member is ServiceErrorSetInfo errorSet)
 			{
@@ -161,7 +161,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: errorSet.Attributes,
 					summary: errorSet.Summary,
 					remarks: errorSet.Remarks,
-					parts: errorSet.GetParts().ToArray());
+					parts: [.. errorSet.GetParts()]);
 			}
 			else if (member is ServiceExternalDtoInfo externalDto)
 			{
@@ -170,7 +170,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: externalDto.Attributes,
 					summary: externalDto.Summary,
 					remarks: externalDto.Remarks,
-					parts: externalDto.GetParts().ToArray());
+					parts: [.. externalDto.GetParts()]);
 			}
 			else if (member is ServiceExternalEnumInfo externalEnum)
 			{
@@ -179,7 +179,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 					attributes: externalEnum.Attributes,
 					summary: externalEnum.Summary,
 					remarks: externalEnum.Remarks,
-					parts: externalEnum.GetParts().ToArray());
+					parts: [.. externalEnum.GetParts()]);
 			}
 			else
 			{

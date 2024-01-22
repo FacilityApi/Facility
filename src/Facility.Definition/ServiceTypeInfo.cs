@@ -177,7 +177,7 @@ public sealed class ServiceTypeInfo
 	}
 
 	private static readonly (ServiceTypeKind Kind, string Name)[] s_primitives =
-	{
+	[
 		(ServiceTypeKind.String, "string"),
 		(ServiceTypeKind.Boolean, "boolean"),
 		(ServiceTypeKind.Double, "double"),
@@ -188,5 +188,5 @@ public sealed class ServiceTypeInfo
 		(ServiceTypeKind.Object, "object"),
 		(ServiceTypeKind.Error, "error"),
 		(ServiceTypeKind.DateTime, "datetime"),
-	};
+	];
 }

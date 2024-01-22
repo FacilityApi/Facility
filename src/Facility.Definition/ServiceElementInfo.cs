@@ -68,7 +68,7 @@ public abstract class ServiceElementInfo
 	private protected ServiceElementInfo(IEnumerable<ServicePart> parts)
 	{
 		m_parts = parts.ToReadOnlyList();
-		m_validationErrors = new List<ServiceDefinitionError>();
+		m_validationErrors = [];
 	}
 
 	private protected void AddValidationErrors(IEnumerable<ServiceDefinitionError> errors)

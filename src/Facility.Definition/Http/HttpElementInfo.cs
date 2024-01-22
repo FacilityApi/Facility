@@ -26,7 +26,7 @@ public abstract class HttpElementInfo
 
 	private protected HttpElementInfo()
 	{
-		m_validationErrors = new List<ServiceDefinitionError>();
+		m_validationErrors = [];
 	}
 
 	private protected void AddValidationError(ServiceDefinitionError error) => m_validationErrors.Add(error);

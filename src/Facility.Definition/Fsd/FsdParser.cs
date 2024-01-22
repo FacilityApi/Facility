@@ -60,7 +60,7 @@ public sealed class FsdParser : ServiceParser
 
 					targetMember.Remarks = targetMember.Remarks.Count == 0
 						? remarksSection.Lines
-						: targetMember.Remarks.Concat(new[] { "" }).Concat(remarksSection.Lines).ToList();
+						: targetMember.Remarks.Concat(s_oneEmptyString).Concat(remarksSection.Lines).ToList();
 				}
 			}
 		}
@@ -144,7 +144,7 @@ public sealed class FsdParser : ServiceParser
 			{
 				var position = new ServiceDefinitionPosition(source.Name, remarksLineNumber, 1);
 				remarksSections.Add(new FsdRemarksSection(remarksLines, position));
-				remarksLines = new List<string>();
+				remarksLines = [];
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public sealed class FsdParser : ServiceParser
 					break;
 
 				name = line!.Substring(match.Index + match.Length).Trim();
-				lines = new List<string>();
+				lines = [];
 				headingLineNumber = lineNumber;
 			}
 			else
@@ -200,4 +200,5 @@ public sealed class FsdParser : ServiceParser
 
 	private static readonly Regex s_interleavedMarkdown = new(@"^```fsd\b", RegexOptions.Multiline);
 	private static readonly Regex s_markdownHeading = new(@"^#\s+");
+	private static readonly string[] s_oneEmptyString = [""];
 }

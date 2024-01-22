@@ -299,7 +299,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 	private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode is HttpStatusCode.NoContent or HttpStatusCode.NotModified;
 
-	private static IReadOnlyList<string> GetPathParameterNames(string routePath) =>
+	private static List<string> GetPathParameterNames(string routePath) =>
 		s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
 
 	private sealed class NestedByRouteComparer : IComparer<HttpMethodInfo>
@@ -311,8 +311,8 @@ public sealed class HttpMethodInfo : HttpElementInfo
 			if (right is null)
 				return 1;
 
-			var leftParts = left.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-			var rightParts = right.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			var leftParts = left.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
+			var rightParts = right.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
 			var partIndex = 0;
 			while (true)
 			{
@@ -353,6 +353,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		}
 	}
 
-	private static readonly List<string> s_httpMethods = new() { "GET", "POST", "PUT", "PATCH", "DELETE" };
+	private static readonly List<string> s_httpMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 	private static readonly Regex s_regexPathParameterRegex = new(@"\{([^\}]+)\}", RegexOptions.CultureInvariant);
+	private static readonly char[] s_oneSlash = ['/'];
 }

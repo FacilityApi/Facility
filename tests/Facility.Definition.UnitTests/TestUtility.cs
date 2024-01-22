@@ -34,6 +34,6 @@ internal static class TestUtility
 		var generator = new FsdGenerator { GeneratorName = "TestUtility" };
 		if (settings is not null)
 			generator.ApplySettings(settings);
-		return generator.GenerateOutput(service).Files[0].Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+		return generator.GenerateOutput(service).Files[0].Text.Split(Environment.NewLine);
 	}
 }
