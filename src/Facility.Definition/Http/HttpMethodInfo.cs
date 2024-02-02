@@ -146,6 +146,9 @@ public sealed class HttpMethodInfo : HttpElementInfo
 					AddValidationError(new ServiceDefinitionError("Type not supported by header request field.", requestField.Position));
 				requestHeaderFields.Add(new HttpHeaderFieldInfo(requestField));
 			}
+			else if (from == "custom")
+			{
+			}
 			else if (from is not null)
 			{
 				AddValidationError(new ServiceDefinitionError($"Unsupported 'from' parameter of 'http' attribute: '{from}'", requestField.Position));
@@ -206,6 +209,9 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 				case "normal" or null:
 					responseNormalFields.Add(new HttpNormalFieldInfo(responseField));
+					break;
+
+				case "custom":
 					break;
 
 				default:

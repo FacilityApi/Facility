@@ -561,6 +561,20 @@ public class HttpMethodInfoTests : HttpInfoTestsBase
 	}
 
 	[Test]
+	public void RequestFieldCustomFrom()
+	{
+		var method = ParseHttpApi("service TestApi { method do { [http(from: custom)] xyzzy: string; }: {} }").Methods.Single();
+		method.RequestNormalFields.Should().BeEmpty();
+	}
+
+	[Test]
+	public void ResponseFieldCustomFrom()
+	{
+		var method = ParseHttpApi("service TestApi { method do {}: { [http(from: custom)] xyzzy: string; } }").Methods.Single();
+		method.ValidResponses.Single().NormalFields.Should().BeEmpty();
+	}
+
+	[Test]
 	public void RequestHeaderFieldBadParameter()
 	{
 		ParseInvalidHttpApi("service TestApi { method do { [http(from: header, nam: x)] xyzzy: string; }: {} }")
