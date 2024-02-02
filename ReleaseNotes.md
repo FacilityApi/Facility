@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.12.0
+
+* Support `[http(from: custom)]` on request/response fields.
+
 ## 2.11.0
 
 * Add support for `datetime`.
