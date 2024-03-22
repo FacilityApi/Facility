@@ -13,5 +13,5 @@ public sealed class ServiceExternalEnumInfo : ServiceMemberInfo
 	{
 	}
 
-	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Array.Empty<ServiceElementInfo>();
+	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => [];
 }

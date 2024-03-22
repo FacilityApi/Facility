@@ -30,5 +30,5 @@ public sealed class ServiceAttributeParameterInfo : ServiceElementInfo, IService
 	/// <summary>
 	/// The children of the service element, if any.
 	/// </summary>
-	public override IEnumerable<ServiceElementInfo> GetChildren() => Enumerable.Empty<ServiceElementInfo>();
+	public override IEnumerable<ServiceElementInfo> GetChildren() => [];
 }

@@ -27,5 +27,5 @@ public sealed class ServiceEnumValueInfo : ServiceElementWithAttributesInfo, ISe
 	/// </summary>
 	public string Summary { get; }
 
-	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Enumerable.Empty<ServiceElementInfo>();
+	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => [];
 }

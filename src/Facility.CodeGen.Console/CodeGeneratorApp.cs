@@ -99,7 +99,7 @@ public abstract class CodeGeneratorApp
 	/// <summary>
 	/// Any extra usage lines for help.
 	/// </summary>
-	protected virtual IReadOnlyList<string> ExtraUsage => Array.Empty<string>();
+	protected virtual IReadOnlyList<string> ExtraUsage => [];
 
 	/// <summary>
 	/// Creates the code generator.

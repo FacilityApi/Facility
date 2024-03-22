@@ -32,7 +32,7 @@ public abstract class HttpElementInfo
 	private protected void AddValidationError(ServiceDefinitionError error) => m_validationErrors.Add(error);
 
 	private protected IReadOnlyList<ServiceAttributeParameterInfo> GetHttpParameters(ServiceElementWithAttributesInfo element) =>
-		element.TryGetHttpAttribute()?.Parameters ?? Array.Empty<ServiceAttributeParameterInfo>();
+		element.TryGetHttpAttribute()?.Parameters ?? [];
 
 	private protected void AddInvalidHttpParameterError(ServiceAttributeParameterInfo parameter) =>
 		AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeParameterError("http", parameter));

@@ -18,8 +18,8 @@ public sealed class CodeGenOutput
 	/// </summary>
 	public CodeGenOutput(IReadOnlyList<CodeGenFile>? files, IReadOnlyList<CodeGenPattern>? patternsToClean)
 	{
-		Files = files ?? Array.Empty<CodeGenFile>();
-		PatternsToClean = patternsToClean ?? Array.Empty<CodeGenPattern>();
+		Files = files ?? [];
+		PatternsToClean = patternsToClean ?? [];
 
 		var duplicate = Files.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase).FirstOrDefault(x => x.Skip(1).Any());
 		if (duplicate is not null)

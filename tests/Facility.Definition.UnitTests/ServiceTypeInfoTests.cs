@@ -17,7 +17,7 @@ public class ServiceTypeInfoTests
 	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	public void PrimitiveTypes(string name, ServiceTypeKind kind)
 	{
-		var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: new[] { new ServiceFieldInfo("myField", name) }) });
+		var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: [new ServiceFieldInfo("myField", name)]) });
 		var type = service.GetFieldType(service.Dtos[0].Fields[0])!;
 		type.Kind.Should().Be(kind);
 		type.Dto.Should().BeNull();
@@ -32,7 +32,7 @@ public class ServiceTypeInfoTests
 	public void DtoType()
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyDto") }), new ServiceDtoInfo("MyDto") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", "MyDto")]), new ServiceDtoInfo("MyDto")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(ServiceTypeKind.Dto);
 		type.Dto.Should().Be(service.Dtos[0]);
@@ -47,7 +47,7 @@ public class ServiceTypeInfoTests
 	public void EnumType()
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyEnum") }), new ServiceEnumInfo("MyEnum") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", "MyEnum")]), new ServiceEnumInfo("MyEnum")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(ServiceTypeKind.Enum);
 		type.Dto.Should().BeNull();
@@ -62,7 +62,7 @@ public class ServiceTypeInfoTests
 	public void ExternalDtoType()
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyExternalDto") }), new ServiceExternalDtoInfo("MyExternalDto") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", "MyExternalDto")]), new ServiceExternalDtoInfo("MyExternalDto")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(ServiceTypeKind.ExternalDto);
 		type.Dto.Should().BeNull();
@@ -77,7 +77,7 @@ public class ServiceTypeInfoTests
 	public void ExternalEnumType()
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", "MyExternalEnum") }), new ServiceExternalEnumInfo("MyExternalEnum") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", "MyExternalEnum")]), new ServiceExternalEnumInfo("MyExternalEnum")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(ServiceTypeKind.ExternalEnum);
 		type.Dto.Should().BeNull();
@@ -95,7 +95,7 @@ public class ServiceTypeInfoTests
 	public void ContainerOfDtoType(string name, ServiceTypeKind kind)
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", name) }), new ServiceDtoInfo("MyDto") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", name)]), new ServiceDtoInfo("MyDto")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(kind);
 		type.Dto.Should().BeNull();
@@ -113,7 +113,7 @@ public class ServiceTypeInfoTests
 	public void ContainerOfExternalDtoType(string name, ServiceTypeKind kind)
 	{
 		var service = new ServiceInfo(name: "MyApi",
-			members: new ServiceMemberInfo[] { new ServiceMethodInfo("myMethod", requestFields: new[] { new ServiceFieldInfo("myField", name) }), new ServiceExternalDtoInfo("MyExternalDto") });
+			members: [new ServiceMethodInfo("myMethod", requestFields: [new ServiceFieldInfo("myField", name)]), new ServiceExternalDtoInfo("MyExternalDto")]);
 		var type = service.GetFieldType(service.Methods[0].RequestFields[0])!;
 		type.Kind.Should().Be(kind);
 		type.Dto.Should().BeNull();

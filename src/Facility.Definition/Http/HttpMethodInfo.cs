@@ -221,7 +221,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		}
 
 		ResponseHeaderFields = responseHeaderFields;
-		ValidResponses = GetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode).ToList();
+		ValidResponses = [.. GetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode)];
 
 		var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
 		if (duplicateStatusCode is not null)

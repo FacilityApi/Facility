@@ -40,7 +40,7 @@ public static class ServiceDefinitionUtility
 	/// </summary>
 	public static bool IsValidName(string? name) => name is not null && s_validNameRegex.IsMatch(name);
 
-	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? Enumerable.Empty<T>()).ToList());
+	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? []).ToList());
 
 #if NET6_0_OR_GREATER
 	internal static bool ContainsOrdinal(this string text, string value) => text.Contains(value, StringComparison.Ordinal);

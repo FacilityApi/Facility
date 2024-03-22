@@ -13,7 +13,7 @@ public sealed class HttpQueryFieldInfo : HttpFieldInfo
 	/// <summary>
 	/// The children of the element, if any.
 	/// </summary>
-	public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
+	public override IEnumerable<HttpElementInfo> GetChildren() => [];
 
 	internal HttpQueryFieldInfo(ServiceFieldInfo fieldInfo)
 		: base(fieldInfo)

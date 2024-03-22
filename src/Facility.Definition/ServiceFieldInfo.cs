@@ -65,5 +65,5 @@ public sealed class ServiceFieldInfo : ServiceElementWithAttributesInfo, IServic
 	/// </summary>
 	public ServiceFieldValidation? Validation { get; }
 
-	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => Enumerable.Empty<ServiceElementInfo>();
+	private protected override IEnumerable<ServiceElementInfo> GetExtraChildrenCore() => [];
 }

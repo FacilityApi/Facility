@@ -60,7 +60,7 @@ public sealed class FsdParser : ServiceParser
 
 					targetMember.Remarks = targetMember.Remarks.Count == 0
 						? remarksSection.Lines
-						: targetMember.Remarks.Concat(s_oneEmptyString).Concat(remarksSection.Lines).ToList();
+						: [.. targetMember.Remarks, .. s_oneEmptyString, .. remarksSection.Lines];
 				}
 			}
 		}

@@ -8,7 +8,7 @@ public sealed class HttpNormalFieldInfo : HttpFieldInfo
 	/// <summary>
 	/// The children of the element, if any.
 	/// </summary>
-	public override IEnumerable<HttpElementInfo> GetChildren() => Enumerable.Empty<HttpElementInfo>();
+	public override IEnumerable<HttpElementInfo> GetChildren() => [];
 
 	internal HttpNormalFieldInfo(ServiceFieldInfo fieldInfo)
 		: base(fieldInfo)

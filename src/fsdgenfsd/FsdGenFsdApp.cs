@@ -9,16 +9,16 @@ public sealed class FsdGenFsdApp : CodeGeneratorApp
 {
 	public static int Main(string[] args) => new FsdGenFsdApp().Run(args);
 
-	protected override IReadOnlyList<string> Description => new[]
-	{
+	protected override IReadOnlyList<string> Description =>
+	[
 		"Generates FSD for a Facility Service Definition",
-	};
+	];
 
-	protected override IReadOnlyList<string> ExtraUsage => new[]
-	{
+	protected override IReadOnlyList<string> ExtraUsage =>
+	[
 		"   --file-scoped-service",
 		"      Generate file-scoped service.",
-	};
+	];
 
 	protected override CodeGenerator CreateGenerator() => new FsdGenerator();
 
