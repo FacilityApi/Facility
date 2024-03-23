@@ -14,7 +14,7 @@ public sealed class ValidationTests
 				{
 					X
 				}
-
+			
 				method do
 				{
 					[validate]
@@ -261,7 +261,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-
+			
 			  method do
 			  {
 			    [validate(regex: "\\d+.{2}")]
@@ -281,7 +281,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-
+			
 			  method do
 			  {
 			    [validate(count: -1..10)]
@@ -302,7 +302,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-
+			
 			  method do
 			  {
 			    [validate(count: ..10)]
@@ -324,7 +324,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-
+			
 			  method do
 			  {
 			    [validate(count: 0..)]
@@ -346,7 +346,7 @@ public sealed class ValidationTests
 			  {
 			    X
 			  }
-
+			
 			  method do
 			  {
 			    [validate(count: 10)]
@@ -366,7 +366,7 @@ public sealed class ValidationTests
 			service TestApi {
 				[csharp(name: "ExternalEnum", namespace: "Facility.Definition.UnitTests.ValidationTests")]
 				extern enum ExternalEnum;
-
+			
 				method do
 				{
 					[validate]
