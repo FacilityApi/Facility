@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.12.1
+
+* Add .NET 8 targets.
+
 ## 2.12.0
 
 * Support `[http(from: custom)]` on request/response fields.
