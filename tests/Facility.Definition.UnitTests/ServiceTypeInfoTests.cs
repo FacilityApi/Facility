@@ -17,7 +17,7 @@ public class ServiceTypeInfoTests
 	[TestCase("datetime", ServiceTypeKind.DateTime)]
 	public void PrimitiveTypes(string name, ServiceTypeKind kind)
 	{
-		var service = new ServiceInfo(name: "MyApi", members: new[] { new ServiceDtoInfo("MyDto", fields: [new ServiceFieldInfo("myField", name)]) });
+		var service = new ServiceInfo(name: "MyApi", members: [new ServiceDtoInfo("MyDto", fields: [new ServiceFieldInfo("myField", name)])]);
 		var type = service.GetFieldType(service.Dtos[0].Fields[0])!;
 		type.Kind.Should().Be(kind);
 		type.Dto.Should().BeNull();

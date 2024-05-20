@@ -25,7 +25,7 @@ public sealed class HttpResponseInfo : HttpElementInfo
 	/// <summary>
 	/// The children of the element, if any.
 	/// </summary>
-	public override IEnumerable<HttpElementInfo> GetChildren() => NormalFields?.AsEnumerable<HttpElementInfo>() ?? new[] { BodyField! };
+	public override IEnumerable<HttpElementInfo> GetChildren() => NormalFields?.AsEnumerable<HttpElementInfo>() ?? [BodyField!];
 
 	internal HttpResponseInfo(HttpStatusCode statusCode, IReadOnlyList<HttpNormalFieldInfo> normalFields)
 	{
