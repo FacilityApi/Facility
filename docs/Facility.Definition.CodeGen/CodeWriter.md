@@ -21,7 +21,9 @@ public sealed class CodeWriter
 | [Write](CodeWriter/Write.md)(…) | Writes the specified text. |
 | [WriteLine](CodeWriter/WriteLine.md)() | Writes a new line. |
 | [WriteLine](CodeWriter/WriteLine.md)(…) | Writes the specified text followed by a new line. |
+| [WriteLineNoIndent](CodeWriter/WriteLineNoIndent.md)(…) | Writes the specified text followed by a new line. |
 | [WriteLineSkipOnce](CodeWriter/WriteLineSkipOnce.md)() | Writes a new line if it has already been called once in this indent scope. |
+| [WriteNoIndent](CodeWriter/WriteNoIndent.md)(…) | Writes the specified text. |
 
 ## See Also
 
