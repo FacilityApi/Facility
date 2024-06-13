@@ -90,6 +90,14 @@ public sealed class CodeWriter
 	}
 
 	/// <summary>
+	/// Writes the specified text.
+	/// </summary>
+	public void WriteNoIndent(string text)
+	{
+		TextWriter.Write(text);
+	}
+
+	/// <summary>
 	/// Writes a new line.
 	/// </summary>
 	public void WriteLine()
@@ -104,6 +112,15 @@ public sealed class CodeWriter
 	public void WriteLine(string text)
 	{
 		Write(text);
+		WriteLine();
+	}
+
+	/// <summary>
+	/// Writes the specified text followed by a new line.
+	/// </summary>
+	public void WriteLineNoIndent(string text)
+	{
+		WriteNoIndent(text);
 		WriteLine();
 	}
 

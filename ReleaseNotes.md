@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.13.0
+
+* Add `WriteNoIndent` and `WriteLineNoIndent` to `CodeWriter`.
+
 ## 2.12.1
 
 * Add .NET 8 targets.
