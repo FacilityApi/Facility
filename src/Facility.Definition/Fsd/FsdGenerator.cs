@@ -52,7 +52,7 @@ public sealed class FsdGenerator : CodeGenerator
 					if (member is ServiceMethodInfo method)
 					{
 						WriteSummaryAndAttributes(code, method);
-						code.WriteLine($"method {method.Name}");
+						code.WriteLine($"{method.Kind.GetKeyword()} {method.Name}");
 						using (code.Block("{", "}:"))
 							WriteFields(code, method.RequestFields);
 						using (code.Block())

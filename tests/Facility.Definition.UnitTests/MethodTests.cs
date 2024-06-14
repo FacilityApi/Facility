@@ -23,12 +23,15 @@ public sealed class MethodTests
 		new ServiceMethodInfo(name: "x", requestFields: isRequest ? fields : null, responseFields: isRequest ? null : fields).IsValid.Should().BeFalse();
 	}
 
-	[Test]
-	public void OneMinimalMethod()
+	[TestCase(ServiceMethodKind.Normal)]
+	[TestCase(ServiceMethodKind.Event)]
+	public void OneMinimalMethod(ServiceMethodKind kind)
 	{
-		var service = TestUtility.ParseTestApi("service TestApi { method do {}: {} }");
+		var keyword = kind.GetKeyword();
+		var service = TestUtility.ParseTestApi($$"""service TestApi { {{keyword}} do {}: {} }""");
 
 		var method = service.Methods.Single();
+		method.Kind.Should().Be(kind);
 		method.Name.Should().Be("do");
 		method.Attributes.Count.Should().Be(0);
 		method.Summary.Should().Be("");
@@ -41,7 +44,7 @@ public sealed class MethodTests
 			"",
 			"service TestApi",
 			"{",
-			"\tmethod do",
+			$"\t{keyword} do",
 			"\t{",
 			"\t}:",
 			"\t{",

@@ -75,7 +75,7 @@ public sealed class ServiceTests
 	[Test]
 	public void MissingEndBrace()
 	{
-		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'extern' or 'method'");
+		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'extern' or 'method' or 'event'");
 	}
 
 	[Test]

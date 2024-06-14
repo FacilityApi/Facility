@@ -125,6 +125,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			if (member is ServiceMethodInfo method)
 			{
 				return new ServiceMethodInfo(
+					kind: method.Kind,
 					name: method.Name,
 					requestFields: method.RequestFields.Where(ShouldNotExclude),
 					responseFields: method.ResponseFields.Where(ShouldNotExclude),
