@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [master]
+    branches: [events]
     tags-ignore: ['**']
   pull_request:
   workflow_dispatch:
@@ -39,7 +39,7 @@ jobs:
     - name: Test
       run: .\build.ps1 test --skip build
     - name: Publish
-      if: runner.os == 'Windows' && github.repository_owner == 'FacilityApi' && github.ref == 'refs/heads/master'
+      if: runner.os == 'Windows' && github.repository_owner == 'FacilityApi' && github.ref == 'refs/heads/events'
       env:
         BUILD_BOT_PASSWORD: ${{ secrets.BUILD_BOT_PASSWORD }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
