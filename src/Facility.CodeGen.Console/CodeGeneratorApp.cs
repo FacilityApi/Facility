@@ -102,6 +102,11 @@ public abstract class CodeGeneratorApp
 	protected virtual IReadOnlyList<string> ExtraUsage => [];
 
 	/// <summary>
+	/// Creates the service parser.
+	/// </summary>
+	protected virtual ServiceParser CreateParser() => new FsdParser(new FsdParserSettings());
+
+	/// <summary>
 	/// Creates the code generator.
 	/// </summary>
 	protected abstract CodeGenerator CreateGenerator();
@@ -112,11 +117,6 @@ public abstract class CodeGeneratorApp
 	/// <param name="args">Used to support extra arguments.</param>
 	/// <returns>The file generator settings.</returns>
 	protected abstract FileGeneratorSettings CreateSettings(ArgsReader args);
-
-	/// <summary>
-	/// Creates the service parser.
-	/// </summary>
-	protected virtual ServiceParser CreateParser() => new FsdParser();
 
 	private void WriteUsage(CodeGenerator generator)
 	{
