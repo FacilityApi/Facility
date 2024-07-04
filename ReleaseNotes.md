@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.14.0
+
+* Support events. (Must opt-in via `FsdParserSettings.SupportsEvents`.)
+
 ## 2.13.0
 
 * Add `WriteNoIndent` and `WriteLineNoIndent` to `CodeWriter`.
