@@ -1,30 +1,4 @@
-# FileGenerator.GenerateFiles method (1 of 2)
-
-Parses input files and generates output files.
-
-```csharp
-public static int GenerateFiles(CodeGenerator generator, FileGeneratorSettings settings)
-```
-
-| parameter | description |
-| --- | --- |
-| generator | The code generator. |
-| settings | The settings. |
-
-## Return Value
-
-The number of updated files.
-
-## See Also
-
-* class [CodeGenerator](../CodeGenerator.md)
-* class [FileGeneratorSettings](../FileGeneratorSettings.md)
-* class [FileGenerator](../FileGenerator.md)
-* namespace [Facility.Definition.CodeGen](../../Facility.Definition.md)
-
----
-
-# FileGenerator.GenerateFiles method (2 of 2)
+# FileGenerator.GenerateFiles method
 
 Parses input files and generates output files.
 

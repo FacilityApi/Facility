@@ -3,11 +3,12 @@
 Generates an FSD file for a service definition.
 
 ```csharp
-public static int GenerateFsd(FsdGeneratorSettings settings)
+public static int GenerateFsd(ServiceParser parser, FsdGeneratorSettings settings)
 ```
 
 | parameter | description |
 | --- | --- |
+| parser | The service parser. |
 | settings | The settings. |
 
 ## Return Value
@@ -16,6 +17,7 @@ The number of updated files.
 
 ## See Also
 
+* class [ServiceParser](../ServiceParser.md)
 * class [FsdGeneratorSettings](../FsdGeneratorSettings.md)
 * class [FsdGenerator](../FsdGenerator.md)
 * namespace [Facility.Definition.Fsd](../../Facility.Definition.md)

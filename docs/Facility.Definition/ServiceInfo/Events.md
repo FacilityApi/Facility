@@ -1,14 +1,14 @@
-# ServiceInfo.Members property
+# ServiceInfo.Events property
 
-All service members.
+The event methods.
 
 ```csharp
-public IReadOnlyList<ServiceMemberInfo> Members { get; }
+public IReadOnlyList<ServiceMethodInfo> Events { get; }
 ```
 
 ## See Also
 
-* class [ServiceMemberInfo](../ServiceMemberInfo.md)
+* class [ServiceMethodInfo](../ServiceMethodInfo.md)
 * class [ServiceInfo](../ServiceInfo.md)
 * namespace [Facility.Definition](../../Facility.Definition.md)
 

@@ -10,7 +10,8 @@ public sealed class ServiceMethodInfo : ServiceMemberInfo
 
 | name | description |
 | --- | --- |
-| [ServiceMethodInfo](ServiceMethodInfo/ServiceMethodInfo.md)(…) | Creates a method. |
+| [ServiceMethodInfo](ServiceMethodInfo/ServiceMethodInfo.md)(…) | Creates a method. (2 constructors) |
+| [Kind](ServiceMethodInfo/Kind.md) { get; } | The kind of the method. |
 | [RequestFields](ServiceMethodInfo/RequestFields.md) { get; } | The request fields of the method. |
 | [ResponseFields](ServiceMethodInfo/ResponseFields.md) { get; } | The response fields of the method. |
 

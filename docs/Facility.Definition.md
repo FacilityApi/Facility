@@ -28,6 +28,7 @@
 | class [ServiceInfo](./Facility.Definition/ServiceInfo.md) | Information about a service from a definition. |
 | abstract class [ServiceMemberInfo](./Facility.Definition/ServiceMemberInfo.md) | Properties common to service members. |
 | class [ServiceMethodInfo](./Facility.Definition/ServiceMethodInfo.md) | A service method. |
+| enum [ServiceMethodKind](./Facility.Definition/ServiceMethodKind.md) | The kind of service method. |
 | class [ServicePart](./Facility.Definition/ServicePart.md) | A part of a service element. |
 | enum [ServicePartKind](./Facility.Definition/ServicePartKind.md) | The kind of service part. |
 | class [ServiceTypeInfo](./Facility.Definition/ServiceTypeInfo.md) | A service type. |
@@ -54,6 +55,7 @@
 | class [FsdGenerator](./Facility.Definition.Fsd/FsdGenerator.md) | Generates an FSD file for a service definition. |
 | class [FsdGeneratorSettings](./Facility.Definition.Fsd/FsdGeneratorSettings.md) | Settings for generating an FSD file for a service definition. |
 | class [FsdParser](./Facility.Definition.Fsd/FsdParser.md) | Parses FSD files. |
+| class [FsdParserSettings](./Facility.Definition.Fsd/FsdParserSettings.md) | Settings for parsing an FSD file. |
 | abstract class [ServiceParser](./Facility.Definition.Fsd/ServiceParser.md) | Base class for service parsers. |
 
 ## Facility.Definition.Http namespace

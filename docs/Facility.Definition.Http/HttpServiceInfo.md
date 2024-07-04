@@ -11,8 +11,10 @@ public sealed class HttpServiceInfo : HttpElementInfo
 | name | description |
 | --- | --- |
 | static [Create](HttpServiceInfo/Create.md)(…) | Creates an HTTP mapping for a service. |
+| [AllMethods](HttpServiceInfo/AllMethods.md) { get; } | The HTTP mapping for all methods (normal methods and event methods). |
 | [ErrorSets](HttpServiceInfo/ErrorSets.md) { get; } | The HTTP mapping for the error sets. |
-| [Methods](HttpServiceInfo/Methods.md) { get; } | The HTTP mapping for the methods. |
+| [Events](HttpServiceInfo/Events.md) { get; } | The HTTP mapping for event methods. |
+| [Methods](HttpServiceInfo/Methods.md) { get; } | The HTTP mapping for normal methods. |
 | [Service](HttpServiceInfo/Service.md) { get; } | The service. |
 | [Url](HttpServiceInfo/Url.md) { get; } | The URL of the HTTP service. |
 | override [GetChildren](HttpServiceInfo/GetChildren.md)() | The children of the element, if any. |

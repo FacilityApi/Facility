@@ -11,13 +11,15 @@ public sealed class ServiceInfo : ServiceMemberInfo
 | name | description |
 | --- | --- |
 | [ServiceInfo](ServiceInfo/ServiceInfo.md)(…) | Creates a service. |
+| [AllMethods](ServiceInfo/AllMethods.md) { get; } | All methods (normal methods and event methods). |
 | [Dtos](ServiceInfo/Dtos.md) { get; } | The DTOs. |
 | [Enums](ServiceInfo/Enums.md) { get; } | The enumerated types. |
 | [ErrorSets](ServiceInfo/ErrorSets.md) { get; } | The error sets. |
+| [Events](ServiceInfo/Events.md) { get; } | The event methods. |
 | [ExternalDtos](ServiceInfo/ExternalDtos.md) { get; } | The external DTOs. |
 | [ExternalEnums](ServiceInfo/ExternalEnums.md) { get; } | The external enumerated types. |
-| [Members](ServiceInfo/Members.md) { get; } | All of the service members.. |
-| [Methods](ServiceInfo/Methods.md) { get; } | The methods. |
+| [Members](ServiceInfo/Members.md) { get; } | All service members. |
+| [Methods](ServiceInfo/Methods.md) { get; } | The normal methods. |
 | [ExcludeTag](ServiceInfo/ExcludeTag.md)(…) | Excludes a tag from the service. |
 | [FindMember](ServiceInfo/FindMember.md)(…) | Finds the member of the specified name. |
 | [GetFieldType](ServiceInfo/GetFieldType.md)(…) | Gets the field type for a field. |

@@ -3,7 +3,7 @@
 Creates the service parser.
 
 ```csharp
-protected virtual ServiceParser CreateParser()
+protected abstract ServiceParser CreateParser()
 ```
 
 ## See Also

@@ -10,7 +10,7 @@ public static class FileGenerator
 
 | name | description |
 | --- | --- |
-| static [GenerateFiles](FileGenerator/GenerateFiles.md)(…) | Parses input files and generates output files. (2 methods) |
+| static [GenerateFiles](FileGenerator/GenerateFiles.md)(…) | Parses input files and generates output files. |
 
 ## See Also
 

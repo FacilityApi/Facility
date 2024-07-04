@@ -1,4 +1,4 @@
-# ServiceMethodInfo constructor
+# ServiceMethodInfo constructor (1 of 2)
 
 Creates a method.
 
@@ -11,6 +11,29 @@ public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo>? requestFiel
 
 ## See Also
 
+* class [ServiceFieldInfo](../ServiceFieldInfo.md)
+* class [ServiceAttributeInfo](../ServiceAttributeInfo.md)
+* class [ServicePart](../ServicePart.md)
+* class [ServiceMethodInfo](../ServiceMethodInfo.md)
+* namespace [Facility.Definition](../../Facility.Definition.md)
+
+---
+
+# ServiceMethodInfo constructor (2 of 2)
+
+Creates a method.
+
+```csharp
+public ServiceMethodInfo(ServiceMethodKind kind, string name, 
+    IEnumerable<ServiceFieldInfo>? requestFields = null, 
+    IEnumerable<ServiceFieldInfo>? responseFields = null, 
+    IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, 
+    IEnumerable<string>? remarks = null, params ServicePart[] parts)
+```
+
+## See Also
+
+* enum [ServiceMethodKind](../ServiceMethodKind.md)
 * class [ServiceFieldInfo](../ServiceFieldInfo.md)
 * class [ServiceAttributeInfo](../ServiceAttributeInfo.md)
 * class [ServicePart](../ServicePart.md)

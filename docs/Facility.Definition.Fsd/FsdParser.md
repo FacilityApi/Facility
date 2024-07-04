@@ -10,7 +10,7 @@ public sealed class FsdParser : ServiceParser
 
 | name | description |
 | --- | --- |
-| [FsdParser](FsdParser/FsdParser.md)() | The default constructor. |
+| [FsdParser](FsdParser/FsdParser.md)(…) | Creates an FSD parser. |
 
 ## Protected Members
 

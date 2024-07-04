@@ -1,9 +1,9 @@
-# HttpServiceInfo.Methods property
+# HttpServiceInfo.AllMethods property
 
-The HTTP mapping for normal methods.
+The HTTP mapping for all methods (normal methods and event methods).
 
 ```csharp
-public IReadOnlyList<HttpMethodInfo> Methods { get; }
+public IReadOnlyList<HttpMethodInfo> AllMethods { get; }
 ```
 
 ## See Also
