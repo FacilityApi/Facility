@@ -13,6 +13,7 @@ public static class FileGenerator
 	/// <param name="generator">The code generator.</param>
 	/// <param name="settings">The settings.</param>
 	/// <returns>The number of updated files.</returns>
+	[Obsolete("Use the overload that takes a parser.")]
 	public static int GenerateFiles(CodeGenerator generator, FileGeneratorSettings settings) => GenerateFiles(new FsdParser(), generator, settings);
 
 	/// <summary>

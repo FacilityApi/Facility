@@ -9,6 +9,22 @@ namespace Facility.Definition.Fsd;
 public sealed class FsdParser : ServiceParser
 {
 	/// <summary>
+	/// Creates an FSD parser.
+	/// </summary>
+	public FsdParser(FsdParserSettings settings)
+	{
+		m_supportsEvents = settings.SupportsEvents;
+	}
+
+	/// <summary>
+	/// Creates an FSD parser.
+	/// </summary>
+	[Obsolete("Use the constructor that takes FsdParserSettings.")]
+	public FsdParser()
+	{
+	}
+
+	/// <summary>
 	/// Implements TryParseDefinition.
 	/// </summary>
 	protected override bool TryParseDefinitionCore(ServiceDefinitionText text, out ServiceInfo? service, out IReadOnlyList<ServiceDefinitionError> errors)
@@ -61,6 +77,22 @@ public sealed class FsdParser : ServiceParser
 					targetMember.Remarks = targetMember.Remarks.Count == 0
 						? remarksSection.Lines
 						: [.. targetMember.Remarks, .. s_oneEmptyString, .. remarksSection.Lines];
+				}
+			}
+
+			foreach (var method in service.AllMethods)
+			{
+				switch (method.Kind)
+				{
+					case ServiceMethodKind.Normal:
+						break;
+					case ServiceMethodKind.Event:
+						if (!m_supportsEvents)
+							errorList.Add(new ServiceDefinitionError("Events are not supported by this parser.", method.GetPart(ServicePartKind.Keyword)!.Position));
+						break;
+					default:
+						errorList.Add(new ServiceDefinitionError("Unexpected method kind.", method.GetPart(ServicePartKind.Keyword)!.Position));
+						break;
 				}
 			}
 		}
@@ -201,4 +233,6 @@ public sealed class FsdParser : ServiceParser
 	private static readonly Regex s_interleavedMarkdown = new(@"^```fsd\b", RegexOptions.Multiline);
 	private static readonly Regex s_markdownHeading = new(@"^#\s+");
 	private static readonly string[] s_oneEmptyString = [""];
+
+	private readonly bool m_supportsEvents;
 }

@@ -13,6 +13,7 @@ public class HttpServiceInfoTests : HttpInfoTestsBase
 		info.Service.Name.Should().Be("TestApi");
 		info.Url.Should().BeNull();
 		info.Methods.Count.Should().Be(0);
+		info.Events.Count.Should().Be(0);
 		info.ErrorSets.Count.Should().Be(0);
 	}
 
@@ -23,6 +24,18 @@ public class HttpServiceInfoTests : HttpInfoTestsBase
 		info.Service.Name.Should().Be("TestApi");
 		info.Url.Should().BeNull();
 		info.Methods.Count.Should().Be(1);
+		info.Events.Count.Should().Be(0);
+		info.ErrorSets.Count.Should().Be(0);
+	}
+
+	[Test]
+	public void OneMinimalEvent()
+	{
+		var info = ParseHttpApi("service TestApi { event do {}: {} }");
+		info.Service.Name.Should().Be("TestApi");
+		info.Url.Should().BeNull();
+		info.Methods.Count.Should().Be(0);
+		info.Events.Count.Should().Be(1);
 		info.ErrorSets.Count.Should().Be(0);
 	}
 

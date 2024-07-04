@@ -35,9 +35,19 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	public string? Url { get; }
 
 	/// <summary>
-	/// The HTTP mapping for the methods.
+	/// The HTTP mapping for all methods (normal methods and event methods).
 	/// </summary>
-	public IReadOnlyList<HttpMethodInfo> Methods { get; }
+	public IReadOnlyList<HttpMethodInfo> AllMethods { get; }
+
+	/// <summary>
+	/// The HTTP mapping for normal methods.
+	/// </summary>
+	public IReadOnlyList<HttpMethodInfo> Methods => AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Normal).ToList();
+
+	/// <summary>
+	/// The HTTP mapping for event methods.
+	/// </summary>
+	public IReadOnlyList<HttpMethodInfo> Events => AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Event).ToList();
 
 	/// <summary>
 	/// The HTTP mapping for the error sets.
@@ -47,7 +57,7 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	/// <summary>
 	/// The children of the element, if any.
 	/// </summary>
-	public override IEnumerable<HttpElementInfo> GetChildren() => Methods.AsEnumerable<HttpElementInfo>().Concat(ErrorSets);
+	public override IEnumerable<HttpElementInfo> GetChildren() => AllMethods.AsEnumerable<HttpElementInfo>().Concat(ErrorSets);
 
 	private HttpServiceInfo(ServiceInfo serviceInfo)
 	{
@@ -73,10 +83,10 @@ public sealed class HttpServiceInfo : HttpElementInfo
 			}
 		}
 
-		Methods = serviceInfo.Methods.Select(x => new HttpMethodInfo(x, serviceInfo)).ToList();
+		AllMethods = serviceInfo.AllMethods.Select(x => new HttpMethodInfo(x, serviceInfo)).ToList();
 		ErrorSets = serviceInfo.ErrorSets.Select(x => new HttpErrorSetInfo(x)).ToList();
 
-		var methodsByRoute = Methods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
+		var methodsByRoute = AllMethods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
 		for (var index = 1; index < methodsByRoute.Count; index++)
 		{
 			var left = methodsByRoute[index - 1];

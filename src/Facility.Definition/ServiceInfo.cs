@@ -43,14 +43,24 @@ public sealed class ServiceInfo : ServiceMemberInfo
 	}
 
 	/// <summary>
-	/// All of the service members..
+	/// All service members.
 	/// </summary>
 	public IReadOnlyList<ServiceMemberInfo> Members { get; }
 
 	/// <summary>
-	/// The methods.
+	/// All methods (normal methods and event methods).
 	/// </summary>
-	public IReadOnlyList<ServiceMethodInfo> Methods => Members.OfType<ServiceMethodInfo>().ToReadOnlyList();
+	public IReadOnlyList<ServiceMethodInfo> AllMethods => Members.OfType<ServiceMethodInfo>().ToReadOnlyList();
+
+	/// <summary>
+	/// The normal methods.
+	/// </summary>
+	public IReadOnlyList<ServiceMethodInfo> Methods => Members.OfType<ServiceMethodInfo>().Where(x => x.Kind == ServiceMethodKind.Normal).ToReadOnlyList();
+
+	/// <summary>
+	/// The event methods.
+	/// </summary>
+	public IReadOnlyList<ServiceMethodInfo> Events => Members.OfType<ServiceMethodInfo>().Where(x => x.Kind == ServiceMethodKind.Event).ToReadOnlyList();
 
 	/// <summary>
 	/// The DTOs.
@@ -125,6 +135,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			if (member is ServiceMethodInfo method)
 			{
 				return new ServiceMethodInfo(
+					kind: method.Kind,
 					name: method.Name,
 					requestFields: method.RequestFields.Where(ShouldNotExclude),
 					responseFields: method.ResponseFields.Where(ShouldNotExclude),

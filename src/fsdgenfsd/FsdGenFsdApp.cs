@@ -20,6 +20,8 @@ public sealed class FsdGenFsdApp : CodeGeneratorApp
 		"      Generate file-scoped service.",
 	];
 
+	protected override ServiceParser CreateParser() => new FsdParser(new FsdParserSettings { SupportsEvents = true });
+
 	protected override CodeGenerator CreateGenerator() => new FsdGenerator();
 
 	protected override FileGeneratorSettings CreateSettings(ArgsReader args) =>
