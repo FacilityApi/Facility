@@ -11,8 +11,18 @@ public sealed class FsdGenerator : CodeGenerator
 	/// <summary>
 	/// Generates an FSD file for a service definition.
 	/// </summary>
+	/// <param name="parser">The service parser.</param>
 	/// <param name="settings">The settings.</param>
 	/// <returns>The number of updated files.</returns>
+	public static int GenerateFsd(ServiceParser parser, FsdGeneratorSettings settings) =>
+		FileGenerator.GenerateFiles(parser, new FsdGenerator { GeneratorName = nameof(FsdGenerator) }, settings);
+
+	/// <summary>
+	/// Generates an FSD file for a service definition.
+	/// </summary>
+	/// <param name="settings">The settings.</param>
+	/// <returns>The number of updated files.</returns>
+	[Obsolete("Use the overload that takes a parser.")]
 	public static int GenerateFsd(FsdGeneratorSettings settings) =>
 		FileGenerator.GenerateFiles(new FsdGenerator { GeneratorName = nameof(FsdGenerator) }, settings);
 
@@ -52,7 +62,7 @@ public sealed class FsdGenerator : CodeGenerator
 					if (member is ServiceMethodInfo method)
 					{
 						WriteSummaryAndAttributes(code, method);
-						code.WriteLine($"method {method.Name}");
+						code.WriteLine($"{method.Kind.GetKeyword()} {method.Name}");
 						using (code.Block("{", "}:"))
 							WriteFields(code, method.RequestFields);
 						using (code.Block())

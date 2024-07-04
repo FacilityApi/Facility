@@ -9,14 +9,28 @@ public sealed class ServiceMethodInfo : ServiceMemberInfo
 	/// Creates a method.
 	/// </summary>
 	public ServiceMethodInfo(string name, IEnumerable<ServiceFieldInfo>? requestFields = null, IEnumerable<ServiceFieldInfo>? responseFields = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
+		: this(ServiceMethodKind.Normal, name, requestFields, responseFields, attributes, summary, remarks, parts)
+	{
+	}
+
+	/// <summary>
+	/// Creates a method.
+	/// </summary>
+	public ServiceMethodInfo(ServiceMethodKind kind, string name, IEnumerable<ServiceFieldInfo>? requestFields = null, IEnumerable<ServiceFieldInfo>? responseFields = null, IEnumerable<ServiceAttributeInfo>? attributes = null, string? summary = null, IEnumerable<string>? remarks = null, params ServicePart[] parts)
 		: base(name, attributes, summary, remarks, parts)
 	{
+		Kind = kind;
 		RequestFields = requestFields.ToReadOnlyList();
 		ResponseFields = responseFields.ToReadOnlyList();
 
 		ValidateNoDuplicateNames(RequestFields, "request field");
 		ValidateNoDuplicateNames(ResponseFields, "response field");
 	}
+
+	/// <summary>
+	/// The kind of the method.
+	/// </summary>
+	public ServiceMethodKind Kind { get; }
 
 	/// <summary>
 	/// The request fields of the method.

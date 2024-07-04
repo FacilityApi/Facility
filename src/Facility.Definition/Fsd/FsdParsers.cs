@@ -173,12 +173,12 @@ internal static class FsdParsers
 		from comments1 in CommentOrWhiteSpaceParser.Many()
 		from attributes in AttributeParser(context).Delimited(",").Bracketed("[", "]").Many()
 		from comments2 in CommentOrWhiteSpaceParser.Many()
-		from keyword in KeywordParser("method")
+		from keyword in KeywordParser("method", "event")
 		from name in NameParser.Named("method name")
 		from requestFields in FieldParser(context).Many().Bracketed("{", "}")
 		from colon in PunctuationParser(":")
 		from responseFields in FieldParser(context).Many().Bracketed("{", "}")
-		select new ServiceMethodInfo(name.Value, requestFields, responseFields,
+		select new ServiceMethodInfo(keyword.Value == "event" ? ServiceMethodKind.Event : ServiceMethodKind.Normal, name.Value, requestFields, responseFields,
 			attributes.SelectMany(x => x),
 			BuildSummary(comments1, comments2),
 			context.GetRemarksSection(name.Value)?.Lines,

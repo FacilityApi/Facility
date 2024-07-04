@@ -72,6 +72,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		Method = "POST";
 		Path = $"/{methodInfo.Name}";
 		HttpStatusCode? statusCode = null;
+		var isEvent = methodInfo.Kind == ServiceMethodKind.Event;
 
 		foreach (var methodParameter in GetHttpParameters(methodInfo))
 		{
@@ -222,6 +223,14 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 		ResponseHeaderFields = responseHeaderFields;
 		ValidResponses = [.. GetValidResponses(serviceInfo, statusCode, responseNormalFields, responseBodyFields).OrderBy(x => x.StatusCode)];
+
+		if (isEvent)
+		{
+			if (responseHeaderFields.Count != 0)
+				AddValidationError(new ServiceDefinitionError("Events do not support response headers.", methodInfo.Position));
+			if (ValidResponses.Count != 1)
+				AddValidationError(new ServiceDefinitionError("Events do not support multiple status codes.", methodInfo.Position));
+		}
 
 		var duplicateStatusCode = ValidResponses.GroupBy(x => x.StatusCode).FirstOrDefault(x => x.Count() > 1);
 		if (duplicateStatusCode is not null)

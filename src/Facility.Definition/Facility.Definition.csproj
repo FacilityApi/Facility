@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Facility.Definition.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Faithlife.Parsing" />
   </ItemGroup>
 

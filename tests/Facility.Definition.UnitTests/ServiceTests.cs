@@ -20,7 +20,7 @@ public sealed class ServiceTests
 		service.ErrorSets.Count.Should().Be(0);
 		service.Enums.Count.Should().Be(0);
 		service.Dtos.Count.Should().Be(0);
-		service.Methods.Count.Should().Be(0);
+		service.AllMethods.Count.Should().Be(0);
 		service.Summary.Should().Be("");
 		service.Remarks.Count.Should().Be(0);
 
@@ -43,7 +43,7 @@ public sealed class ServiceTests
 		service.ErrorSets.Count.Should().Be(0);
 		service.Enums.Count.Should().Be(0);
 		service.Dtos.Count.Should().Be(0);
-		service.Methods.Count.Should().Be(0);
+		service.AllMethods.Count.Should().Be(0);
 		service.Summary.Should().Be("");
 		service.Remarks.Count.Should().Be(0);
 
@@ -75,7 +75,7 @@ public sealed class ServiceTests
 	[Test]
 	public void MissingEndBrace()
 	{
-		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'extern' or 'method'");
+		TestUtility.ParseInvalidTestApi("service TestApi {").Message.Should().Be("TestApi.fsd(1,18): expected '}' or '[' or 'data' or 'enum' or 'errors' or 'extern' or 'method' or 'event'");
 	}
 
 	[Test]

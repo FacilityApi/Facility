@@ -40,6 +40,13 @@ public static class ServiceDefinitionUtility
 	/// </summary>
 	public static bool IsValidName(string? name) => name is not null && s_validNameRegex.IsMatch(name);
 
+	internal static string GetKeyword(this ServiceMethodKind kind) => kind switch
+	{
+		ServiceMethodKind.Normal => "method",
+		ServiceMethodKind.Event => "event",
+		_ => throw new ArgumentOutOfRangeException(nameof(kind)),
+	};
+
 	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? []).ToList());
 
 #if NET6_0_OR_GREATER

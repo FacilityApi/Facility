@@ -6,7 +6,7 @@ internal static class TestUtility
 {
 	public static ServiceInfo ParseTestApi(string text)
 	{
-		return new FsdParser().ParseDefinition(new ServiceDefinitionText("TestApi.fsd", text));
+		return CreateParser().ParseDefinition(new ServiceDefinitionText("TestApi.fsd", text));
 	}
 
 	public static ServiceDefinitionException ParseInvalidTestApi(string text)
@@ -24,7 +24,7 @@ internal static class TestUtility
 
 	public static IReadOnlyList<ServiceDefinitionError> TryParseInvalidTestApi(string text)
 	{
-		if (new FsdParser().TryParseDefinition(new ServiceDefinitionText("TestApi.fsd", text), out _, out var errors))
+		if (CreateParser().TryParseDefinition(new ServiceDefinitionText("TestApi.fsd", text), out _, out var errors))
 			throw new InvalidOperationException("Parse did not fail.");
 		return errors;
 	}
@@ -36,4 +36,6 @@ internal static class TestUtility
 			generator.ApplySettings(settings);
 		return generator.GenerateOutput(service).Files[0].Text.Split(Environment.NewLine);
 	}
+
+	public static FsdParser CreateParser() => new(new FsdParserSettings { SupportsEvents = true });
 }
