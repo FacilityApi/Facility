@@ -48,6 +48,6 @@ return BuildRunner.Execute(args, build =>
 		RunCodeGen("example/ExampleApi.fsd.md", "example/output/ExampleApi-nowidgets.fsd", "--excludeTag", "widgets", "--verify");
 
 		void RunCodeGen(params string?[] args) =>
-			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-f", "net6.0", "-c", configuration, "--", "--newline", "lf" }.Concat(args));
+			RunDotNet(new[] { "run", "--no-build", "--project", $"src/{codegen}", "-c", configuration, "--", "--newline", "lf" }.Concat(args));
 	}
 });
