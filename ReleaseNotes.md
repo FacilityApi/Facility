@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.15.0
+
+* Drop support for end-of-life frameworks (.NET 6 and 7).
+* Use roll forward with .NET tool.
+
 ## 2.14.0
 
 * Support events. (Must opt-in via `FsdParserSettings.SupportsEvents`.)
