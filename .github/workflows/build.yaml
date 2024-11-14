@@ -22,16 +22,12 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-    - name: Install .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: |
-          6.0.x
-          8.0.x
     - name: Check out code
       uses: actions/checkout@v3
       with:
         fetch-depth: 0 # required to publish docs
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
     - name: Restore
       run: .\build.ps1 restore
     - name: Build
