@@ -223,7 +223,7 @@ internal static class FsdParsers
 			'n' => "\n",
 			'r' => "\r",
 			't' => "\t",
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 			'u' => new string((char) ushort.Parse(text.AsSpan(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),
 #else
 			'u' => new string((char) ushort.Parse(text.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture), 1),

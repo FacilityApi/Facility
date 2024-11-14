@@ -8,7 +8,7 @@ internal static partial class Regexes
 {
 	private const string c_wordPattern = "[A-Z]([A-Z]*(?![a-z])|[a-z]*)|[a-z]+|[0-9]+";
 	private const RegexOptions c_wordOptions = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
-#if NET7_0_OR_GREATER
+#if !NETSTANDARD2_0
 	[GeneratedRegex(c_wordPattern, c_wordOptions)]
 	public static partial Regex Word();
 #else

@@ -49,7 +49,7 @@ public static class ServiceDefinitionUtility
 
 	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? []).ToList());
 
-#if NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 	internal static bool ContainsOrdinal(this string text, string value) => text.Contains(value, StringComparison.Ordinal);
 	internal static string ReplaceOrdinal(this string text, string oldValue, string newValue) => text.Replace(oldValue, newValue, StringComparison.Ordinal);
 #else
