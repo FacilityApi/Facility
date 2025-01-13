@@ -359,6 +359,10 @@ data Preference
 
 	booleans: boolean[];
 
+	float: float;
+
+	floats: float[];
+
 	double: double;
 
 	doubles: double[];

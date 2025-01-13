@@ -180,6 +180,7 @@ public sealed class ServiceTypeInfo
 	[
 		(ServiceTypeKind.String, "string"),
 		(ServiceTypeKind.Boolean, "boolean"),
+		(ServiceTypeKind.Float, "float"),
 		(ServiceTypeKind.Double, "double"),
 		(ServiceTypeKind.Int32, "int32"),
 		(ServiceTypeKind.Int64, "int64"),
