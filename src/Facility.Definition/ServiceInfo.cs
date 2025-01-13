@@ -236,6 +236,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 
 				break;
 
+			case ServiceTypeKind.Float:
 			case ServiceTypeKind.Double:
 			case ServiceTypeKind.Int32:
 			case ServiceTypeKind.Int64:

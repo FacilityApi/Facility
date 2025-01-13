@@ -13,6 +13,7 @@ public sealed class FieldTests
 
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]
@@ -185,6 +186,7 @@ public sealed class FieldTests
 
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]
@@ -215,6 +217,7 @@ public sealed class FieldTests
 
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]
@@ -245,6 +248,7 @@ public sealed class FieldTests
 
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]
@@ -275,6 +279,7 @@ public sealed class FieldTests
 
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]

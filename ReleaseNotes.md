@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.16.0
+
+* Support `float` data type.
+
 ## 2.15.0
 
 * Drop support for end-of-life frameworks (.NET 6 and 7).

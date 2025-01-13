@@ -94,4 +94,9 @@ public enum ServiceTypeKind
 	/// A date and time.
 	/// </summary>
 	DateTime,
+
+	/// <summary>
+	/// A single-precision floating point.
+	/// </summary>
+	Float,
 }

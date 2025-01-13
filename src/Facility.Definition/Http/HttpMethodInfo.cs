@@ -266,7 +266,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		if (fieldTypeKind == ServiceTypeKind.Array)
 			fieldTypeKind = fieldType!.ValueType!.Kind;
 
-		return fieldTypeKind is ServiceTypeKind.String or ServiceTypeKind.Boolean or ServiceTypeKind.Double or ServiceTypeKind.Int32 or ServiceTypeKind.Int64 or ServiceTypeKind.Decimal or ServiceTypeKind.Enum or ServiceTypeKind.ExternalEnum or ServiceTypeKind.DateTime;
+		return fieldTypeKind is ServiceTypeKind.String or ServiceTypeKind.Boolean or ServiceTypeKind.Float or ServiceTypeKind.Double or ServiceTypeKind.Int32 or ServiceTypeKind.Int64 or ServiceTypeKind.Decimal or ServiceTypeKind.Enum or ServiceTypeKind.ExternalEnum or ServiceTypeKind.DateTime;
 	}
 
 	private static bool IsValidRequestBodyField(ServiceFieldInfo fieldInfo, ServiceInfo serviceInfo)

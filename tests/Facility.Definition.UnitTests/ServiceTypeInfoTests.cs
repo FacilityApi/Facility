@@ -7,6 +7,7 @@ public class ServiceTypeInfoTests
 {
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]
+	[TestCase("float", ServiceTypeKind.Float)]
 	[TestCase("double", ServiceTypeKind.Double)]
 	[TestCase("int32", ServiceTypeKind.Int32)]
 	[TestCase("int64", ServiceTypeKind.Int64)]
