@@ -28,6 +28,7 @@ public enum ServiceTypeKind
 | ExternalDto | `15` | An external DTO. |
 | ExternalEnum | `16` | An external enumerated type. |
 | DateTime | `17` | A date and time. |
+| Float | `18` | A single-precision floating point. |
 
 ## See Also
 
