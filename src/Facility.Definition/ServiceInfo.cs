@@ -122,9 +122,7 @@ public sealed class ServiceInfo : ServiceMemberInfo
 			remarks: Remarks,
 			parts: [.. GetParts()]);
 
-		errors = service.GetValidationErrors()
-			.Select(x => new ServiceDefinitionError($"{x.Message} ('{tagName}' tags are excluded.)", x.Position))
-			.ToList();
+		errors = [.. service.GetValidationErrors().Select(x => new ServiceDefinitionError($"{x.Message} ('{tagName}' tags are excluded.)", x.Position))];
 
 		return errors.Count == 0;
 

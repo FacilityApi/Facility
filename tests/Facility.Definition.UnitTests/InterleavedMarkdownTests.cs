@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class InterleavedMarkdownTests
+internal sealed class InterleavedMarkdownTests
 {
 	[Test]
 	public void EmptyServiceNoRemarks()

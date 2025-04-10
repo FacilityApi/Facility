@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class ValidationTests
+internal sealed class ValidationTests
 {
 	[Test]
 	public void DuplicateValidation()

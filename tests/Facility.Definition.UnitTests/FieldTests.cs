@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class FieldTests
+internal sealed class FieldTests
 {
 	[Test]
 	public void InvalidName()

@@ -31,7 +31,7 @@ public abstract class ServiceElementWithAttributesInfo : ServiceElementInfo
 	/// <summary>
 	/// Returns any attributes with the specified name.
 	/// </summary>
-	public IReadOnlyList<ServiceAttributeInfo> GetAttributes(string name) => Attributes.Where(x => x.Name == name).ToList();
+	public IReadOnlyList<ServiceAttributeInfo> GetAttributes(string name) => [.. Attributes.Where(x => x.Name == name)];
 
 	/// <summary>
 	/// Returns the first attribute with the specified name, if any.

@@ -204,7 +204,7 @@ public sealed class FsdGenerator : CodeGenerator
 
 			var attributes = field.Attributes;
 			if (field.IsRequired)
-				attributes = attributes.Where(x => x.Name != "required").ToList();
+				attributes = [.. attributes.Where(x => x.Name != "required")];
 			WriteAttributes(code, attributes);
 
 			code.WriteLine($"{field.Name}: {field.TypeName}{(field.IsRequired ? "!" : "")};");

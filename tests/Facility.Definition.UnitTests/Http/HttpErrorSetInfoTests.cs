@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests.Http;
 
-public class HttpErrorSetInfoTests : HttpInfoTestsBase
+internal sealed class HttpErrorSetInfoTests : HttpInfoTestsBase
 {
 	[Test]
 	public void OneMinimalErrorSet()

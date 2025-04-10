@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public class ServiceTypeInfoTests
+internal sealed class ServiceTypeInfoTests
 {
 	[TestCase("string", ServiceTypeKind.String)]
 	[TestCase("boolean", ServiceTypeKind.Boolean)]

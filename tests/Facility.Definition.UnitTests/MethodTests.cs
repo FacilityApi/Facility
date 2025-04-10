@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class MethodTests
+internal sealed class MethodTests
 {
 	[Test]
 	public void InvalidName()

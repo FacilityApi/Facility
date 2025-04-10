@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests.Http;
 
-public class HttpServiceInfoTests : HttpInfoTestsBase
+internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 {
 	[Test]
 	public void EmptyServiceDefinition()

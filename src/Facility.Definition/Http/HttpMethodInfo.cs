@@ -279,7 +279,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 		IsValidRequestBodyField(fieldInfo, serviceInfo) ||
 		serviceInfo.GetFieldType(fieldInfo)?.Kind == ServiceTypeKind.Boolean;
 
-	private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, IReadOnlyList<HttpNormalFieldInfo> responseNormalFields, IReadOnlyList<HttpBodyFieldInfo> responseBodyFields)
+	private IEnumerable<HttpResponseInfo> GetValidResponses(ServiceInfo serviceInfo, HttpStatusCode? statusCode, List<HttpNormalFieldInfo> responseNormalFields, List<HttpBodyFieldInfo> responseBodyFields)
 	{
 		foreach (var responseBodyField in responseBodyFields)
 		{
@@ -315,7 +315,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 	private static bool IsNoContentStatusCode(HttpStatusCode? statusCode) => statusCode is HttpStatusCode.NoContent or HttpStatusCode.NotModified;
 
 	private static List<string> GetPathParameterNames(string routePath) =>
-		s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString()).ToList();
+		[.. s_regexPathParameterRegex.Matches(routePath).Cast<Match>().Select(x => x.Groups[1].ToString())];
 
 	private sealed class NestedByRouteComparer : IComparer<HttpMethodInfo>
 	{

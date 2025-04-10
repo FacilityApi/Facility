@@ -47,7 +47,7 @@ public static class ServiceDefinitionUtility
 		_ => throw new ArgumentOutOfRangeException(nameof(kind)),
 	};
 
-	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>((items ?? []).ToList());
+	internal static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T>? items) => new ReadOnlyCollection<T>([.. items ?? []]);
 
 #if !NETSTANDARD2_0
 	internal static bool ContainsOrdinal(this string text, string value) => text.Contains(value, StringComparison.Ordinal);

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public class ExcludeTagTests
+internal sealed class ExcludeTagTests
 {
 	[Test]
 	public void NoTags()

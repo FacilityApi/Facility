@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests.CodeGen;
 
-public sealed class CodeGenUtilityTests
+internal sealed class CodeGenUtilityTests
 {
 	[TestCase("xyZzy", "XyZzy")]
 	[TestCase("XyZzy", "XyZzy")]

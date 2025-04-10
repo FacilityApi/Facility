@@ -5,7 +5,7 @@ using Facility.Definition.Fsd;
 
 namespace fsdgenfsd;
 
-public sealed class FsdGenFsdApp : CodeGeneratorApp
+internal sealed class FsdGenFsdApp : CodeGeneratorApp
 {
 	public static int Main(string[] args) => new FsdGenFsdApp().Run(args);
 
