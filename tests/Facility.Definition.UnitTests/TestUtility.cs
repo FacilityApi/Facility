@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Facility.Definition.Fsd;
 
 namespace Facility.Definition.UnitTests;
@@ -34,7 +35,7 @@ internal static class TestUtility
 		var generator = new FsdGenerator { GeneratorName = "TestUtility" };
 		if (settings is not null)
 			generator.ApplySettings(settings);
-		return generator.GenerateOutput(service).Files[0].Text.Split(Environment.NewLine);
+		return Regex.Split(generator.GenerateOutput(service).Files[0].Text, Regex.Escape(Environment.NewLine));
 	}
 
 	public static FsdParser CreateParser() => new(new FsdParserSettings { SupportsEvents = true });

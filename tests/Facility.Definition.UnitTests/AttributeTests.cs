@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class AttributeTests
+internal sealed class AttributeTests
 {
 	[Test]
 	public void InvalidAttributeName()

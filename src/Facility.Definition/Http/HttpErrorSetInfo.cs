@@ -28,6 +28,6 @@ public sealed class HttpErrorSetInfo : HttpElementInfo
 		if (parameter is not null)
 			AddInvalidHttpParameterError(parameter);
 
-		Errors = errorSetInfo.Errors.Select(x => new HttpErrorInfo(x)).ToList();
+		Errors = [.. errorSetInfo.Errors.Select(x => new HttpErrorInfo(x))];
 	}
 }

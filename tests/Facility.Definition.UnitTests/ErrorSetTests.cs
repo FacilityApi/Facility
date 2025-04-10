@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class ErrorSetTests
+internal sealed class ErrorSetTests
 {
 	[Test]
 	public void OneMinimalErrorSet()

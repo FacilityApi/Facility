@@ -57,5 +57,5 @@ public static class CodeGenUtility
 		return string.Join(separator.ToString(), words.Select(x => x.ToLowerInvariant()));
 	}
 
-	private static string[] GetWords(string value) => Regexes.Word().Matches(value ?? throw new ArgumentNullException(nameof(value))).Cast<Match>().Select(x => x.ToString()).ToArray();
+	private static string[] GetWords(string value) => [.. Regexes.Word().Matches(value ?? throw new ArgumentNullException(nameof(value))).Cast<Match>().Select(x => x.ToString())];
 }

@@ -20,7 +20,7 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	public static bool TryCreate(ServiceInfo serviceInfo, out HttpServiceInfo httpServiceInfo, out IReadOnlyList<ServiceDefinitionError> errors)
 	{
 		httpServiceInfo = new HttpServiceInfo(serviceInfo);
-		errors = httpServiceInfo.GetValidationErrors().ToList();
+		errors = [.. httpServiceInfo.GetValidationErrors()];
 		return errors.Count == 0;
 	}
 
@@ -42,12 +42,12 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	/// <summary>
 	/// The HTTP mapping for normal methods.
 	/// </summary>
-	public IReadOnlyList<HttpMethodInfo> Methods => AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Normal).ToList();
+	public IReadOnlyList<HttpMethodInfo> Methods => [.. AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Normal)];
 
 	/// <summary>
 	/// The HTTP mapping for event methods.
 	/// </summary>
-	public IReadOnlyList<HttpMethodInfo> Events => AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Event).ToList();
+	public IReadOnlyList<HttpMethodInfo> Events => [.. AllMethods.Where(x => x.ServiceMethod.Kind == ServiceMethodKind.Event)];
 
 	/// <summary>
 	/// The HTTP mapping for the error sets.
@@ -83,8 +83,8 @@ public sealed class HttpServiceInfo : HttpElementInfo
 			}
 		}
 
-		AllMethods = serviceInfo.AllMethods.Select(x => new HttpMethodInfo(x, serviceInfo)).ToList();
-		ErrorSets = serviceInfo.ErrorSets.Select(x => new HttpErrorSetInfo(x)).ToList();
+		AllMethods = [.. serviceInfo.AllMethods.Select(x => new HttpMethodInfo(x, serviceInfo))];
+		ErrorSets = [.. serviceInfo.ErrorSets.Select(x => new HttpErrorSetInfo(x))];
 
 		var methodsByRoute = AllMethods.OrderBy(x => x, HttpMethodInfo.ByRouteComparer).ToList();
 		for (var index = 1; index < methodsByRoute.Count; index++)

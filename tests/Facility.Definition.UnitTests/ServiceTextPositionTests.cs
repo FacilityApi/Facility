@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public class ServiceTextPositionTests
+internal sealed class ServiceTextPositionTests
 {
 	[Test]
 	public void SourceNameOnly()

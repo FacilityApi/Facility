@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests;
 
-public sealed class ServiceTests
+internal sealed class ServiceTests
 {
 	[TestCase("service TestApi")]
 	[TestCase("service TestApi;")]

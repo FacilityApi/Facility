@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests.Http;
 
-public class HttpMethodInfoTests : HttpInfoTestsBase
+internal sealed class HttpMethodInfoTests : HttpInfoTestsBase
 {
 	[Test]
 	public void OneMinimalMethod()

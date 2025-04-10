@@ -3,7 +3,7 @@
   <PropertyGroup>
     <VersionPrefix>2.16.0</VersionPrefix>
     <PackageValidationBaselineVersion>2.15.0</PackageValidationBaselineVersion>
-    <LangVersion>12.0</LangVersion>
+    <LangVersion>13.0</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

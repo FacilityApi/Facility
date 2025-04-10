@@ -2,7 +2,7 @@ using Facility.Definition.Http;
 
 namespace Facility.Definition.UnitTests.Http;
 
-public abstract class HttpInfoTestsBase
+internal abstract class HttpInfoTestsBase
 {
 	protected static HttpServiceInfo ParseHttpApi(string text)
 	{

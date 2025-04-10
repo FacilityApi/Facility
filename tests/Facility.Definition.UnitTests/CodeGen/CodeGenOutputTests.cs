@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Facility.Definition.UnitTests.CodeGen;
 
-public sealed class CodeGenOutputTests
+internal sealed class CodeGenOutputTests
 {
 	[Test]
 	public void DuplicateFileName()
