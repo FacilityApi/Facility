@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.17.0
+
+* Add .NET 9 targets.
+
 ## 2.16.0
 
 * Support `float` data type.
