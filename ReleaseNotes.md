@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.18.0
+
+* Add .NET 10 targets.
+
 ## 2.17.0
 
 * Add .NET 9 targets.
