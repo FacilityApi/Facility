@@ -43,13 +43,8 @@ public abstract class CodeGeneratorApp
 			settings.ExcludeTags = argsReader.ReadExcludeTagOptions();
 			settings.IgnoreNewLines = isVerify;
 
-			settings.InputPath = argsReader.ReadArgument();
-			if (settings.InputPath is null)
-				throw new ArgsReaderException("Missing input path.");
-
-			settings.OutputPath = argsReader.ReadArgument();
-			if (settings.OutputPath is null)
-				throw new ArgsReaderException("Missing output path.");
+			settings.InputPath = argsReader.ReadArgument() ?? throw new ArgsReaderException("Missing input path.");
+			settings.OutputPath = argsReader.ReadArgument() ?? throw new ArgsReaderException("Missing output path.");
 
 			argsReader.VerifyComplete();
 

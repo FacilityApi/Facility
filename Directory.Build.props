@@ -3,20 +3,30 @@
   <PropertyGroup>
     <VersionPrefix>2.18.0</VersionPrefix>
     <PackageValidationBaselineVersion>2.17.0</PackageValidationBaselineVersion>
+    <NoWarn>$(NoWarn);1591;1998;CA1510;CA1865;NU1507;NU5105</NoWarn>
+    <Authors>Ed Ball</Authors>
+  </PropertyGroup>
+
+  <!-- DO NOT EDIT: facility-dotnet-package-props convention -->
+  <PropertyGroup>
+    <GitHubOrganization>FacilityApi</GitHubOrganization>
+    <RepositoryName>Facility</RepositoryName>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <!-- END DO NOT EDIT -->
+
+  <!-- DO NOT EDIT: dotnet-common-props convention -->
+  <PropertyGroup>
     <LangVersion>14.0</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);1591;1998;CA1510;CA1865;NU1507;NU5105</NoWarn>
     <NeutralLanguage>en-US</NeutralLanguage>
     <DebugType>embedded</DebugType>
-    <GitHubOrganization>FacilityApi</GitHubOrganization>
-    <RepositoryName>Facility</RepositoryName>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/$(GitHubOrganization)/$(RepositoryName)</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/$(GitHubOrganization)/$(RepositoryName)/blob/master/ReleaseNotes.md</PackageReleaseNotes>
+    <PackageProjectUrl Condition=" '$(PackageProjectUrl)' == '' ">https://github.com/$(GitHubOrganization)/$(RepositoryName)</PackageProjectUrl>
+    <PackageReleaseNotes Condition=" '$(PackageReleaseNotes)' == '' ">https://github.com/$(GitHubOrganization)/$(RepositoryName)/blob/master/ReleaseNotes.md</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/$(GitHubOrganization)/$(RepositoryName).git</RepositoryUrl>
-    <Authors>Ed Ball</Authors>
+    <Authors Condition=" '$(Authors)' == '' ">$(GitHubOrganization)</Authors>
     <Copyright>Copyright $(Authors)</Copyright>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-all</AnalysisLevel>
@@ -29,6 +39,9 @@
     <EnableStrictModeForCompatibleFrameworksInPackageValidation>true</EnableStrictModeForCompatibleFrameworksInPackageValidation>
     <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
     <DisablePackageBaselineValidation Condition=" $(PackageValidationBaselineVersion) == $(VersionPrefix) or $(PackageValidationBaselineVersion) == '0.0.0' ">true</DisablePackageBaselineValidation>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
   </PropertyGroup>
-
+  <!-- END DO NOT EDIT -->
 </Project>

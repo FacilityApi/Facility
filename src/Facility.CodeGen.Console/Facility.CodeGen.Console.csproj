@@ -6,6 +6,7 @@
     <PackageTags>Facility FSD CodeGen Console</PackageTags>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RewritePackageReadmeLinks>true</RewritePackageReadmeLinks>
   </PropertyGroup>
 
   <ItemGroup>

@@ -9,6 +9,7 @@
     <PackAsTool>true</PackAsTool>
     <RollForward>Major</RollForward>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RewritePackageReadmeLinks>true</RewritePackageReadmeLinks>
   </PropertyGroup>
 
   <ItemGroup>
