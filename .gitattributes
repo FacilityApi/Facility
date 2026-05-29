@@ -5,3 +5,7 @@
 *.sln text merge=union
 
 *.g.cs linguist-generated=true
+
+# DO NOT EDIT: csharp convention
+*.cs text diff=csharp
+# END DO NOT EDIT
