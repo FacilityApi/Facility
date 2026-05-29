@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.18.1
+
+* Update NuGet package README.
+
 ## 2.18.0
 
 * Add .NET 10 targets.
