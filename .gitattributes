@@ -1,8 +1,5 @@
 * text=auto eol=lf
 
-*.csproj text merge=union
-*.sln text merge=union
-
 *.g.cs linguist-generated=true
 
 # DO NOT EDIT: csharp convention
