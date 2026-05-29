@@ -31,4 +31,11 @@
     <DisablePackageBaselineValidation Condition=" $(PackageValidationBaselineVersion) == $(VersionPrefix) or $(PackageValidationBaselineVersion) == '0.0.0' ">true</DisablePackageBaselineValidation>
   </PropertyGroup>
 
+  <!-- DO NOT EDIT: facility-dotnet-package-props convention -->
+  <PropertyGroup>
+    <GitHubOrganization>FacilityApi</GitHubOrganization>
+    <RepositoryName>Facility</RepositoryName>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <!-- END DO NOT EDIT -->
 </Project>
