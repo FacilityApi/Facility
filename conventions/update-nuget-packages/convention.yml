@@ -1,0 +1,6 @@
+conventions:
+  - path: Faithlife/CodingGuidelines/conventions/update-nuget-packages
+    settings:
+      rules:
+        - packages: [FluentAssertions]
+          version: "[,8)"
