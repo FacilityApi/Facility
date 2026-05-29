@@ -2,8 +2,6 @@
 
 Tools and libraries for working with the [Facility API Framework](https://facilityapi.github.io/).
 
-[![Build](https://github.com/FacilityApi/Facility/workflows/Build/badge.svg)](https://github.com/FacilityApi/Facility/actions?query=workflow%3ABuild)
-
 Project | Description | NuGet
 --- | --- | ---
 Facility.Definition | Used by code generators to process Facility Service Definitions. | [![NuGet](https://img.shields.io/nuget/v/Facility.Definition.svg)](https://www.nuget.org/packages/Facility.Definition)

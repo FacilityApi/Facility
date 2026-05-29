@@ -2,7 +2,11 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
-    <File Path=".github/workflows/build.yaml" />
+    <File Path=".github/conventions.yml" />
+    <File Path=".github/lsp.json" />
+    <File Path=".github/workflows/apply-repo-conventions.yml" />
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/copilot-setup-steps.yml" />
     <File Path=".gitignore" />
     <File Path="build.ps1" />
     <File Path="Directory.Build.props" />
@@ -21,5 +25,4 @@
   <Project Path="src/fsdgenfsd/fsdgenfsd.csproj" />
   <Project Path="tests/Facility.Definition.UnitTests/Facility.Definition.UnitTests.csproj" />
   <Project Path="tools/Build/Build.csproj" />
-  <Project Path="tools/XmlDocGen/XmlDocGen.csproj" />
 </Solution>
