@@ -1,0 +1,26 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+defaults:
+  run:
+    shell: pwsh
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+    - name: Install .NET
+      uses: actions/setup-dotnet@v5
+    - name: Restore
+      run: ./build.ps1 restore
