@@ -4,3 +4,4 @@ conventions:
       rules:
         - packages: [FluentAssertions]
           version: "[,8)"
+        - ${{ settings.rules }}

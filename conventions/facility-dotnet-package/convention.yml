@@ -15,3 +15,6 @@ conventions:
     settings:
       copyright-holder: Ed Ball
   - path: ../update-nuget-packages
+    settings:
+      rules:
+        - ${{ settings.nuget-rules }}
