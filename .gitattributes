@@ -5,3 +5,12 @@
 # DO NOT EDIT: csharp convention
 *.cs text diff=csharp
 # END DO NOT EDIT
+
+# DO NOT EDIT: agentic-repo convention
+apm.lock.yaml linguist-generated=true
+.agents/** linguist-generated=true
+.github/agents/** linguist-generated=true
+.github/hooks/** linguist-generated=true
+.github/instructions/** linguist-generated=true
+.github/prompts/** linguist-generated=true
+# END DO NOT EDIT
