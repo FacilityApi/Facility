@@ -30,9 +30,14 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	public ServiceInfo Service { get; }
 
 	/// <summary>
-	/// The URL of the HTTP service.
+	/// The primary URL of the HTTP service.
 	/// </summary>
-	public string? Url { get; }
+	public string? Url => Servers.FirstOrDefault()?.Url;
+
+	/// <summary>
+	/// The supported HTTP servers.
+	/// </summary>
+	public IReadOnlyList<HttpServiceServer> Servers { get; }
 
 	/// <summary>
 	/// The HTTP mapping for all methods (normal methods and event methods).
@@ -63,22 +68,35 @@ public sealed class HttpServiceInfo : HttpElementInfo
 	{
 		Service = serviceInfo;
 
-		foreach (var parameter in GetHttpParameters(serviceInfo))
+		var servers = new List<HttpServiceServer>();
+		foreach (var httpAttribute in serviceInfo.GetAttributes("http"))
 		{
-			if (parameter.Name == "url")
-				Url = parameter.Value;
-			else
-				AddInvalidHttpParameterError(parameter);
+			string? url = null;
+			string? description = null;
+
+			foreach (var parameter in httpAttribute.Parameters)
+			{
+				if (parameter.Name == "url")
+					url = parameter.Value;
+				else if (parameter.Name == "description")
+					description = parameter.Value;
+				else
+					AddInvalidHttpParameterError(parameter);
+			}
+
+			if (url is not null)
+				servers.Add(new HttpServiceServer(url, description));
 		}
+		Servers = servers;
 
 		foreach (var descendant in serviceInfo.GetElementAndDescendants().OfType<ServiceElementWithAttributesInfo>())
 		{
 			var httpAttributes = descendant.GetAttributes("http");
 			if (httpAttributes.Count != 0)
 			{
-				if (!(descendant is ServiceInfo or ServiceMethodInfo or ServiceFieldInfo or ServiceErrorSetInfo or ServiceErrorInfo))
+				if (descendant is not (ServiceInfo or ServiceMethodInfo or ServiceFieldInfo or ServiceErrorSetInfo or ServiceErrorInfo))
 					AddValidationError(ServiceDefinitionUtility.CreateUnexpectedAttributeError(httpAttributes[0]));
-				else if (httpAttributes.Count > 1)
+				else if (httpAttributes.Count > 1 && descendant is not ServiceInfo)
 					AddValidationError(ServiceDefinitionUtility.CreateDuplicateAttributeError(httpAttributes[1]));
 			}
 		}

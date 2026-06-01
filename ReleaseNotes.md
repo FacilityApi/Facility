@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.19.0
+
+* Support multiple `http` attributes on service.
+
 ## 2.18.1
 
 * Update NuGet package README.
