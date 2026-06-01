@@ -1,8 +1,5 @@
 commit:
   message: Update Facility .NET repository conventions
-pull-request:
-  reviewers:
-    - ejball
 conventions:
   - path: Faithlife/CodingGuidelines/conventions/dotnet-common
   - path: Faithlife/CodingGuidelines/conventions/nuget-config
