@@ -38,6 +38,40 @@ Describe 'facility-dotnet-package-workflows convention' {
 				Remove-Item -LiteralPath $inputPath -ErrorAction SilentlyContinue
 			}
 		}
+
+		function script:NormalizeWorkflowCronMinutes {
+			param(
+				[Parameter(Mandatory = $true)]
+				[string] $WorkflowContent
+			)
+
+			$pattern = '(?m)^(\s*(?:-\s*)?cron:\s*)(["'']?)([^"''\r\n]+)\2(\s*)$'
+			return [System.Text.RegularExpressions.Regex]::Replace($WorkflowContent, $pattern, {
+				param($match)
+
+				$parts = $match.Groups[3].Value.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+				if ($parts.Count -lt 5) {
+					return $match.Value
+				}
+
+				$parts[0] = '*'
+				$cronExpression = $parts -join ' '
+				return "{0}{1}{2}{1}{3}" -f $match.Groups[1].Value, $match.Groups[2].Value, $cronExpression, $match.Groups[4].Value
+			})
+		}
+
+		function script:GetScheduledCronMinute {
+			param(
+				[Parameter(Mandatory = $true)]
+				[string] $WorkflowContent
+			)
+
+			$match = [System.Text.RegularExpressions.Regex]::Match($WorkflowContent, '(?m)^\s*-\s*cron:\s*["'']?([^"''\r\n]+)')
+			$match.Success | Should -Be $true
+			$parts = $match.Groups[1].Value.Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+			$parts.Count | Should -BeGreaterOrEqual 5
+			return [int] $parts[0]
+		}
 	}
 
 	It 'copies the published workflow templates and is idempotent' {
@@ -53,7 +87,15 @@ Describe 'facility-dotnet-package-workflows convention' {
 				$sourcePath = Join-Path $PSScriptRoot 'files' $workflowName
 				$targetPath = Join-Path $testDirectory '.github' 'workflows' $workflowName
 				(Test-Path -LiteralPath $targetPath) | Should -Be $true
-				(Get-Content -LiteralPath $targetPath -Raw) | Should -Be (Get-Content -LiteralPath $sourcePath -Raw)
+				$sourceContent = Get-Content -LiteralPath $sourcePath -Raw
+				$targetContent = Get-Content -LiteralPath $targetPath -Raw
+				(NormalizeWorkflowCronMinutes -WorkflowContent $targetContent) | Should -Be (NormalizeWorkflowCronMinutes -WorkflowContent $sourceContent)
+
+				if ($workflowName -eq 'apply-repo-conventions.yml') {
+					$minute = GetScheduledCronMinute -WorkflowContent $targetContent
+					$minute | Should -BeGreaterThan 0
+					$minute | Should -BeLessThan 60
+				}
 			}
 
 			# Re-run the convention and assert no workflow content changes.
