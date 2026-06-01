@@ -19,3 +19,7 @@ release/
 *.userprefs
 _ReSharper*
 # END DO NOT EDIT
+
+# DO NOT EDIT: agentic-repo convention
+apm_modules/
+# END DO NOT EDIT
