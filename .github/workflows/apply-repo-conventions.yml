@@ -2,7 +2,8 @@ name: Apply Repository Conventions
 
 on:
   schedule:
-  - cron: '31 9 * * 1-5'
+  - cron: '42 6 * * 1-5'
+    timezone: 'America/Los_Angeles'
   workflow_dispatch:
 
 permissions: {}
