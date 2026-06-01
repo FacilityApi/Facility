@@ -12,9 +12,8 @@ conventions:
   - path: Faithlife/CodingGuidelines/conventions/dotnet-common-contributing
   - path: Faithlife/CodingGuidelines/conventions/dotnet-common-props
   - path: Faithlife/CodingGuidelines/conventions/agentic-repo
-  - path: Faithlife/CodingGuidelines/conventions/apm
     settings:
-      install:
+      apm-install:
         - Faithlife/RepoConventions/skills/repo-conventions
         - richlander/dotnet-inspect/skills/dotnet-inspect
       pull-request:
