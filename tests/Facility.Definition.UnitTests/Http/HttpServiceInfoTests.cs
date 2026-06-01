@@ -12,9 +12,10 @@ internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 		var info = ParseHttpApi("service TestApi{}");
 		info.Service.Name.Should().Be("TestApi");
 		info.Url.Should().BeNull();
-		info.Methods.Count.Should().Be(0);
-		info.Events.Count.Should().Be(0);
-		info.ErrorSets.Count.Should().Be(0);
+		info.Servers.Should().BeEmpty();
+		info.Methods.Should().BeEmpty();
+		info.Events.Should().BeEmpty();
+		info.ErrorSets.Should().BeEmpty();
 	}
 
 	[Test]
@@ -23,9 +24,10 @@ internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 		var info = ParseHttpApi("service TestApi { method do {}: {} }");
 		info.Service.Name.Should().Be("TestApi");
 		info.Url.Should().BeNull();
+		info.Servers.Should().BeEmpty();
 		info.Methods.Count.Should().Be(1);
-		info.Events.Count.Should().Be(0);
-		info.ErrorSets.Count.Should().Be(0);
+		info.Events.Should().BeEmpty();
+		info.ErrorSets.Should().BeEmpty();
 	}
 
 	[Test]
@@ -34,9 +36,10 @@ internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 		var info = ParseHttpApi("service TestApi { event do {}: {} }");
 		info.Service.Name.Should().Be("TestApi");
 		info.Url.Should().BeNull();
-		info.Methods.Count.Should().Be(0);
+		info.Servers.Should().BeEmpty();
+		info.Methods.Should().BeEmpty();
 		info.Events.Count.Should().Be(1);
-		info.ErrorSets.Count.Should().Be(0);
+		info.ErrorSets.Should().BeEmpty();
 	}
 
 	[Test]
@@ -44,6 +47,7 @@ internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 	{
 		var info = ParseHttpApi("[http] service TestApi { method do {}: {} }");
 		info.Url.Should().BeNull();
+		info.Servers.Should().BeEmpty();
 	}
 
 	[Test]
@@ -51,13 +55,21 @@ internal sealed class HttpServiceInfoTests : HttpInfoTestsBase
 	{
 		var info = ParseHttpApi("[http(url: \"https://api.example.com\")] service TestApi { method do {}: {} }");
 		info.Url.Should().Be("https://api.example.com");
+		info.Servers.Count.Should().Be(1);
+		info.Servers[0].Url.Should().Be("https://api.example.com");
+		info.Servers[0].Description.Should().BeNull();
 	}
 
 	[Test]
-	public void TwoServiceAttributes()
+	public void TwoServers()
 	{
-		ParseInvalidHttpApi("[http] [http] service TestApi { method do {}: {} }")
-			.ToString().Should().Be("TestApi.fsd(1,9): 'http' attribute is duplicated.");
+		var info = ParseHttpApi("[http(url: \"https://api.example.com\"), http(url: \"https://test.api.example.com\", description: \"test\")] service TestApi { method do {}: {} }");
+		info.Url.Should().Be("https://api.example.com");
+		info.Servers.Count.Should().Be(2);
+		info.Servers[0].Url.Should().Be("https://api.example.com");
+		info.Servers[0].Description.Should().BeNull();
+		info.Servers[1].Url.Should().Be("https://test.api.example.com");
+		info.Servers[1].Description.Should().Be("test");
 	}
 
 	[Test]
