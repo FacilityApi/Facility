@@ -1,0 +1,12 @@
+name: Facility
+version: 1.0.0
+description: APM project for Facility
+dependencies:
+  apm:
+  - Faithlife/RepoConventions/skills/repo-conventions
+  - richlander/dotnet-inspect/skills/dotnet-inspect
+  mcp: []
+includes: auto
+scripts: {}
+targets:
+- copilot
