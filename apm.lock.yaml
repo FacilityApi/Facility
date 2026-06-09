@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-06-08T16:58:20.387108+00:00'
+generated_at: '2026-06-09T16:20:14.758315+00:00'
 apm_version: 0.14.0
 dependencies:
 - repo_url: Faithlife/RepoConventions
@@ -13,10 +13,10 @@ dependencies:
   content_hash: sha256:b4c71ea6793ab8bbc481cf7fa25cf86c7f5c36caefcfbe68053860082191af57
 - repo_url: richlander/dotnet-inspect
   host: github.com
-  resolved_commit: 9c5d4a0e7e5af5147eb08180ef7f426ed7d882ea
+  resolved_commit: 9abb0d49c4ce82040e01ea381c6a451c788e844e
   virtual_path: skills/dotnet-inspect
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/dotnet-inspect
-  content_hash: sha256:d3c7da3fc5f81f3e8a0226cac483fc71afa4942ccd4d090837a963d8a4e885fa
+  content_hash: sha256:c10287ed345c1affe49f463481e065c4dea1783062430256b54b69290380d2a5
