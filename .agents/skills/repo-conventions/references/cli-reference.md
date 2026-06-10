@@ -24,7 +24,7 @@ dnx repo-conventions validate [options]
 | `--draft` / `--no-draft` | Override configured draft behavior. These options cannot be used together. |
 | `--auto-merge` / `--no-auto-merge` | Override configured auto-merge behavior. These options cannot be used together. |
 | `--merge-method <method>` | Preferred auto-merge method. Must be `merge`, `squash`, or `rebase`. |
-| `--git-no-verify` | Pass `--no-verify` to git commit and git push commands run by RepoConventions. |
+| `--git-no-verify` | Pass `--no-verify` to git commit and git push commands run by RepoConventions, and expose `git.noVerify` in the JSON input to convention scripts so they can bypass the same hooks when they create their own commits. |
 
 ## `add`
 
