@@ -152,7 +152,8 @@ Execution contract:
 - The current working directory is the target Git repository root, not the convention directory.
 - The first argument is the path to a JSON input file.
 - Use `$args[0]` to access the input path so future arguments do not break the script.
-- The JSON input file contains a single `settings` property.
+- The JSON input file contains a `settings` property and a `git` property.
+- `git.noVerify` is a boolean that reflects the `--git-no-verify` option. When it is `true`, scripts that create their own commits or pushes must pass `--no-verify` so they bypass the same hooks RepoConventions bypasses.
 - RepoConventions captures stdout and stderr as UTF-8. Set `[Console]::OutputEncoding` before invoking native tools so their output is emitted as UTF-8 too.
 
 Standard header for `convention.ps1`:
@@ -175,6 +176,17 @@ $conventionInput = Get-Content -Raw $args[0] | ConvertFrom-Json
 $settings = $conventionInput.settings
 ```
 
+When the script creates its own commits, honor `git.noVerify` so it matches the rest of the run:
+
+```pwsh
+$conventionInput = Get-Content -Raw $args[0] | ConvertFrom-Json
+$commitArguments = @('commit', '-m', 'Use LF')
+if ($conventionInput.git.noVerify) {
+    $commitArguments += '--no-verify'
+}
+git @commitArguments
+```
+
 Authoring expectations:
 
 - Read the JSON input only when settings are needed.
@@ -185,7 +197,7 @@ Authoring expectations:
 - Prefer deterministic file writes, stable ordering, and stable line endings.
 - When the script has nothing to do, usually emit no output; already-compliant repositories are the most common case.
 - Emit focused output that explains what changed or why the convention cannot continue.
-- If the convention naturally consists of multiple meaningful steps, the script may create its own commits with informative messages.
+- If the convention naturally consists of multiple meaningful steps, the script may create its own commits with informative messages. When it does, pass `--no-verify` to those commits whenever `git.noVerify` is `true`.
 
 ## Commit and Failure Behavior
 
@@ -215,6 +227,7 @@ Keep repository-level consumer docs focused on using RepoConventions.
 - Test both an already-compliant repository and a non-compliant repository.
 - Re-run after the first successful application to confirm idempotency.
 - If the convention has settings, exercise at least one non-default settings case.
+- If the convention executes any git commits or pushes, test compliance with `git.noVerify` input against failing git hooks.
 - Test failure paths when settings are required or external tools may be unavailable.
 
 ## Agent Workflow
