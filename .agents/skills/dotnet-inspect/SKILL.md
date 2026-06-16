@@ -25,6 +25,7 @@ dnx dotnet-inspect -y -- <command>
 | Inspect members and overloads | `member Type --package Foo -m Name --show-index` | Use `Name:N` selectors for a specific overload. |
 | Compare API versions | `diff --package Foo@old..new --breaking` | Use `--additive` for new APIs or `-t Type` to narrow. |
 | Locate source or implementation | `source Type --package Foo` | For a selected overload use `member Type Member:1 -S "Original Source"`, `-S Calls`, or `-S IL`. |
+| Audit unsafe calls | `library MyLib.dll -S @Audit` | Drill into a selected member with `member Type Method:N --library MyLib.dll -S @Audit`. |
 | Explore relationships | `depends Type`, `extensions Type`, `implements Interface` | Add package, platform, or project scope as needed. |
 
 ## Output modes
@@ -57,11 +58,12 @@ dnx dotnet-inspect -y -- library System.Text.Json -S "Async*" --count
 dnx dotnet-inspect -y -- library System.Text.Json -S "Async*" --rows -n 10
 ```
 
-`@` represents a category or grouping of sections. Bare `-S` renders `@Default`, a curated high-density view; `-S @All` renders an exhaustive document with all sections. Categories such as `@Integrations` and `@Switches` expand to related sections. Sections marked opt-in must be selected explicitly with `-S`. Focused library/member `-S Section` output keeps a compact context row before the selected section.
+`@` represents a category or grouping of sections. Bare `-S` renders `@Default`, a curated high-density view; `-S @All` renders an exhaustive document with all sections. Workflow categories such as `@Audit`, plus focused categories such as `@Integrations` and `@Switches`, expand to related sections. Sections marked opt-in must be selected explicitly with `-S`. Focused library/member `-S Section` output keeps a compact context row before the selected section.
 
 ## General tips
 
 - Built-in aliases and common BCL types such as `string`, `int`, and `List<T>` resolve without `--package`, `--platform`, or `--library`; start with `type string` or `type 'List<T>'`.
+- `type` supports URL-like namespace probing: unresolved namespace-ish names such as `System.Text` produce best-effort prefix matches, while exact package/library/platform matches keep normal precedence.
 - After `find`, reuse the package/library it reports in follow-up commands. Use explicit `--platform`, `--package`, or `--library` when the source matters; for multi-library packages, include the `--library` value shown by `find`.
 - Always quote generic type names in shell commands: `type 'List<T>'`, `member 'Dictionary<TKey,TValue>'`, or `type 'INumber<TSelf>'`. Use `<T>` rather than `<>` for generic type queries.
 - Wildcards are supported for type names and section/schema selection; quote shell patterns, such as `type 'Json*' --package System.Text.Json`, `-S "Async*"`, or `-D "SourceLink*"`.
@@ -76,6 +78,7 @@ Use `find` when you do not know the package, library, or exact namespace.
 
 ```bash
 dnx dotnet-inspect -y -- find JsonSerializer
+dnx dotnet-inspect -y -- type System.Text
 dnx dotnet-inspect -y -- type JsonSerializer --package System.Text.Json
 dnx dotnet-inspect -y -- member JsonSerializer --package System.Text.Json -m Serialize --show-index
 dnx dotnet-inspect -y -- depends Stream
@@ -103,12 +106,13 @@ dnx dotnet-inspect -y -- diff --platform System.Runtime@9.0.0..10.0.0 --additive
 
 ## Source and implementation workflow
 
-Use `source` for SourceLink URLs, source text, or token/IL-offset mapping. Use `member Type Member:N -S "Decompiled Source"` when you need a selected member's lowered C# body, `-S "Original Source"` for SourceLink-backed source text, `-S Calls` for direct call-site evidence, or `-S IL` / `-S "IL (Annotated)"` for IL.
+Use `source` for SourceLink URLs, source text, or token/IL-offset mapping. Use `member Type Member:N -S "Decompiled Source"` when you need a selected member's lowered C# body, `-S "Original Source"` for SourceLink-backed source text, `-S Calls` for direct call-site evidence, `-S "Unsafe*"` for unsafe API-member and operation evidence, or `-S IL` / `-S "IL (Annotated)"` for IL.
 
 ```bash
 dnx dotnet-inspect -y -- source JsonSerializer --package System.Text.Json
 dnx dotnet-inspect -y -- member JsonSerializer --package System.Text.Json Serialize:1 -S "Decompiled Source"
 dnx dotnet-inspect -y -- member JsonSerializer --package System.Text.Json Serialize:1 -S Calls
+dnx dotnet-inspect -y -- library MyLib.dll -S @Audit
 ```
 
 A selected overload defaults to `Signature`; use bare `-S` for `Signature` plus `Decompiled Source`, or select `Original Source`, `IL`, or `IL (Annotated)` when you need specific implementation evidence.
@@ -123,9 +127,21 @@ Fidelity expectations: `Original Source` is the SourceLink-backed original sourc
 
 For crash/stack diagnostics that include a MethodDef token plus IL offset, `source --il-offset 0x06000001+0x5` can map the offset to source. This is a niche deep-debugging path; do not start there for normal API lookup.
 
+## Unsafe call audit workflow
+
+Start with the library/type roll-up, then drill into a selected overload for exact evidence.
+
+```bash
+dnx dotnet-inspect -y -- library MyLib.dll -S @Audit
+dnx dotnet-inspect -y -- member MyType MyMethod:1 --library MyLib.dll -S @Audit
+dnx dotnet-inspect -y -- member MyType MyMethod:1 --library MyLib.dll -S "Calls,IL"
+```
+
+At library/type scope, `@Audit` surfaces unsafe members, P/Invoke, and switch evidence. On a selected member, `@Audit` expands to signature, direct calls, unsafe operations, and IL; use the `IL` offsets and metadata tokens to confirm the exact binary evidence.
+
 ## Package, library, integrations, and Signals workflow
 
-Use `package` for NuGet package structure and registry-backed signals. Use `library` for assembly metadata, APIs, PDB/SourceLink evidence, and direct references.
+Use `package` for NuGet package structure and registry-backed signals. Use `library` for assembly metadata, APIs, PDB/SourceLink evidence, direct references, and unsafe-member audits.
 
 ```bash
 dnx dotnet-inspect -y -- package System.Text.Json -S Signals
