@@ -25,8 +25,8 @@ dnx dotnet-inspect -y -- <command>
 | Select an overload | `member Type --platform Lib Name:1` or `Name~digest` |
 | Compare APIs | `diff --package Foo@old..new --breaking` (`--additive` new APIs); `--alloc-regressions` for perf regressions (allocations up, hot first). |
 | Trace API evolution | `timeline --package Foo@old..new --type Type --members --at all`; omit `--at` to inspect the vector without acquiring packages. |
-| Inspect packages | `package Foo -S Signals`, `--library`, `--path @readme --content`. |
-| Inspect libraries | `library Foo` or `library path/to.dll`; add `--platform`, `-S Signals`. |
+| Inspect packages | `package Foo -S Signals`; load `skill private-feeds` for authenticated/custom sources. |
+| Inspect libraries | `library Foo` or `library path/to.dll`; load `skill metadata` for raw ECMA-335 tables/heaps. |
 | Relationships | `depends Type`, `extensions Type`, `implements Interface`. |
 
 ## Member lookup
@@ -44,7 +44,7 @@ dnx dotnet-inspect -y -- member System.Text.Json.JsonSerializer.Serialize -S "Me
 
 ## Tips
 
-- Default output is Markdown; for formats, `-D`/`-S` discovery, projection, and limits, load `dotnet-inspect skill query`.
+- Default output is Markdown; for formats, `-D`/`-S` discovery, projection, and limits, load `dotnet-inspect skill query`. Decompiled source uses readable synthesized local names when PDB names are unavailable.
 - Add `--project <csproj|dir|project.assets.json>` when project-referenced packages should be in scope; it reads existing restored assets, so restore/build first if dependencies changed.
 - Common BCL types resolve without scope: `type string`, `type 'List<T>'`. Quote generics and patterns: `member 'Dictionary<TKey,TValue>'`, `-S "Async*"`.
 - Unpinned packages use latest stable; add `--preview` for prerelease APIs.
