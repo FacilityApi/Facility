@@ -10,6 +10,8 @@ When a workflow template includes a `cron` expression with minute `0`, the conve
 
 The apply workflow uses the FacilityApi-owned `Facility Bot` GitHub App. Repositories using this convention must define `FACILITY_BOT_CLIENT_ID` as an Actions variable and `FACILITY_BOT_PRIVATE_KEY` as an Actions secret.
 
+The CI publish job uses NuGet trusted publishing for the `ejball` NuGet account. Each repository using this convention must be configured as a trusted publishing policy in NuGet.org before packages can be published.
+
 Repositories with materially different CI needs should use a different workflow convention instead of adding settings to this convention.
 
 ## Example
