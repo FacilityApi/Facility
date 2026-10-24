@@ -319,15 +319,15 @@ public sealed class HttpMethodInfo : HttpElementInfo
 
 	private sealed class NestedByRouteComparer : IComparer<HttpMethodInfo>
 	{
-		public int Compare(HttpMethodInfo? left, HttpMethodInfo? right)
+		public int Compare(HttpMethodInfo? x, HttpMethodInfo? y)
 		{
-			if (left is null)
-				return right is null ? 0 : -1;
-			if (right is null)
+			if (x is null)
+				return y is null ? 0 : -1;
+			if (y is null)
 				return 1;
 
-			var leftParts = left.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
-			var rightParts = right.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
+			var leftParts = x.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
+			var rightParts = y.Path.Split(s_oneSlash, StringSplitOptions.RemoveEmptyEntries);
 			var partIndex = 0;
 			while (true)
 			{
@@ -355,8 +355,8 @@ public sealed class HttpMethodInfo : HttpElementInfo
 				partIndex++;
 			}
 
-			var leftRank = s_httpMethods.IndexOf(left.Method);
-			var rightRank = s_httpMethods.IndexOf(right.Method);
+			var leftRank = s_httpMethods.IndexOf(x.Method);
+			var rightRank = s_httpMethods.IndexOf(y.Method);
 			if (leftRank >= 0 && rightRank >= 0)
 				return leftRank.CompareTo(rightRank);
 			if (leftRank >= 0)
@@ -364,7 +364,7 @@ public sealed class HttpMethodInfo : HttpElementInfo
 			if (rightRank >= 0)
 				return 1;
 
-			return string.CompareOrdinal(left.Method, right.Method);
+			return string.CompareOrdinal(x.Method, y.Method);
 		}
 	}
 
