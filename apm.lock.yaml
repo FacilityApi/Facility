@@ -1,22 +1,129 @@
 lockfile_version: '1'
-generated_at: '2026-11-16T23:30:37.703725+00:00'
-apm_version: 0.14.0
+generated_at: '2026-11-20T21:57:59.709650+00:00'
+apm_version: 0.36.1
 dependencies:
-- repo_url: Faithlife/RepoConventions
+- repo_url: faithlife/repoconventions
+  materialization_repo_url: Faithlife/RepoConventions
+  name: repo-conventions
   host: github.com
   resolved_commit: a62b306788b2e8ee46e0d9113a762b33b906b5da
+  version: unknown
   virtual_path: skills/repo-conventions
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/repo-conventions
+  - .agents/skills/repo-conventions/LICENSE
+  - .agents/skills/repo-conventions/SKILL.md
+  - .agents/skills/repo-conventions/references/cli-reference.md
+  - .agents/skills/repo-conventions/references/convention-authoring.md
+  - .agents/skills/repo-conventions/references/convention-configuration.md
+  - .agents/skills/repo-conventions/references/repository-configuration.md
+  deployed_file_hashes:
+    .agents/skills/repo-conventions/LICENSE: sha256:28db130be88f18ea8c6b011408727654cd544fd637400c8c8e7ed75c66cef429
+    .agents/skills/repo-conventions/SKILL.md: sha256:60d6ab9ba85b6ca7e0e9424993f99f6ebac0c03d9c8c0c18eb411c50b36c9201
+    .agents/skills/repo-conventions/references/cli-reference.md: sha256:93e7279247d87579bf9064b47010a72e84c601e974abd871e0df4681ca2bec44
+    .agents/skills/repo-conventions/references/convention-authoring.md: sha256:5c6a390d52a8a863287882df4dcae325ef117278ac270a18e1f35d11ce5fceb7
+    .agents/skills/repo-conventions/references/convention-configuration.md: sha256:2dc1e5b5c8115f11f2b7dd09b40ca80c50fd021a109c9822e9d6d5f9617b70f2
+    .agents/skills/repo-conventions/references/repository-configuration.md: sha256:97bdbc2ebf4d247bfd0e36fe4d76268337e94c664281bed0f9394eed74ff8699
   content_hash: sha256:6e4dc45d96d7adc8f1d3e3300d9ee90eef9c2d0231ea83ad86fed64fca105034
+  carried_licenses:
+  - path: LICENSE
+    source: LICENSE
+    hash: sha256:28db130be88f18ea8c6b011408727654cd544fd637400c8c8e7ed75c66cef429
 - repo_url: richlander/dotnet-inspect
+  name: dotnet-inspect
   host: github.com
-  resolved_commit: 72007273f3432d80441b303883f953653e996625
+  resolved_commit: 44c2ec7a3873523f8a53e7195863e1ac40df65f3
+  version: unknown
   virtual_path: skills/dotnet-inspect
   is_virtual: true
   package_type: claude_skill
   deployed_files:
   - .agents/skills/dotnet-inspect
+  - .agents/skills/dotnet-inspect/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/dotnet-inspect/SKILL.md: sha256:722c54ad66b6d57fd9f0ba5d4d0c0bd1d3d77d09a7357e7ff4e92505b25523e2
   content_hash: sha256:ad23a1710a9caf705b07b968ec1b59f08200f5a860ef8912440aa06654432439
+deployments:
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dotnet-inspect
+  runtime: null
+  scope: project
+  owners:
+  - richlander/dotnet-inspect/skills/dotnet-inspect
+  active_owner: richlander/dotnet-inspect/skills/dotnet-inspect
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/dotnet-inspect/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - richlander/dotnet-inspect/skills/dotnet-inspect
+  active_owner: richlander/dotnet-inspect/skills/dotnet-inspect
+  content_hash: sha256:722c54ad66b6d57fd9f0ba5d4d0c0bd1d3d77d09a7357e7ff4e92505b25523e2
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: null
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:28db130be88f18ea8c6b011408727654cd544fd637400c8c8e7ed75c66cef429
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:60d6ab9ba85b6ca7e0e9424993f99f6ebac0c03d9c8c0c18eb411c50b36c9201
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/references/cli-reference.md
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:93e7279247d87579bf9064b47010a72e84c601e974abd871e0df4681ca2bec44
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/references/convention-authoring.md
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:5c6a390d52a8a863287882df4dcae325ef117278ac270a18e1f35d11ce5fceb7
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/references/convention-configuration.md
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:2dc1e5b5c8115f11f2b7dd09b40ca80c50fd021a109c9822e9d6d5f9617b70f2
+- kind: project-relative
+  target: copilot
+  value: .agents/skills/repo-conventions/references/repository-configuration.md
+  runtime: null
+  scope: project
+  owners:
+  - faithlife/repoconventions/skills/repo-conventions
+  active_owner: faithlife/repoconventions/skills/repo-conventions
+  content_hash: sha256:97bdbc2ebf4d247bfd0e36fe4d76268337e94c664281bed0f9394eed74ff8699
